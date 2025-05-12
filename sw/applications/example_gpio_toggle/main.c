@@ -8,7 +8,10 @@
 #include "gpio.h"
 #include "x-heep.h"
 
-#define GPIO_TOGGLE 2
+#define GPIO_TOGGLE1 1
+#define GPIO_TOGGLE2 2
+#define GPIO_TOGGLE3 3
+#define GPIO_TOGGLE4 4
 
 /* By default, printfs are activated for FPGA and disabled for simulation. */
 #define PRINTF_IN_FPGA  1
@@ -22,24 +25,43 @@
     #define PRINTF(...)
 #endif
 
+void init_gpio_pin(gpio_pin_number_t pin) {
+    gpio_cfg_t pin_cfg = {
+        .pin = pin,
+        .mode = GpioModeOutPushPull
+    };
+    gpio_result_t res = gpio_config(pin_cfg);
+    if (res != GpioOk) {
+        PRINTF("Gpio initialization failed for pin %d!\n", pin);
+    }
+}
 
 int main(int argc, char *argv[])
 {
-    gpio_result_t gpio_res;
-    gpio_cfg_t pin_cfg = {
-        .pin = GPIO_TOGGLE,
-        .mode = GpioModeOutPushPull
-    };
-    gpio_res = gpio_config (pin_cfg);
-    if (gpio_res != GpioOk)
-        PRINTF("Gpio initialization failed!\n");
+    
+    init_gpio_pin(GPIO_TOGGLE1);
+    init_gpio_pin(GPIO_TOGGLE2);
+    init_gpio_pin(GPIO_TOGGLE3);
+    init_gpio_pin(GPIO_TOGGLE4);
 
+    gpio_write(GPIO_TOGGLE1, false);
+    gpio_write(GPIO_TOGGLE2, false);
+    gpio_write(GPIO_TOGGLE3, false);
+    gpio_write(GPIO_TOGGLE4, false);
 
-    for(int i=0;i<100;i++) {
-        gpio_write(GPIO_TOGGLE, true);
-        for(int i=0;i<10;i++) asm volatile("nop");
-        gpio_write(GPIO_TOGGLE, false);
-        for(int i=0;i<10;i++) asm volatile("nop");
+    for(int i=0;i<10;i++) {
+        gpio_write(GPIO_TOGGLE4, false);
+        gpio_write(GPIO_TOGGLE1, true);
+        for(int i=0;i<1e6;i++) asm volatile("nop");
+        gpio_write(GPIO_TOGGLE1, false);
+        gpio_write(GPIO_TOGGLE2, true);
+        for(int i=0;i<1e6;i++) asm volatile("nop");
+        gpio_write(GPIO_TOGGLE2, false);
+        gpio_write(GPIO_TOGGLE3, true);
+        for(int i=0;i<1e6;i++) asm volatile("nop");
+        gpio_write(GPIO_TOGGLE3, false);
+        gpio_write(GPIO_TOGGLE4, true);
+        for(int i=0;i<1e6;i++) asm volatile("nop");
     }
 
     PRINTF("Success.\n");
