@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source env.sh
 make mcu-gen CPU=cv32e40p BUS=onetoM MEMORY_BANKS=4
 make app PROJECT=tpg_float_base COMPILER_PREFIX=riscv32-corev- ARCH=rv32imfc_zicsr_zifencei
 #_xcvhwlp_xcvmem_xcvmac_xcvbi_xcvalu_xcvsimd_xcvbitmanip
