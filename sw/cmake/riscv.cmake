@@ -54,6 +54,8 @@ endif()
 set( CMAKE_SYSTEM_NAME          Generic )
 set( CMAKE_SYSTEM_PROCESSOR     $ENV{ARCH} 
      CACHE STRING "Generate code for given RISC-V ISA string")
+set( ABI     $ENV{ABI} 
+     CACHE STRING "Generate code for given RISC-V ISA string ABI")     
 set( CMAKE_EXECUTABLE_SUFFIX    ".elf")
 
 # specify the cross compiler. We force the compiler so that CMake doesn't
@@ -95,6 +97,12 @@ endif()
 # Dealing with GDB into CMake - TBD
 #set( CMAKE_C_GDB        ${CROSS_COMPILE}gdb 
 #     CACHE FILEPATH "The gdb toolchain command " FORCE )
+
+# Paul
+# disable automatic C compiler test
+# Skip compiler/linker test
+set(CMAKE_C_COMPILER_WORKS TRUE CACHE INTERNAL "")
+set(CMAKE_CXX_COMPILER_WORKS TRUE CACHE INTERNAL "")
 
 # Set the common build flags
 

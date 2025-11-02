@@ -849,6 +849,7 @@ def main():
 
     if "cve2_rv32e" in obj:
         cve2_rv32e = obj["cve2_rv32e"]
+        # print("cve2_rv32e DETECTED") # ajout perso
     else:
         cve2_rv32e = None
 

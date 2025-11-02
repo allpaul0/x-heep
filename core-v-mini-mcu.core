@@ -378,6 +378,7 @@ targets:
           - '--exe tb_top.cpp'
           - '-CFLAGS "-std=c++11 -Wall -g -fpermissive"'
           - '-LDFLAGS "-pthread -lutil -lelf"'
+          - '-I/home/user/tools/verilator/4.210/share/verilator/include'
           - "-Wall"
 
   sim_sc:

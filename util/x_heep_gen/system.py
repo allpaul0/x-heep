@@ -578,7 +578,7 @@ class XHeep:
             if self.ram_numbanks() > 1:
                 sec_name = "data_interleaved"
             self.add_ram_banks_il(
-                self._override_numbanks_il, 32, sec_name, ignore_ignore=True
+                self._override_numbanks_il, 4, sec_name, ignore_ignore=True
             )  # Add automatically a section for compatibility purposes.
 
         self._linker_sections.sort(key=lambda l: l.start)

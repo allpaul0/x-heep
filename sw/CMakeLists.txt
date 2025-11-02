@@ -358,6 +358,7 @@ endif()
 if(NOT ${PROJECT} MATCHES "coremark")
   set(COMPILER_LINKER_FLAGS "\
     -march=${CMAKE_SYSTEM_PROCESSOR} \
+    -mabi=${ABI} \
     -w -O2 -g  -nostdlib  \
     -ffunction-sections \
     -DHOST_BUILD \
@@ -445,7 +446,7 @@ SET(CMAKE_EXE_LINKER_FLAGS  "-T ${LINKER_SCRIPT}  \
                              -static ${LINKED_FILES} \
                              -Wl,-Map=${MAINFILE}.map \
                              -Wl,--gc-sections \
-                             -L ${RISCV}/${COMPILER_PREFIX}elf/lib \
+                             -L ${RISCV}/${COMPILER_PREFIX}elf/lib/rv32imfc_zicsr/ilp32f \
                              -lc -lm -lgcc -flto \
                              -fpermissive -fno-rtti -fno-exceptions -fno-threadsafe-statics \
                             -ffunction-sections -fdata-sections -specs=nano.specs")

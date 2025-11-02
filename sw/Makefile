@@ -15,6 +15,11 @@
 # OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
+# Paul 
+# debug 
+
+$(info COMPILER_FLAGS = [$(COMPILER_FLAGS)])
+
 # Author: Jose Miranda, Juan Sapriza (jose.mirandacalero / juan.sapriza @epfl.ch)
 
 MAKE                       = make
@@ -36,6 +41,9 @@ COMPILER_PREFIX ?= riscv32-unknown-
 
 # Arch options are any RISC-V ISA string supported by the CPU. Default 'rv32imc'
 ARCH     ?= rv32imc
+
+# ABI options are any RISC-V ISA string supported by the CPU. Default 'ilp32'
+ABI ?= ilp32
 
 # Path relative from the location of sw/Makefile from which to fetch source files. The directory of that file is the default value.
 SOURCE 	 ?= $(".")

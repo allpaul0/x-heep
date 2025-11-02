@@ -8,6 +8,7 @@ make app PROJECT=tpg_float_base COMPILER_PREFIX=riscv32-corev- ARCH=rv32imfc_zic
 /home/user/tools/corev-openhw-gcc/bin/riscv32-corev-elf-objdump -d sw/build/main.elf > disassembly.txt
 make verilator-sim
 # make verilator-sim FUSESOC_PARAM="--COREV_PULP=1 --FPU=1"
+# make vivado-fpga FPGA_BOARD=pynq-z2 FUSESOC_PARAM="--COREV_PULP=1 --FPU=1"
 cd ./build/openhwgroup.org_systems_core-v-mini-mcu_0/sim-verilator
 ./Vtestharness +firmware=../../../sw/build/main.hex
 cat uart0.log

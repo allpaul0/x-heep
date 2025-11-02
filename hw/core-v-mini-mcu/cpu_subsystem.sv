@@ -5,6 +5,8 @@
 module cpu_subsystem
   import obi_pkg::*;
   import core_v_mini_mcu_pkg::*;
+  import cve2_pkg::*;
+  import cv32e40x_pkg::*;
 #(
     parameter BOOT_ADDR = 'h180,
     parameter COREV_PULP =  0, // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. p.elw)
@@ -12,7 +14,7 @@ module cpu_subsystem
     parameter ZFINX = 0,  // Float-in-General Purpose registers
     parameter NUM_MHPMCOUNTERS = 1,
     parameter DM_HALTADDRESS = '0,
-    parameter X_EXT = 0,  // eXtension interface in cv32e40x
+    parameter X_EXT = 1,  // eXtension interface in cv32e40x
     parameter core_v_mini_mcu_pkg::cpu_type_e CPU_TYPE = core_v_mini_mcu_pkg::CpuType
 ) (
     // Clock and Reset
@@ -60,6 +62,7 @@ module cpu_subsystem
   if (CPU_TYPE == cv32e20) begin : gen_cv32e20
 
     cve2_top #(
+        .RV32M(RV32MSingleCycle),
         .MHPMCounterNum('0)
     ) cv32e20_i (
         .clk_i (clk_i),
@@ -113,7 +116,9 @@ module cpu_subsystem
     cv32e40x_core #(
         .NUM_MHPMCOUNTERS(NUM_MHPMCOUNTERS),
         .X_EXT(X_EXT[0]),
-        .DBG_NUM_TRIGGERS('0)
+        .DBG_NUM_TRIGGERS('0),
+        .RV32(RV32I),
+        .M_EXT(M)
     ) cv32e40x_core_i (
         // Clock and reset
         .clk_i(clk_i),

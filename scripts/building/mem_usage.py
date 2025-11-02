@@ -63,7 +63,7 @@ def get_banks_and_sizes(mcu_pkg_size):
                 else: 
                     match = re.search(r"RAM(\d+)_SIZE = 32'h([0-9A-Fa-f]+);", line)
                     if match:
-                        size_B      = int(match.group(2), 16)
+                        size_B      = 4096 # paul test C ISA int(match.group(2), 16)
                         sizes_B.append(size_B)               
     except FileNotFoundError:
         print("File not found. Please check the path and try again.")
