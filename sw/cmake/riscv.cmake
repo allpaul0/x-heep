@@ -54,6 +54,8 @@ endif()
 set( CMAKE_SYSTEM_NAME          Generic )
 set( CMAKE_SYSTEM_PROCESSOR     $ENV{ARCH} 
      CACHE STRING "Generate code for given RISC-V ISA string")
+set( ABI     $ENV{ABI} 
+     CACHE STRING "Generate code for given RISC-V ISA string ABI")     
 set( CMAKE_EXECUTABLE_SUFFIX    ".elf")
 
 # specify the cross compiler. We force the compiler so that CMake doesn't
@@ -100,7 +102,7 @@ endif()
 
 # Set the CMAKE C flags (which should also be used by the assembler!
 set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g" )
-set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=${CMAKE_SYSTEM_PROCESSOR}" )
+set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=${CMAKE_SYSTEM_PROCESSOR} -mabi=${ABI}" )
 if ($ENV{COMPILER} MATCHES "clang")
      set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-command-line-argument --target=riscv32 --gcc-toolchain=$ENV{RISCV_XHEEP} --sysroot=$ENV{RISCV_XHEEP}/$ENV{COMPILER_PREFIX}elf" )
 endif()
