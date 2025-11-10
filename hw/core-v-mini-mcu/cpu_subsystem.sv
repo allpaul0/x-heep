@@ -7,6 +7,7 @@
 module cpu_subsystem
   import obi_pkg::*;
   import core_v_mini_mcu_pkg::*;
+  import cve2_pkg::*;
 #(
     parameter BOOT_ADDR = 'h180,
     parameter COREV_PULP =  0, // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. p.elw)
