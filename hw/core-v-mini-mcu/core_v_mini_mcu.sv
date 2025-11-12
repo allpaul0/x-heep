@@ -283,7 +283,6 @@ module core_v_mini_mcu
 
 
     // IDs
-    input logic [31:0] hart_id_i,
     input logic [31:0] xheep_instance_id_i,
 
     // eXtension interface
@@ -538,7 +537,6 @@ module core_v_mini_mcu
       // Clock and Reset
       .clk_i,
       .rst_ni(cpu_subsystem_rst_n && debug_reset_n),
-      .hart_id_i,
       .core_instr_req_o(core_instr_req),
       .core_instr_resp_i(core_instr_resp),
       .core_data_req_o(core_data_req),
