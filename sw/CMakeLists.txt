@@ -454,12 +454,15 @@ SET(CMAKE_EXE_LINKER_FLAGS  "-T ${LINKER_SCRIPT}  \
                              -static ${LINKED_FILES} \
                              -Wl,-Map=${MAINFILE}.map \
                              -Wl,--gc-sections \
-                             -L ${RISCV_XHEEP}/${COMPILER_PREFIX}elf/lib \
+                             -L ${RISCV_XHEEP}/${COMPILER_PREFIX}elf/${CMAKE_SYSTEM_PROCESSOR}/lib \
                              -lc -lm -lgcc -flto \
                              -fpermissive -fno-rtti -fno-exceptions -fno-threadsafe-statics \
                             -ffunction-sections -fdata-sections -specs=nano.specs")
 message( "${Green}RISCV_XHEEP env variable: ${RISCV_XHEEP}")
 message( "${Magenta}Lib Folder RISCV-GCC: ${RISCV_XHEEP}/${COMPILER_PREFIX}elf/lib${ColourReset}")
+#-L ${RISCV_XHEEP}/${COMPILER_PREFIX}elf/rv32imfc/lib \
+#-L /tools/riscv_multilib_18_07_25/${COMPILER_PREFIX}elf/rv32imfc_zicsr/lib \
+#-L ${RISCV_XHEEP}/${COMPILER_PREFIX}elf/lib \
 
 if (${VERBOSE} MATCHES "true")
  SET(CMAKE_VERBOSE_MAKEFILE ON)
