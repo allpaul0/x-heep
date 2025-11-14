@@ -33,7 +33,7 @@ from x_heep_gen.peripherals.user_peripherals import (
 
 def config():
     system = XHeep(BusType.NtoM)
-    system.set_cpu(cv32e20(rv32e=True, rv32m="RV32MSingleCycle"))
+    system.set_cpu(cv32e20(rv32e=True, rv32m="RV32MSlow"))
 
     memory_ss = MemorySS()
     memory_ss.add_ram_banks([32] * 2)
