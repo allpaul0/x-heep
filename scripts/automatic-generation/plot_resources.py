@@ -55,7 +55,7 @@ def main():
 
     # Define targets
     #targets = ["Slice LUTs", "Slice Registers", "Slice", "DSPs", "Block RAM Tile"]
-    targets = ["Slice LUTs", "Slice Registers", "DSPs", "Block RAM Tile"]
+    targets = ["Slice LUTs", "Slice Registers", "DSPs"]
 
     # Base folder
     folder_archis = "experimentations/microarchitectures/"
