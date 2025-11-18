@@ -12,6 +12,8 @@
 
 #include "XHEEP_CmdLineOptions.hh"
 
+#define VCD_DUMP 0
+
 vluint64_t sim_time = 0;
 
 void runCycles(unsigned int ncycles, Vtestharness *dut, VerilatedFstC *m_trace){
@@ -19,7 +21,11 @@ void runCycles(unsigned int ncycles, Vtestharness *dut, VerilatedFstC *m_trace){
     sim_time += CLK_PERIOD_ps/2;
     dut->clk_i ^= 1;
     dut->eval();
+    // Full FST/VCD dumping at high resolution is very expensive.
+    // Cutting it for execution acceleration 
+#if VCD_DUMP == 1
     m_trace->dump(sim_time);
+#endif
   }
 }
 
@@ -38,10 +44,14 @@ int main (int argc, char * argv[])
   Vtestharness *dut = new Vtestharness;
 
   // Open VCD
+#if VCD_DUMP
   Verilated::traceEverOn (true);
+#endif
   VerilatedFstC *m_trace = new VerilatedFstC;
+#if VCD_DUMP
   dut->trace (m_trace, 99);
   m_trace->open ("waveform.fst");
+#endif
 
   XHEEP_CmdLineOptions* cmd_lines_options = new XHEEP_CmdLineOptions(argc,argv);
 
@@ -73,8 +83,9 @@ int main (int argc, char * argv[])
   dut->execute_from_flash_i = 0;
 
   dut->eval();
+#if VCD_DUMP
   m_trace->dump(sim_time);
-
+#endif
   dut->rst_ni               = 1;
   dut->boot_select_i        = boot_sel;
 
