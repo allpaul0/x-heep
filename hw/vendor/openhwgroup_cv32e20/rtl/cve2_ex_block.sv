@@ -8,6 +8,10 @@
  *
  * Execution block: Hosts ALU and MUL/DIV unit
  */
+
+// verilator lint_off UNUSED
+// verilator lint_off UNDRIVEN
+
 module cve2_ex_block #(
   parameter cve2_pkg::rv32m_e RV32M           = cve2_pkg::RV32MFast,
   parameter cve2_pkg::rv32b_e RV32B           = cve2_pkg::RV32BNone
