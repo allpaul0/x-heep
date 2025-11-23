@@ -1,35 +1,46 @@
 #!/bin/bash
+set -e
+
+# ---- Validate argument ----
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <config>"
+    echo "Available configs:"
+    ls configs/mcu/hjson/cv32e20_*.hjson | xargs -n1 basename | sed 's/.hjson$//'
+    exit 1
+fi
+
+CONFIG="$1"
+HJSON_DIR="configs/mcu/hjson"
+HJSON_FILE="$HJSON_DIR/${CONFIG}.hjson"
+
+OUTPUT_DIR="experimentations/microarchitectures/simulators"
+
+# ---- Check config exists ----
+if [ ! -f "$HJSON_FILE" ]; then
+    echo "Error: config '$CONFIG' not found."
+    echo "Available configs:"
+    ls "$HJSON_DIR"/cv32e20_*.hjson | xargs -n1 basename | sed 's/.hjson$//'
+    exit 1
+fi
 
 source env.sh
+mkdir -p "$OUTPUT_DIR"
 
-dir_hjson_config_MCUs=configs/mcu/hjson
-output_dir=experimentations/microarchitectures/simulators
+echo "=== Building MCU for config: $CONFIG ==="
 
-# Create output directory if it doesn't exist
-mkdir -p "$output_dir"
+# ---- MCU generation ----
+make mcu-gen X_HEEP_CFG="$HJSON_FILE"
 
-for config in "$dir_hjson_config_MCUs"/cv32e20*.hjson; do
-    # Extract full path (already in $config)
-    config_path="$config"
-    # Extract filename without extension
-    config_name=$(basename "$config" .hjson)
+echo "=== Verilating: $CONFIG ==="
+make verilator-build
 
-    echo "mcu-gen for config: $config_name"
+# (Optional) Testing steps
+# make app
+# make verilator-run
 
-    make mcu-gen X_HEEP_CFG="$config_path"
+echo "=== Finished config: $CONFIG ==="
 
-    echo "Verilating for config: $config_name"
+DEST="$OUTPUT_DIR/$CONFIG"
+mv build/ "$DEST"
 
-    # build simulator
-    make verilator-build
-
-    # compile app to test if it fits on the mcu
-    # make app
-
-    # run test
-    # make verilator-run
-
-    echo "Finished config: $config_name"
-
-    mv build/ "$output_dir/$config_name"
-done
+echo "Output located at: $DEST"
