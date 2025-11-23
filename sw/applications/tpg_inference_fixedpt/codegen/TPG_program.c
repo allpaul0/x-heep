@@ -12,32 +12,6 @@ extern fixedpt* in3;
 extern fixedpt* in4;
 #include <limits.h>
 
-
-static inline fixedpt f_pow2(fixedpt si_b) {
-  fixedpt result;
-  if ((si_b < 0) ||
-      (si_b > 30) || // si si_b > 30 bits décalage 1<<31 KO | 1<<30 OK
-      (1 > (INT_MAX >> si_b))) { //si 1 > (INT_MAX >> si_b) alors si_b est trop grand 
-    // Handle error 
-    result = 0;
-  } else {
-    result = 1 << si_b;
-  }
-  return result;
-}
-
-
-static inline fixedpt f_log2(fixedpt si_a)
-{    
-  fixedpt result = 0;    
-	
-  if(si_a > 0) {
-		for (result = 0; si_a > 1; result++, si_a >>= 1);
-	}
-  
-  return result;
-}
-
 fixedpt P0(){
 	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	return reg[0];
