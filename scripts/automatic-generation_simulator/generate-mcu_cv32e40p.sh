@@ -1,16 +1,49 @@
 #!/bin/bash
+set -e
 
+# ---- Validate argument ----
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 {cv32e40p|cv32e40p_corev_pulp}"
+    exit 1
+fi
+
+CONFIG="$1"
+OUTPUT_DIR="experimentations/microarchitectures/simulators"
+
+# ---- Select parameters based on config ----
+case "$CONFIG" in
+    cv32e40p)
+        PARAMS=""
+        DEST="cv32e40p"
+        ;;
+    cv32e40p_corev_pulp)
+        PARAMS='FUSESOC_PARAM="--COREV_PULP=1"'
+        DEST="cv32e40p_corev_pulp"
+        ;;
+    *)
+        echo "Invalid config: $CONFIG"
+        echo "Valid options: cv32e40p  cv32e40p_corev_pulp"
+        exit 1
+        ;;
+esac
+
+# ---- Setup ----
 source env.sh
+mkdir -p "$OUTPUT_DIR"
 
-make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40p.hjson 
+echo "=== Building: $CONFIG ==="
 
-make verilator-build 
-
-mv build/ experimentations/microarchitectures/simulators/cv32e40p
-
-
+# ---- MCU generation ----
 make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40p.hjson
 
-make verilator-build FUSESOC_PARAM="--COREV_PULP=1"
+# ---- Verilator build with or without parameters ----
+if [ -z "$PARAMS" ]; then
+    make verilator-build
+else
+    eval make verilator-build $PARAMS
+fi
 
-mv build/ experimentations/microarchitectures/simulators/cv32e40p_corev_pulp
+# ---- Move output ----
+mv build/ "$OUTPUT_DIR/$DEST"
+
+echo "=== Done. Output at: $OUTPUT_DIR/$DEST ==="
