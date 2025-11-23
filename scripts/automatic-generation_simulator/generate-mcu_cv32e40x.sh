@@ -1,32 +1,46 @@
 #!/bin/bash
+set -e
 
+# ---- Validate argument ----
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <config>"
+    echo "Valid configs:"
+    ls configs/mcu/sv_tpl/cv32e40x_*.sv.tpl | xargs -n1 basename | sed 's/.sv.tpl$//'
+    exit 1
+fi
+
+CONFIG="$1"
+TPL_DIR="configs/mcu/sv_tpl"
+TPL_FILE="$TPL_DIR/${CONFIG}.sv.tpl"
+
+OUTPUT_DIR="experimentations/microarchitectures/simulators"
+
+# ---- Check config exists ----
+if [ ! -f "$TPL_FILE" ]; then
+    echo "Error: config '$CONFIG' not found."
+    echo "Available configs:"
+    ls "$TPL_DIR"/cv32e40x_*.sv.tpl | xargs -n1 basename | sed 's/.sv.tpl$//'
+    exit 1
+fi
+
+# ---- Setup environment ----
 source env.sh
+mkdir -p "$OUTPUT_DIR"
 
-dir_sv_tpl_config_MCUs=configs/mcu/sv_tpl
-output_dir=experimentations/microarchitectures/simulators
+echo "=== Building CV32E40X config: $CONFIG ==="
 
-# Create output directory if it doesn't exist
-mkdir -p "$output_dir"
+# ---- Copy template into place ----
+echo "Applying template: $TPL_FILE"
+cp "$TPL_FILE" hw/core-v-mini-mcu/cpu_subsystem.sv.tpl
 
-for config in "$dir_sv_tpl_config_MCUs"/*.sv.tpl; do
-    # Extract full path (already in $config)
-    config_path="$config"
-    # Extract filename without extension
-    config_name=$(basename "$config" .sv.tpl)
+# ---- MCU generation ----
+make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40x.hjson
 
-    echo "mcu-gen for config: $config_name"
+# ---- Verilator build ----
+make verilator-build
 
-    # replace cpu_subsystem with the choosen config
-    cp $config_path hw/core-v-mini-mcu/cpu_subsystem.sv.tpl 
+# ---- Move result ----
+DEST="$OUTPUT_DIR/$CONFIG"
+mv build/ "$DEST"
 
-    # apply the config
-    make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40x.hjson
-
-    echo "Verilating build for config: $config_name"
-
-    make verilator-build
-
-    echo "Finished config: $config_name"
-
-    mv build/ "$output_dir/$config_name"
-done
+echo "=== Done. Output located at: $DEST ==="
