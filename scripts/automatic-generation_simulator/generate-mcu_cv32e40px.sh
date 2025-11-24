@@ -36,7 +36,6 @@ case "$CONFIG" in
         ;;
 esac
 
-source env.sh
 
 echo "=== Building config: $CONFIG ==="
 make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40px.hjson

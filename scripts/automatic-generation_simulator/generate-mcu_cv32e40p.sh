@@ -28,7 +28,6 @@ case "$CONFIG" in
 esac
 
 # ---- Setup ----
-source env.sh
 mkdir -p "$OUTPUT_DIR"
 
 echo "=== Building: $CONFIG ==="

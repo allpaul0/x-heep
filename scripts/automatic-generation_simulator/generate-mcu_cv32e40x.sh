@@ -24,7 +24,6 @@ if [ ! -f "$TPL_FILE" ]; then
 fi
 
 # ---- Setup environment ----
-source env.sh
 mkdir -p "$OUTPUT_DIR"
 
 echo "=== Building CV32E40X config: $CONFIG ==="

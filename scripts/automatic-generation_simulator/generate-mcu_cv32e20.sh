@@ -23,7 +23,6 @@ if [ ! -f "$HJSON_FILE" ]; then
     exit 1
 fi
 
-source env.sh
 mkdir -p "$OUTPUT_DIR"
 
 echo "=== Building MCU for config: $CONFIG ==="

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source env.sh
-
 dir_sv_tpl_config_MCUs=configs/mcu/sv_tpl
 output_dir=experimentations/microarchitectures
 

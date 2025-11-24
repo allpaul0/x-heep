@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source env.sh
-
 dir_py_config_MCUs=configs/mcu/python
 output_dir=experimentations/microarchitectures
 
