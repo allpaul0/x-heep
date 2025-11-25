@@ -47,6 +47,8 @@ else
     eval make verilator-build $PARAMS
 fi
 
+mkdir -p experimentations/microarchitectures/simulators
+
 mv build/ experimentations/microarchitectures/simulators/$DEST
 
 echo "=== Done. Output moved to: experimentations/microarchitectures/simulators/$DEST ==="
