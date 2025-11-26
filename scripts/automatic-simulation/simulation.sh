@@ -40,7 +40,8 @@ cp -r "$SIM_PATH" build/
 
 # Build application
 echo "=== Building app with ISA=$ISA ABI=$ABI DTYPE=$DTYPE ==="
-make app PROJECT=tpg_inference_fixedpt ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
+export RISCV_XHEEP=/opt/tools/riscv
+make app PROJECT=tpg_inference ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
 
 # Run simulation
 echo "=== Running simulation ==="
