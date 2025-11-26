@@ -119,8 +119,6 @@ int main(void)
         // each graph traversal/class is done NB_ACTIONS_INF times 
         uint32_t cycles_avg = total_cycles / NB_ACTIONS_INF;
 
-        PRINTF("cycles_avg; %d", total_cycles);
-
         int cls = ids_graph_traversals[seed];
         if (cls < 0 || cls >= NB_CLASSES) {
             PRINTF("Seed %d has invalid class %d\n", seed, cls);

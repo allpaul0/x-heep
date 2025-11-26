@@ -16,7 +16,7 @@
 
 #include "../codegen/externHeader.h"
 
-#define NB_SEED 2 //100
+#define NB_SEED 100
 #define NB_VALUES_PER_CLASS 10
 #define NB_CLASSES 10
 
