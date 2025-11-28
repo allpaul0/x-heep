@@ -48,14 +48,8 @@ fi
 echo "Error: Unknown config '$CONFIG'"
 echo
 echo "Valid configs:"
-echo "  cv32e20_em0 ... cv32e20_em3"
-echo "  cv32e20_im0 ... cv32e20_im3"
-echo "  cv32e40x_em0 ... cv32e40x_em2"
-echo "  cv32e40x_im0 ... cv32e40x_im2"
-echo "  cv32e40px"
-echo "  cv32e40px_fpu"
-echo "  cv32e40px_corev_pulp"
-echo "  cv32e40px_corev_pulp_fpu"
-echo "  cv32e40p"
-echo "  cv32e40p_corev_pulp"
+echo "  cv32e20_{e/i}m{0-3}"
+echo "  cv32e40x_{e/i}m{0-2}"
+echo "  cv32e40p[_corev_pulp]"
+echo "  cv32e40px[_corev_pulp][_fpu]"
 exit 1
