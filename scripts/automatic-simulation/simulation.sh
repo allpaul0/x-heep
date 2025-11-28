@@ -4,11 +4,11 @@ set -e
 # -------------------------------
 # Validate arguments
 # -------------------------------
-if [ $# -ne 4 ]; then
-    echo "Usage: $0 <SIMULATOR> <ISA> <ABI> <DTYPE>"
+if [ $# -ne 5 ]; then
+    echo "Usage: $0 <SIMULATOR> <ISA> <ABI> <DTYPE> <COMPILER>"
     echo
     echo "Example:"
-    echo "  $0 cv32e40p rv32imc ilp32 FIXEDPT"
+    echo "  $0 cv32e40p rv32imc ilp32 FIXEDPT /opt/tools/riscv" 
     echo
     echo "SIMULATOR: directory under experimentations/microarchitectures/simulators/"
     exit 1
