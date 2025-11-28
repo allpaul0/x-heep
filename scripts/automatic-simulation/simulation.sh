@@ -18,6 +18,7 @@ SIMULATOR="$1"
 ISA="$2"
 ABI="$3"
 DTYPE="$4"
+COMPILER="$5"
 
 # Check simulator directory exists
 SIM_PATH="experimentations/microarchitectures/simulators/$SIMULATOR/openhwgroup.org_systems_core-v-mini-mcu_0.3.0"
@@ -38,10 +39,12 @@ rm -rf build/ && mkdir build
 echo "=== Copying simulator: $SIMULATOR ==="
 cp -r "$SIM_PATH" build/
 
+# Set RISCV_XHEEP to use the appropriate compiler
+export RISCV_XHEEP=$COMPILER
+
 # Build application
-echo "=== Building app with ISA=$ISA ABI=$ABI DTYPE=$DTYPE ==="
-export RISCV_XHEEP=/opt/tools/riscv
-make app PROJECT=tpg_inference ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
+echo "=== Building app with ISA=$ISA ABI=$ABI DTYPE=$DTYPE COMPILER=$COMPILER ==="
+make app PROJECT=tpg_inference_expe ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
 
 # Run simulation
 echo "=== Running simulation ==="
