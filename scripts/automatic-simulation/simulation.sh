@@ -4,21 +4,22 @@ set -e
 # -------------------------------
 # Validate arguments
 # -------------------------------
-if [ $# -ne 5 ]; then
-    echo "Usage: $0 <SIMULATOR> <ISA> <ABI> <DTYPE> <COMPILER>"
+if [ $# -ne 6 ]; then
+    echo "Usage: $0 <APP> <SIMULATOR> <ISA> <ABI> <DTYPE> <COMPILER>"
     echo
     echo "Example:"
-    echo "  $0 cv32e40p rv32imc ilp32 FIXEDPT /opt/tools/riscv" 
+    echo "  $0 tpg_inference_fixedpt cv32e40p rv32imc_zicsr ilp32 FIXEDPT /opt/tools/riscv" 
     echo
     echo "SIMULATOR: directory under experimentations/microarchitectures/simulators/"
     exit 1
 fi
 
-SIMULATOR="$1"
-ISA="$2"
-ABI="$3"
-DTYPE="$4"
-COMPILER="$5"
+APP="$1"
+SIMULATOR="$2"
+ISA="$3"
+ABI="$4"
+DTYPE="$5"
+COMPILER="$6"
 
 # Check simulator directory exists
 SIM_PATH="experimentations/microarchitectures/simulators/$SIMULATOR/openhwgroup.org_systems_core-v-mini-mcu_0.3.0"
@@ -44,7 +45,7 @@ export RISCV_XHEEP=$COMPILER
 
 # Build application
 echo "=== Building app with ISA=$ISA ABI=$ABI DTYPE=$DTYPE COMPILER=$COMPILER ==="
-make app PROJECT=tpg_inference_expe ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
+make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
 
 # Run simulation
 echo "=== Running simulation ==="
