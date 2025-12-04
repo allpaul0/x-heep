@@ -43,9 +43,20 @@ cp -r "$SIM_PATH" build/
 # Set RISCV_XHEEP to use the appropriate compiler
 export RISCV_XHEEP=$COMPILER
 
+# Determine compiler prefix based on COMPILER path/name
+if [[ "$COMPILER" == *"riscv"* ]]; then
+    COMPILER_PREFIX="riscv32-unknown-"
+elif [[ "$COMPILER" == *"corev"* ]]; then
+    COMPILER_PREFIX="riscv32-corev-"
+else
+    COMPILER_PREFIX=""
+fi
+echo "Using compiler prefix: $COMPILER_PREFIX"
+
 # Build application
 echo "=== Building app with ISA=$ISA ABI=$ABI DTYPE=$DTYPE COMPILER=$COMPILER ==="
-make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_FLAGS="-DUSE_$DTYPE"
+
+make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_PREFIX=$COMPILER_PREFIX COMPILER_FLAGS="-DUSE_$DTYPE"
 
 # Run simulation
 echo "=== Running simulation ==="
