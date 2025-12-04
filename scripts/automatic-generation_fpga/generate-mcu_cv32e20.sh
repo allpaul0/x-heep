@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dir_py_config_MCUs=configs/mcu/python
-output_dir=experimentations/microarchitectures
+output_dir=experimentations/microarchitectures/fpga_implementations/
 
 # Create output directory if it doesn't exist
 mkdir -p "$output_dir"
