@@ -3,6 +3,9 @@ from vivado_utilization_report_parser import Vivado_Utilization_Report_Parser as
 import matplotlib.pyplot as plt
 from typing import Dict, List
 import numpy as np
+import re
+from matplotlib.ticker import FuncFormatter
+
 
 def list_files(folder: str):
     """List immediate subfolders or files under folder."""
@@ -55,7 +58,7 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
     Plot delta LUT, delta FF (primary y-axis), and delta DSP (secondary y-axis)
     using the microarchitecture with the smallest LUT count as baseline.
     
-    - X axis is sorted by LUT usage (ascending)
+    - X axis is sorted by family name (factorized)
     - Delta = value - baseline_value
     """
 
@@ -76,9 +79,59 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
     print(f"LUT baseline: {baseline_LUT}, FF baseline: {baseline_FF}, DSP baseline: {baseline_DSP}")
 
     # ------------------------------------------------------------
-    # 2) Sort architectures by LUT usage ASC (for x-axis ranking)
+    # 2) Family / variant splitter (variant will be the top line)
     # ------------------------------------------------------------
-    archis_sorted = sorted(lut_values, key=lut_values.get)
+    def split_arch_name(arch_name: str):
+        """
+        Return (family, variant) where family is one of:
+        - cv32e20
+        - cv32e40
+        Variant = everything after the family prefix.
+        """
+
+        name = arch_name.strip()
+
+        if name.startswith("cv32e20"):
+            family = "cv32e20"
+            variant = name[len("cv32e20"):].lstrip("_")
+        elif name.startswith("cv32e40"):
+            family = "cv32e40"
+            variant = name[len("cv32e40"):].lstrip("_")
+        else:
+            # fallback for unexpected names
+            if "_" in name:
+                family, variant = name.split("_", 1)
+            else:
+                family, variant = name, ""
+
+        if not variant:
+            variant = "-"
+
+        return family, variant
+
+
+    # ------------------------------------------------------------
+    # 3) Sort architectures by custom family + variant order
+    # ------------------------------------------------------------
+
+    # Define the variant ordering per family
+    variant_order = {
+        "cv32e20": ["em0", "em1", "em2", "em3", "im0", "im1", "im2", "im3"],
+        "cv32e40": ["x_em0", "x_em1", "x_em2", "x_im0", "x_im1", "x_im2",
+                    "p", "px", "px_pulp", "px_fpu", "px_pulp_fpu"]
+    }
+
+    def arch_sort_key(arch):
+        family, variant = split_arch_name(arch)
+        try:
+            index = variant_order[family].index(variant)
+        except (KeyError, ValueError):
+            # If family or variant not listed, place at end
+            index = len(variant_order.get(family, []))
+        return (family, index)
+
+    # Sort architectures according to family first, then variant order
+    archis_sorted = sorted(all_archi_results.keys(), key=arch_sort_key)
 
     # Prepare delta arrays
     delta_LUT = []
@@ -95,7 +148,7 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
         delta_DSP.append(dsp - baseline_DSP)
 
     # ------------------------------------------------------------
-    # 3) Plot with dual y-axis, all 3 metrics bars
+    # 4) Plot with dual y-axis, all 3 metrics bars
     # ------------------------------------------------------------
     colors = {
         "LUT": "#FFBE0B",   # Amber gold
@@ -108,29 +161,88 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
 
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
+    # Define formatter function
+    def kilo_formatter(x, pos):
+        """Convert numbers like 2000 -> 2k"""
+        return f"{int(x/1000)}k"
+
+    # Apply k formatting to primary y-axis
+    ax1.yaxis.set_major_formatter(FuncFormatter(kilo_formatter))
+
     # Primary axis bars (LUT and FF deltas)
     bar_lut = ax1.bar(x - width, delta_LUT, width, label="ΔLUT", color=colors["LUT"])
     bar_ff  = ax1.bar(x,          delta_FF,  width, label="ΔFF", color=colors["FF"])
+ 
+    # ------------------------------------------------------------
+    # 5) Custom two-level x-axis: rotated variants + centered families
+    # ------------------------------------------------------------
+    families = [split_arch_name(a)[0] for a in archis_sorted]
+    variants = [split_arch_name(a)[1] for a in archis_sorted]
 
-    # Set x-axis labels
-    x_labels = archis_sorted.copy()
-    # Append "(baseline: <name>)" to the first microarchitecture
-    x_labels[0] = f"baseline: {baseline_archi}"
+    # Hide default tick labels
+    ax1.set_xticks(x)
+    ax1.set_xticklabels([""] * len(x))
 
-    ax1.set_xlabel("Microarchitecture (ranked by LUT usage)")
+    # Define family colors
+    family_colors = {
+        "cv32e20": "#1f77b4",  # slightly blue
+        "cv32e40": "#d62728"   # slightly red
+    }  
+
+    # ---- Draw rotated variant labels (top line) ----
+    for xi, variant, fam in zip(x, variants, families):
+        # Mark the baseline variant
+        display_variant = variant
+        if archis_sorted[xi] == baseline_archi:
+            display_variant = f"baseline: {variant}"
+
+        ax1.annotate(
+            display_variant,
+            xy=(xi, 0), xycoords=('data', 'axes fraction'),
+            xytext=(0, -5), textcoords='offset points',
+            rotation=45,
+            ha="right", va="top",
+            fontsize=9,
+            color=family_colors.get(fam, "black")  # default black if unknown family
+        )
+
+    # ---- Compute centered family positions ----
+    unique_fams = []
+    for f in families:
+        if not unique_fams or f != unique_fams[-1]:
+            unique_fams.append(f)
+
+    for fam in unique_fams:
+        idxs = [i for i, f in enumerate(families) if f == fam]
+        center_x = np.mean([x[i] for i in idxs])
+
+         # Draw family label (bottom line, horizontal)
+        ax1.annotate(
+            fam,
+            xy=(center_x, 0), xycoords=('data', 'axes fraction'),
+            xytext=(0, -40), textcoords='offset points',
+            rotation=0,
+            ha="center", va="top",
+            fontsize=10,
+            fontweight="bold",
+            color=family_colors.get(fam, "black")
+        )
+
+    # Adjust subplot bottom margin so labels fit
+    plt.subplots_adjust(bottom=0.25)
+
+    # Optional: set x-axis label
+    ax1.set_xlabel("Microarchitecture", labelpad=35)
     ax1.set_ylabel("ΔLUT, ΔFF")
     ax1.set_title("Resource Utilization Deltas Compared to Baseline Microarchitecture")
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(x_labels, rotation=45, ha="right")
-
     # ------------------------------------------------------------
-    # Add baseline sticker
+    # 6) Add baseline vertical sticker
     # ------------------------------------------------------------
     # Identify baseline position
     x_baseline = x[archis_sorted.index(baseline_archi)]
 
     # Values to display as a single vertical line
-    sticker_text = f"LUT: {int(baseline_LUT)} | FF: {int(baseline_FF)} | DSP: {int(baseline_DSP)}"
+    sticker_text = f"LUT: {round(baseline_LUT / 1000)}k\nFF: {round(baseline_FF / 1000)}k\nDSP: {round(baseline_DSP / 1000)} "
 
     # Add vertical text box above baseline bars
     ax1.text(
@@ -139,12 +251,13 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
         sticker_text,                   # Text
         ha="center", va="bottom",       # Centered horizontally
         fontsize=10,
-        rotation=90,                    # Rotate text vertically
+        rotation=0,                    # Rotate text vertically
         bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
     )
-    # ------------------------------------------------------------
 
-    # Secondary axis bars (DSP deltas)
+    # ------------------------------------------------------------
+    # 7) Secondary axis bars (DSP deltas)
+    # ------------------------------------------------------------
     ax2 = ax1.twinx()
     bar_dsp = ax2.bar(x + width, delta_DSP, width, label="ΔDSP", color=colors["DSP"])
     ax2.set_ylabel("ΔDSP")
@@ -188,6 +301,14 @@ def main():
         print(f"\n=== {archi} ===")
         for name, values in archi_resources.items():
             print(f"{name}: {values}")
+
+
+    # rename microarchitectures: replace 'corev_pulp' with 'pulp'
+    renamed_archis = {}
+    for arch, data in all_archi_results.items():
+        new_arch = arch.replace("corev_pulp", "pulp")
+        renamed_archis[new_arch] = data
+    all_archi_results = renamed_archis
 
     plot_resource_utilization(all_archi_results, targets)
     plot_delta_resource_usage(all_archi_results, targets)
