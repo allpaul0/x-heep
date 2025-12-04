@@ -118,7 +118,7 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
     variant_order = {
         "cv32e20": ["em0", "em1", "em2", "em3", "im0", "im1", "im2", "im3"],
         "cv32e40": ["x_em0", "x_em1", "x_em2", "x_im0", "x_im1", "x_im2",
-                    "p", "px", "px_pulp", "px_fpu", "px_pulp_fpu"]
+                    "p", "p_pulp", "px", "px_pulp", "px_fpu", "px_pulp_fpu"]
     }
 
     def arch_sort_key(arch):
@@ -268,6 +268,182 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
     plt.tight_layout()
     plt.show()
 
+def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]]],
+                                   targets: List[str]):
+    """
+    Improved normalization plot:
+
+      • LUT and FF are normalized so the baseline architecture = 1.0.
+        → Units become "× baseline"
+        → Example: norm_LUT = 1.25 means 125% of baseline LUT
+
+      • DSP is shown as RAW values (no normalization) on the secondary axis.
+
+      • Layout, sorting, baseline marking, variant/family labels
+        remain consistent with the delta plot.
+    """
+
+    # ------------------------------------------------------------
+    # 1) Identify baseline architecture (smallest LUT absolute usage)
+    # ------------------------------------------------------------
+    lut_values = {a: all_archi_results[a]["Slice LUTs"][0] for a in all_archi_results}
+    baseline_archi = min(lut_values, key=lut_values.get)
+
+    baseline_LUT = all_archi_results[baseline_archi]["Slice LUTs"][0]
+    baseline_FF  = all_archi_results[baseline_archi]["Slice Registers"][0]
+    baseline_DSP = all_archi_results[baseline_archi]["DSPs"][0]
+
+    print(f"\nBaseline architecture (lowest LUT): {baseline_archi}")
+    print(f"Baseline LUT={baseline_LUT}, FF={baseline_FF}, DSP={baseline_DSP}")
+
+    # ------------------------------------------------------------
+    # 2) Family/variant splitting (same logic as before)
+    # ------------------------------------------------------------
+    def split_arch_name(arch_name: str):
+        name = arch_name.strip()
+
+        if name.startswith("cv32e20"):
+            fam = "cv32e20"
+            var = name[len("cv32e20"):].lstrip("_")
+        elif name.startswith("cv32e40"):
+            fam = "cv32e40"
+            var = name[len("cv32e40"):].lstrip("_")
+        else:
+            fam, _, var = name.partition("_")
+
+        return fam, var or "-"
+
+    variant_order = {
+        "cv32e20": ["em0", "em1", "em2", "em3", "im0", "im1", "im2", "im3"],
+        "cv32e40": ["x_em0", "x_em1", "x_em2", "x_im0", "x_im1", "x_im2",
+                     "px", "px_pulp", "px_fpu", "px_pulp_fpu"] #"p", "p_pulp",
+    }
+
+    def arch_sort_key(arch):
+        fam, var = split_arch_name(arch)
+        try:
+            idx = variant_order[fam].index(var)
+        except (KeyError, ValueError):
+            idx = len(variant_order.get(fam, []))
+        return (fam, idx)
+
+    archis_sorted = sorted(all_archi_results.keys(), key=arch_sort_key)
+
+    # ------------------------------------------------------------
+    # 3) Normalised data
+    # ------------------------------------------------------------
+    norm_LUT = []
+    norm_FF  = []
+    raw_DSP  = []
+
+    for archi in archis_sorted:
+        lut = all_archi_results[archi]["Slice LUTs"][0]
+        ff  = all_archi_results[archi]["Slice Registers"][0]
+        dsp = all_archi_results[archi]["DSPs"][0]
+
+        norm_LUT.append(lut / baseline_LUT)
+        norm_FF.append(ff  / baseline_FF)
+        raw_DSP.append(dsp)
+
+    # ------------------------------------------------------------
+    # 4) Plot
+    # ------------------------------------------------------------
+    colors = {
+        "LUT": "#FFBE0B",
+        "FF":  "#FB5607",
+        "DSP": "#3A86FF",
+    }
+
+    x = np.arange(len(archis_sorted))
+    width = 0.25
+
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+
+    bar_lut = ax1.bar(x - width, norm_LUT, width, color=colors["LUT"], label="LUT")
+    bar_ff  = ax1.bar(x,          norm_FF,  width, color=colors["FF"], label="FF")
+
+    # Secondary axis (raw DSP)
+    ax2 = ax1.twinx()
+    bar_dsp = ax2.bar(x + width, raw_DSP, width, color=colors["DSP"], label="DSP (raw)")
+
+    # ------------------------------------------------------------
+    # 5) Variant + family labels
+    # ------------------------------------------------------------
+    families = [split_arch_name(a)[0] for a in archis_sorted]
+    variants = [split_arch_name(a)[1] for a in archis_sorted]
+
+    ax1.set_xticks(x)
+    ax1.set_xticklabels([""] * len(x))
+
+    fam_colors = {"cv32e20": "#1f77b4", "cv32e40": "#d62728"}
+
+    # Variant labels
+    for xi, (fam, var) in enumerate(zip(families, variants)):
+        label = var
+        if archis_sorted[xi] == baseline_archi:
+            label = f"baseline: {var}"
+
+        ax1.annotate(
+            label,
+            xy=(xi, 0), xycoords=("data", "axes fraction"),
+            xytext=(0, -5), textcoords="offset points",
+            rotation=45, ha="right", va="top",
+            fontsize=9,
+            color=fam_colors.get(fam, "black")
+        )
+
+    # Family labels centered
+    unique_fams = []
+    for f in families:
+        if not unique_fams or f != unique_fams[-1]:
+            unique_fams.append(f)
+
+    for fam in unique_fams:
+        idxs = [i for i, f in enumerate(families) if f == fam]
+        cx = np.mean([x[i] for i in idxs])
+        ax1.annotate(
+            fam,
+            xy=(cx, 0), xycoords=("data", "axes fraction"),
+            xytext=(0, -40), textcoords="offset points",
+            ha="center", va="top",
+            fontsize=10, fontweight="bold",
+            color=fam_colors.get(fam, "black")
+        )
+
+    plt.subplots_adjust(bottom=0.27)
+
+    # ------------------------------------------------------------
+    # 6) Baseline sticker
+    # ------------------------------------------------------------
+    x_base = x[archis_sorted.index(baseline_archi)]
+    #sticker = f"LUT={baseline_LUT}\nFF={baseline_FF}\nDSP={baseline_DSP}"
+    sticker_text = f"LUT: {round(baseline_LUT / 1000)}k\nFF: {round(baseline_FF / 1000)}k\nDSP: {round(baseline_DSP / 1000)} "
+
+    ax1.text(
+        x_base,
+        max(norm_LUT[x_base], norm_FF[x_base]) + 0.05,
+        sticker_text,
+        ha="center", va="bottom",
+        fontsize=10,
+        bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
+    )
+
+    # ------------------------------------------------------------
+    # 7) Labeling and legend
+    # ------------------------------------------------------------
+    ax1.set_ylabel("LUT, FF")
+    ax2.set_ylabel("DSP (raw)")
+
+    ax1.set_title("Normalized Resource Usage (baseline = 1.0)")
+    ax1.set_xlabel("Microarchitecture", labelpad=35)
+
+    ax1.legend(handles=[bar_lut, bar_ff, bar_dsp],
+               labels=["LUT", "FF", "DSP raw"],
+               loc="upper left")
+
+    plt.tight_layout()
+    plt.show()
+
 
 def main():
     # Instantiate parser
@@ -310,8 +486,21 @@ def main():
         renamed_archis[new_arch] = data
     all_archi_results = renamed_archis
 
+    print(all_archi_results)
+
+    # remove microarchitectures p and p_pulp
+    filtered_archis = {}
+    for arch, data in all_archi_results.items():
+        if arch == "cv32e40p" or arch == "cv32e40p_pulp":
+            continue
+        filtered_archis[arch] = data
+    all_archi_results = filtered_archis
+
+    print(all_archi_results)
+
     plot_resource_utilization(all_archi_results, targets)
     plot_delta_resource_usage(all_archi_results, targets)
+    plot_normalised_resource_usage(all_archi_results, targets)
 
 if __name__ == "__main__":
     main()
