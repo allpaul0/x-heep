@@ -17,6 +17,9 @@ extern "C" {
 #elif defined(USE_FLOAT)
   #warning "Using float as typeInf"
   typedef float  typeInf;
+#elif defined(USE_DOUBLE)
+  #warning "Using double as typeInf"
+  typedef double    typeInf;
 #elif defined(USE_FIXEDPT)
   #warning "Using fixedpt as typeInf"
   typedef fixedpt  typeInf;  // using fixedptc library
