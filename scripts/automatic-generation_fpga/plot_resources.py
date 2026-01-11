@@ -5,7 +5,7 @@ from typing import Dict, List
 import numpy as np
 import re
 from matplotlib.ticker import FuncFormatter
-
+import pickle
 
 def list_files(folder: str):
     """List immediate subfolders or files under folder."""
@@ -268,13 +268,53 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
     plt.tight_layout()
     plt.show()
 
+def assign_simulator_nickname(simulator: str) -> str:
+        """
+        Produce a compact nickname from a simulator string.
+        Patterns handled:
+        cv32e20 -> e2 
+        cv32e40 -> e4
+        ! Attention à l'ordre des règles !+
+        """
+        
+        simulator = simulator.replace("cv32e20", "e2") # simplifie
+        simulator = simulator.replace("cv32e40", "e4") # simplifie
+        simulator = simulator.replace("corev_pulp", "pulp") # simplifie
+               
+        # e4x_i-em0,1,2 -> renommage
+        simulator = simulator.replace("e4x_im0", "e4x_im0d0") # pas de mult, pas de div
+        simulator = simulator.replace("e4x_im1", "e4x_im4d2") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("e4x_im2", "e4x_im4d0") # change mult -> basé ressources, ajoute div
+
+        simulator = simulator.replace("e4x_em0", "e4x_em0d0") # pas de mult, pas de div
+        simulator = simulator.replace("e4x_em1", "e4x_em4d2") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("e4x_em2", "e4x_em4d0") # change mult -> basé ressources, ajoute div
+
+        simulator = simulator.replace("e4px", "e4x_im5d2") # ajout mult -> basé ressources
+
+        # e2_i-em0-3 -> add div
+        simulator = simulator.replace("e2_im0", "e2_im0d1")
+        simulator = simulator.replace("e2_im1", "e2_im1d1")
+        simulator = simulator.replace("e2_im2", "e2_im2d1")
+        simulator = simulator.replace("e2_im3", "e2_im3d1")
+
+        simulator = simulator.replace("e2_em0", "e2_em0d1")
+        simulator = simulator.replace("e2_em1", "e2_em1d1")
+        simulator = simulator.replace("e2_em2", "e2_em2d1")
+        simulator = simulator.replace("e2_em3", "e2_em3d1")
+
+        simulator = simulator.replace("px", "") # rassemble px, x
+        simulator = simulator.replace("x", "") # rassemble px, x
+
+        return simulator
+
 def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]]],
                                    targets: List[str]):
     """
     Improved normalization plot:
 
       • LUT and FF are normalized so the baseline architecture = 1.0.
-        → Units become "× baseline"
+        → Units become "x baseline"
         → Example: norm_LUT = 1.25 means 125% of baseline LUT
 
       • DSP is shown as RAW values (no normalization) on the secondary axis.
@@ -282,6 +322,20 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
       • Layout, sorting, baseline marking, variant/family labels
         remain consistent with the delta plot.
     """
+    print("\nRenaming architectures for clarity...")
+    for archi in all_archi_results.keys():
+        print(archi)
+
+     # rename microarchitectures: replace 'corev_pulp' with 'pulp'
+
+    renamed_archis = {}
+    for arch, key in all_archi_results.items():
+        arch = assign_simulator_nickname(arch)
+        renamed_archis[arch] = key
+    all_archi_results = renamed_archis
+
+    for arch in all_archi_results.keys():
+        print(arch)
 
     # ------------------------------------------------------------
     # 1) Identify baseline architecture (smallest LUT absolute usage)
@@ -302,22 +356,32 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     def split_arch_name(arch_name: str):
         name = arch_name.strip()
 
-        if name.startswith("cv32e20"):
-            fam = "cv32e20"
-            var = name[len("cv32e20"):].lstrip("_")
-        elif name.startswith("cv32e40"):
-            fam = "cv32e40"
-            var = name[len("cv32e40"):].lstrip("_")
+        # if name.startswith("cv32e20"):
+        #     fam = "cv32e20"
+        #     var = name[len("cv32e20"):].lstrip("_")
+        # elif name.startswith("cv32e40"):
+        #     fam = "cv32e40"
+        #     var = name[len("cv32e40"):].lstrip("_")
+        # else:
+        #     fam, _, var = name.partition("_")
+
+        if name.startswith("e2"):
+            fam = "e2"
+            var = name[len("e2"):].lstrip("_")
+        elif name.startswith("e4"):
+            fam = "e4"
+            var = name[len("e4"):].lstrip("_")
         else:
             fam, _, var = name.partition("_")
 
         return fam, var or "-"
 
     variant_order = {
-        "cv32e20": ["em0", "em1", "em2", "em3", "im0", "im1", "im2", "im3"],
-        "cv32e40": ["x_em0", "x_em1", "x_em2", "x_im0", "x_im1", "x_im2",
-                     "px", "px_pulp", "px_fpu", "px_pulp_fpu"] #"p", "p_pulp",
+        "e2": ["em0d1", "em1d1", "em2d1", "em3d1", "im0d1", "im1d1", "im2d1", "im3d1"],
+        "e4": ["em0d0", "em4d0", "em4d2", "im0d0", "im4d0", "im4d2",
+                     "im5d2", "im5d2_pulp", "im5d2_fpu", "im5d2_pulp_fpu"] #"p", "p_pulp",
     }
+
 
     def arch_sort_key(arch):
         fam, var = split_arch_name(arch)
@@ -327,7 +391,9 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
             idx = len(variant_order.get(fam, []))
         return (fam, idx)
 
+
     archis_sorted = sorted(all_archi_results.keys(), key=arch_sort_key)
+
 
     # ------------------------------------------------------------
     # 3) Normalised data
@@ -341,8 +407,8 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         ff  = all_archi_results[archi]["Slice Registers"][0]
         dsp = all_archi_results[archi]["DSPs"][0]
 
-        norm_LUT.append(lut / baseline_LUT)
-        norm_FF.append(ff  / baseline_FF)
+        norm_LUT.append(100 * lut / baseline_LUT)
+        norm_FF.append(100 * ff  / baseline_FF)
         raw_DSP.append(dsp)
 
     # ------------------------------------------------------------
@@ -429,9 +495,25 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     )
 
     # ------------------------------------------------------------
+    # Draw dotted line between families
+    # ------------------------------------------------------------
+    families = [split_arch_name(a)[0] for a in archis_sorted]
+
+    for i in range(1, len(families)):
+        if families[i] != families[i - 1]:
+            # vertical line between bars i-1 and i
+            ax1.axvline(
+                x=i - 0.5,
+                linestyle=":",
+                linewidth=1.5,
+                color="black",
+                alpha=0.7
+            )
+
+    # ------------------------------------------------------------
     # 7) Labeling and legend
     # ------------------------------------------------------------
-    ax1.set_ylabel("LUT, FF")
+    ax1.set_ylabel("LUT, FF (% of baseline)")
     ax2.set_ylabel("DSP (raw)")
 
     ax1.set_title("Normalized Resource Usage (baseline = 1.0)")
@@ -486,8 +568,6 @@ def main():
         renamed_archis[new_arch] = data
     all_archi_results = renamed_archis
 
-    print(all_archi_results)
-
     # remove microarchitectures p and p_pulp
     filtered_archis = {}
     for arch, data in all_archi_results.items():
@@ -498,8 +578,11 @@ def main():
 
     print(all_archi_results)
 
-    plot_resource_utilization(all_archi_results, targets)
-    plot_delta_resource_usage(all_archi_results, targets)
+    with open("uarchs_ressources.pkl", "wb") as f:
+        pickle.dump(all_archi_results, f)
+
+    #plot_resource_utilization(all_archi_results, targets)
+    #plot_delta_resource_usage(all_archi_results, targets)
     plot_normalised_resource_usage(all_archi_results, targets)
 
 if __name__ == "__main__":
