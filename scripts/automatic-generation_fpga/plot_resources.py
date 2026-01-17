@@ -338,6 +338,20 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         print(arch)
 
     # ------------------------------------------------------------
+    # 0) Define a resource cost model (adjustable)
+    # ------------------------------------------------------------
+    alpha = 0.5   # LUT weight
+    beta  = 0.5   # FF weight
+
+    # DSP equivalent cost expressed in LUT/REG terms
+    DSP_LUT_EQ = 700 #1500 # 750 LUTs, 150 FFs is the diff btw cv32e20_em1 and cv32e20_em0
+    DSP_FF_EQ  = 150 #0
+
+    # Gamma expressed consistently with alpha/beta
+    gamma = alpha * DSP_LUT_EQ + beta * DSP_FF_EQ
+    print("gamma:" +  str(gamma))
+
+    # ------------------------------------------------------------
     # 1) Identify baseline architecture (smallest LUT absolute usage)
     # ------------------------------------------------------------
     lut_values = {a: all_archi_results[a]["Slice LUTs"][0] for a in all_archi_results}
@@ -401,6 +415,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     norm_LUT = []
     norm_FF  = []
     raw_DSP  = []
+    resource_cost = []
 
     for archi in archis_sorted:
         lut = all_archi_results[archi]["Slice LUTs"][0]
@@ -410,6 +425,28 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         norm_LUT.append(100 * lut / baseline_LUT)
         norm_FF.append(100 * ff  / baseline_FF)
         raw_DSP.append(dsp)
+        
+        # --------------------------------------------------------
+        # Resource cost
+        # Cost = α·LUT + β·FF + γ·DSP
+        # --------------------------------------------------------
+        cost = alpha * lut + beta * ff + gamma * dsp
+        resource_cost.append(cost)
+    
+    for archi, cost in zip(archis_sorted, resource_cost):
+        all_archi_results[archi]["Resource cost"] = [cost]
+
+    # ------------------------------------------------------------
+    # Normalize resource cost (baseline = baseline_archi)
+    # ------------------------------------------------------------
+    baseline_resource_cost = resource_cost[
+        archis_sorted.index(baseline_archi)
+    ]
+
+    norm_RESOURCE = [
+        100 * cost / baseline_resource_cost
+        for cost in resource_cost
+    ]
 
     # ------------------------------------------------------------
     # 4) Plot
@@ -421,16 +458,37 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     }
 
     x = np.arange(len(archis_sorted))
-    width = 0.25
+    width = 0.2
 
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
-    bar_lut = ax1.bar(x - width, norm_LUT, width, color=colors["LUT"], label="LUT")
-    bar_ff  = ax1.bar(x,          norm_FF,  width, color=colors["FF"], label="FF")
+    bar_lut = ax1.bar(
+        x - 0.5 * width,
+        norm_LUT,
+        width,
+        color=colors["LUT"],
+        label="LUT"
+    )
+
+    bar_ff = ax1.bar(
+        x + 0.5 * width,
+        norm_FF,
+        width,
+        color=colors["FF"],
+        label="FF"
+    )
+
+    bar_resource = ax1.bar(
+        x + 1.5 * width,
+        norm_RESOURCE,
+        width,
+        color="#8338EC",  # purple
+        label="Resource cost"
+    )
 
     # Secondary axis (raw DSP)
     ax2 = ax1.twinx()
-    bar_dsp = ax2.bar(x + width, raw_DSP, width, color=colors["DSP"], label="DSP (raw)")
+    bar_dsp = ax2.bar(x - 1.5 * width, raw_DSP, width, color=colors["DSP"], label="DSP")
 
     # ------------------------------------------------------------
     # 5) Variant + family labels
@@ -478,6 +536,11 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     plt.subplots_adjust(bottom=0.27)
 
+    # Give headroom for stickers
+    ymax1 = max(max(norm_LUT), max(norm_FF), max(norm_RESOURCE) * 1.15)
+
+    ax1.set_ylim(0, ymax1)
+
     # ------------------------------------------------------------
     # 6) Baseline sticker
     # ------------------------------------------------------------
@@ -486,13 +549,29 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     sticker_text = f"LUT: {round(baseline_LUT / 1000)}k\nFF: {round(baseline_FF / 1000)}k\nDSP: {round(baseline_DSP / 1000)} "
 
     ax1.text(
-        x_base,
-        max(norm_LUT[x_base], norm_FF[x_base]) + 0.05,
+        x_base + 0.40 * width,
+        max(norm_LUT[x_base], norm_FF[x_base]) + 1.30,
         sticker_text,
         ha="center", va="bottom",
         fontsize=10,
         bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
     )
+
+    # x_base_dsp = x[archis_sorted.index(baseline_archi_DSP)]
+    # sticker_text_dsp = f"LUT: {round(baseline_archi_DSP_LUT / 1000)}k\nFF: {round(baseline_archi_DSP_FF / 1000)}k\nDSP: {int(baseline_archi_DSP_DSP)} "
+    
+    # # compute a vertical offset = 5% of axis height
+    # y_offset = 0.01 * ax1.get_ylim()[1]
+
+    # ax1.text(
+    #     x_base_dsp,
+    #     max(norm_LUT[x_base_dsp], norm_FF[x_base_dsp], norm_DSP[x_base_dsp]) + y_offset,
+    #     sticker_text_dsp,
+    #     ha="center", va="bottom",
+    #     fontsize=10,
+    #     bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
+    # )   
+
 
     # ------------------------------------------------------------
     # Draw dotted line between families
@@ -514,17 +593,80 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # 7) Labeling and legend
     # ------------------------------------------------------------
     ax1.set_ylabel("LUT, FF (% of baseline)")
-    ax2.set_ylabel("DSP (raw)")
+    ax2.set_ylabel("DSP raw")
 
     ax1.set_title("Normalized Resource Usage (baseline = 1.0)")
     ax1.set_xlabel("Microarchitecture", labelpad=35)
 
-    ax1.legend(handles=[bar_lut, bar_ff, bar_dsp],
-               labels=["LUT", "FF", "DSP raw"],
+    ax1.legend(handles=[bar_dsp, bar_lut, bar_ff, bar_resource],
+               labels=["DSP", "LUT", "FF", "Resource cost"],
                loc="upper left")
 
     plt.tight_layout()
+    plt.savefig(
+        "microarchitectures_normalized_resource_usage.svg",
+        format="svg",
+        bbox_inches="tight",  # removes extra white space
+        transparent=False,    # set True if you want a transparent background
+    )
+
     plt.show()
+
+def find_cost_one_dsp(all_archi_results: Dict[str, Dict[str, List[float]]]):
+    """
+    Estimate the cost of one DSP by comparing e2_em1d1 and e2_em2d1
+    e2_em1d1 uses 1 HW emulated multiplier (no DSP)
+    whereas e2_em2d1 uses 1 DSP for the multiplier.
+    The difference in LUT/FF usage gives an estimate of the cost of one DSP.
+    """
+    # e2_em1d1
+    archi1 = "cv32e20_em1"
+    # e2_em2d1
+    archi2 = "cv32e20_em2"
+
+    lut1 = all_archi_results[archi1]["Slice LUTs"][0]
+    ff1  = all_archi_results[archi1]["Slice Registers"][0]
+    dsp1 = all_archi_results[archi1]["DSPs"][0]
+
+    lut2 = all_archi_results[archi2]["Slice LUTs"][0]
+    ff2  = all_archi_results[archi2]["Slice Registers"][0]
+    dsp2 = all_archi_results[archi2]["DSPs"][0]
+
+    delta_lut = lut2 - lut1
+    delta_ff  = ff2 - ff1
+    delta_dsp = dsp2 - dsp1  # should be 1
+
+    print(f"Diff ressources (cv32e20_em2 - cv32e20_em1)")
+    print(f"  LUT: {delta_lut}")
+    print(f"  FF:  {delta_ff}")
+    print(f"  DSP: {delta_dsp}")
+
+    # compute delta between cv32e20_em1 and cv32e20_em0 to see the cost of having a hw emulated multiplier
+    archi0 = "cv32e20_em0"
+    lut0 = all_archi_results[archi0]["Slice LUTs"][0]
+    ff0  = all_archi_results[archi0]["Slice Registers"][0]
+    dsp0 = all_archi_results[archi0]["DSPs"][0]
+
+    delta_lut_emul = lut1 - lut0
+    delta_ff_emul  = ff1 - ff0
+    delta_dsp_emul = dsp1 - dsp0  # should be 0
+
+    print(f"compute delta between cv32e20_em1 and cv32e20_em0 to see the cost of having a hw emulated multiplier")
+    print(f"  LUT: {delta_lut_emul}")
+    print(f"  FF:  {delta_ff_emul}")
+    print(f"  DSP: {delta_dsp_emul}")
+
+    # compute the diff between cv32e20_em0 sw emulated and cv32e20_em2 dsp to see the total cost of having 
+    # a hw multiplier with dsp as well as the cost of the data path to use the dsp
+    delta_lut_total = lut2 - lut0
+    delta_ff_total  = ff2 - ff0
+    delta_dsp_total = dsp2 - dsp0  # should be 1
+    
+    print(f"compute the diff between cv32e20_em0 sw emulated and cv32e20_em2 dsp to see the total cost of having \
+         a hw multiplier with dsp as well as the cost of the data path to use the dsp")
+    print(f"  LUT: {delta_lut_total}")
+    print(f"  FF:  {delta_ff_total}")
+    print(f"  DSP: {delta_dsp_total}")
 
 
 def main():
@@ -581,9 +723,12 @@ def main():
     with open("uarchs_ressources.pkl", "wb") as f:
         pickle.dump(all_archi_results, f)
 
+    find_cost_one_dsp(all_archi_results)
+
     #plot_resource_utilization(all_archi_results, targets)
     #plot_delta_resource_usage(all_archi_results, targets)
     plot_normalised_resource_usage(all_archi_results, targets)
+    print("available LUTs: " + str(all_archi_results["cv32e20_em1"]["Slice LUTs"][1]))
 
 if __name__ == "__main__":
     main()
