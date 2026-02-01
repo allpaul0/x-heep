@@ -338,20 +338,6 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         print(arch)
 
     # ------------------------------------------------------------
-    # 0) Define a resource cost model (adjustable)
-    # ------------------------------------------------------------
-    alpha = 0.5   # LUT weight
-    beta  = 0.5   # FF weight
-
-    # DSP equivalent cost expressed in LUT/REG terms
-    DSP_LUT_EQ = 700 #1500 # 750 LUTs, 150 FFs is the diff btw cv32e20_em1 and cv32e20_em0
-    DSP_FF_EQ  = 150 #0
-
-    # Gamma expressed consistently with alpha/beta
-    gamma = alpha * DSP_LUT_EQ + beta * DSP_FF_EQ
-    print("gamma:" +  str(gamma))
-
-    # ------------------------------------------------------------
     # 1) Identify baseline architecture (smallest LUT absolute usage)
     # ------------------------------------------------------------
     lut_values = {a: all_archi_results[a]["Slice LUTs"][0] for a in all_archi_results}
@@ -408,9 +394,22 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     archis_sorted = sorted(all_archi_results.keys(), key=arch_sort_key)
 
+    # ------------------------------------------------------------
+    # Define a resource cost model (adjustable)
+    # ------------------------------------------------------------
+    alpha = 0.5   # LUT weight
+    beta  = 0.5   # FF weight
+
+    # DSP equivalent cost expressed in LUT/REG terms
+    DSP_LUT_EQ = 700 #1500 # 750 LUTs, 150 FFs is the diff btw cv32e20_em1 and cv32e20_em0
+    DSP_FF_EQ  = 150 #0
+
+    # Gamma expressed consistently with alpha/beta
+    gamma = alpha * DSP_LUT_EQ + beta * DSP_FF_EQ
+    print("gamma:" +  str(gamma))
 
     # ------------------------------------------------------------
-    # 3) Normalised data
+    # 3) Assign resource cost w.r.t resource cost model 
     # ------------------------------------------------------------
     norm_LUT = []
     norm_FF  = []
@@ -448,6 +447,62 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         for cost in resource_cost
     ]
 
+    # print cost per microarchitecture
+    print("\nResource cost per microarchitecture:")
+    for archi, cost in zip(archis_sorted, norm_RESOURCE):
+        print(f"{archi}: {cost:.2f}%")
+
+    # ------------------------------------------------------------
+    # 3.5) Second cost model normalized by FPGA resources available 
+    # ------------------------------------------------------------
+    
+    # A. assign available resources from reference architecture
+    
+    ref_arch = archis_sorted[0]
+
+    LUT_avail = all_archi_results[ref_arch]["Slice LUTs"][1]
+    FF_avail  = all_archi_results[ref_arch]["Slice Registers"][1]
+    DSP_avail = all_archi_results[ref_arch]["DSPs"][1]
+
+    print("Available LUTs:", LUT_avail)
+    print("Available FFs :", FF_avail)
+    print("Available DSPs:", DSP_avail)
+
+    # B. define weights
+
+    alpha_cap = 1.0
+    beta_cap  = 1.0
+    gamma_cap = 1.0
+
+    # C. Compute second resource cost normalized by available resources 
+
+    resource_cost_cap = []
+
+    for archi in archis_sorted:
+        lut = all_archi_results[archi]["Slice LUTs"][0]
+        ff  = all_archi_results[archi]["Slice Registers"][0]
+        dsp = all_archi_results[archi]["DSPs"][0]
+
+        cost_cap = (
+            alpha_cap * (lut / LUT_avail) +
+            beta_cap  * (ff  / FF_avail)  +
+            gamma_cap * (dsp / DSP_avail)
+        )
+
+        resource_cost_cap.append(cost_cap)
+        all_archi_results[archi]["Resource cost (capacity)"] = [cost_cap]
+
+    # D. Normalize second resource cost (baseline = baseline_archi)
+
+    baseline_cap_cost = resource_cost_cap[
+        archis_sorted.index(baseline_archi)
+    ]
+
+    norm_RESOURCE_CAP = [
+        100 * cost / baseline_cap_cost
+        for cost in resource_cost_cap
+    ]
+
     # ------------------------------------------------------------
     # 4) Plot
     # ------------------------------------------------------------
@@ -458,8 +513,8 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     }
 
     x = np.arange(len(archis_sorted))
-    width = 0.2
-
+    width = 0.18
+    bar_sep = 0.5
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
     bar_lut = ax1.bar(
@@ -485,6 +540,15 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         color="#8338EC",  # purple
         label="Resource cost"
     )
+
+    # bar_resource_cap = ax1.bar(
+    #     x + 2.5 * width,
+    #     norm_RESOURCE_CAP,
+    #     width,
+    #     color="#06D6A0",  # green
+    #     label="Resource cost (capacity)"
+    # )
+
 
     # Secondary axis (raw DSP)
     ax2 = ax1.twinx()
@@ -550,7 +614,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     ax1.text(
         x_base + 0.40 * width,
-        max(norm_LUT[x_base], norm_FF[x_base]) + 1.30,
+        max(norm_LUT[x_base], norm_FF[x_base]) + 2.50,
         sticker_text,
         ha="center", va="bottom",
         fontsize=10,
@@ -582,7 +646,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         if families[i] != families[i - 1]:
             # vertical line between bars i-1 and i
             ax1.axvline(
-                x=i - 0.5,
+                x=i - 2.25 * width,
                 linestyle=":",
                 linewidth=1.5,
                 color="black",
@@ -592,10 +656,10 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # ------------------------------------------------------------
     # 7) Labeling and legend
     # ------------------------------------------------------------
-    ax1.set_ylabel("LUT, FF (% of baseline)")
+    ax1.set_ylabel("LUT, FF, Resource cost (% of baseline)")
     ax2.set_ylabel("DSP raw")
 
-    ax1.set_title("Normalized Resource Usage (baseline = 1.0)")
+    #ax1.set_title("Normalized Resource Usage (baseline = 1.0)")
     ax1.set_xlabel("Microarchitecture", labelpad=35)
 
     ax1.legend(handles=[bar_dsp, bar_lut, bar_ff, bar_resource],
@@ -610,6 +674,33 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         transparent=False,    # set True if you want a transparent background
     )
 
+    # compute relative difference for each microarchitecture between first and second cost model
+    print("\nRelative difference between first and second cost model:")
+    for archi, cost1, cost2 in zip(archis_sorted, norm_RESOURCE, norm_RESOURCE_CAP):
+        rel_diff = 100 * abs(cost2 - cost1) / cost1
+        print(f"{archi}: {rel_diff:.2f}%")
+
+    # compute avg relative difference
+    rel_diffs = [
+        100 * abs(cost2 - cost1) / cost1
+        for cost1, cost2 in zip(norm_RESOURCE, norm_RESOURCE_CAP)
+    ]
+    avg_rel_diff = sum(rel_diffs) / len(rel_diffs)
+    
+    import math
+
+    # std
+    mean = avg_rel_diff
+    std_rel_diff = math.sqrt(
+        sum((x - mean) ** 2 for x in rel_diffs) / len(rel_diffs)
+    )
+
+    print(f"Average relative difference: {avg_rel_diff:.2f}%")
+    print(f"Std dev (sample): {std_rel_diff:.2f}%")
+
+    # Export to PDF
+    plt.tight_layout()
+    plt.savefig("microarchitectures_resources.pdf", format="pdf")
     plt.show()
 
 def find_cost_one_dsp(all_archi_results: Dict[str, Dict[str, List[float]]]):
