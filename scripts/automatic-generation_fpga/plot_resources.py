@@ -283,14 +283,14 @@ def assign_simulator_nickname(simulator: str) -> str:
                
         # e4x_i-em0,1,2 -> renommage
         simulator = simulator.replace("e4x_im0", "e4x_im0d0") # pas de mult, pas de div
-        simulator = simulator.replace("e4x_im1", "e4x_im4d2") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("e4x_im1", "e4x_im4d1") # change mult -> basé ressources, ajoute div
         simulator = simulator.replace("e4x_im2", "e4x_im4d0") # change mult -> basé ressources, ajoute div
 
         simulator = simulator.replace("e4x_em0", "e4x_em0d0") # pas de mult, pas de div
-        simulator = simulator.replace("e4x_em1", "e4x_em4d2") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("e4x_em1", "e4x_em4d1") # change mult -> basé ressources, ajoute div
         simulator = simulator.replace("e4x_em2", "e4x_em4d0") # change mult -> basé ressources, ajoute div
 
-        simulator = simulator.replace("e4px", "e4x_im5d2") # ajout mult -> basé ressources
+        simulator = simulator.replace("e4px", "e4x_im5d1") # ajout mult -> basé ressources
 
         # e2_i-em0-3 -> add div
         simulator = simulator.replace("e2_im0", "e2_im0d1")
@@ -378,8 +378,8 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     variant_order = {
         "e2": ["em0d1", "em1d1", "em2d1", "em3d1", "im0d1", "im1d1", "im2d1", "im3d1"],
-        "e4": ["em0d0", "em4d0", "em4d2", "im0d0", "im4d0", "im4d2",
-                     "im5d2", "im5d2_pulp", "im5d2_fpu", "im5d2_pulp_fpu"] #"p", "p_pulp",
+        "e4": ["em0d0", "em4d0", "em4d1", "im0d0", "im4d0", "im4d1",
+                     "im5d1", "im5d1_pulp", "im5d1_fpu", "im5d1_pulp_fpu"] #"p", "p_pulp",
     }
 
 
