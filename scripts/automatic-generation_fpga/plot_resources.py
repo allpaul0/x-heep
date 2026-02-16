@@ -667,12 +667,12 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
                loc="upper left")
 
     plt.tight_layout()
-    plt.savefig(
-        "microarchitectures_normalized_resource_usage.svg",
-        format="svg",
-        bbox_inches="tight",  # removes extra white space
-        transparent=False,    # set True if you want a transparent background
-    )
+    # plt.savefig(
+    #     "./experimentations/results/microarchitectures_normalized_resource_usage.svg",
+    #     format="svg",
+    #     bbox_inches="tight",  # removes extra white space
+    #     transparent=False,    # set True if you want a transparent background
+    # )
 
     # compute relative difference for each microarchitecture between first and second cost model
     print("\nRelative difference between first and second cost model:")
@@ -700,7 +700,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     # Export to PDF
     plt.tight_layout()
-    plt.savefig("microarchitectures_resources.pdf", format="pdf")
+    plt.savefig("./experimentations/results/microarchitectures_resources.pdf", format="pdf")
     plt.show()
 
 def find_cost_one_dsp(all_archi_results: Dict[str, Dict[str, List[float]]]):
@@ -819,10 +819,10 @@ def main():
 
         # print("available LUTs: " + str(all_archi_results["cv32e20_em1"]["Slice LUTs"][1]))
 
-        with open("uarchs_ressources.pkl", "wb") as f:
+        with open("experimentations/results/uarchs_ressources.pkl", "wb") as f:
             pickle.dump(all_archi_results, f)
 
-    all_archi_results = pickle.load(open("uarchs_ressources.pkl", "rb"))
+    all_archi_results = pickle.load(open("experimentations/results/uarchs_ressources.pkl", "rb"))
 
     # plot_resource_utilization(all_archi_results, targets)
     # plot_delta_resource_usage(all_archi_results, targets)
