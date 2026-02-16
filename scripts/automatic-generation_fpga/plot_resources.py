@@ -761,65 +761,73 @@ def find_cost_one_dsp(all_archi_results: Dict[str, Dict[str, List[float]]]):
 
 
 def main():
-    # Instantiate parser
-    vurp = VURP()
 
     # Define targets
     #targets = ["Slice LUTs", "Slice Registers", "Slice", "DSPs", "Block RAM Tile"]
     targets = ["Slice LUTs", "Slice Registers", "DSPs"]
 
-    # Base folder
-    folder_archis = "experimentations/microarchitectures/fpga_implementations"
-    archis = list_files(folder_archis)
+    data_collection = False
+    if data_collection:
 
-    all_archi_results = {}
+        # Instantiate parser
+        vurp = VURP()
 
-    for archi in archis:
-        # Construct expected report path
-        path_utilization_rpt = os.path.join(
-            folder_archis,
-            archi,
-            "openhwgroup.org_systems_core-v-mini-mcu_0.3.0/pynq-z2-vivado/openhwgroup.org_systems_core-v-mini-mcu_0.3.0.runs/impl_1/xilinx_core_v_mini_mcu_wrapper_utilization_placed.rpt"
-        )
+        # Base folder
+        folder_archis = "experimentations/microarchitectures/fpga_implementations"
+        archis = list_files(folder_archis)
 
-        # Read report
-        report_text = read_file(path_utilization_rpt)
-        
-        # Parse
-        archi_resources = vurp.parse(report_text, targets)
-        all_archi_results[archi] = archi_resources
+        all_archi_results = {}
 
-        print(f"\n=== {archi} ===")
-        for name, values in archi_resources.items():
-            print(f"{name}: {values}")
+        for archi in archis:
+            # Construct expected report path
+            path_utilization_rpt = os.path.join(
+                folder_archis,
+                archi,
+                "openhwgroup.org_systems_core-v-mini-mcu_0.3.0/pynq-z2-vivado/openhwgroup.org_systems_core-v-mini-mcu_0.3.0.runs/impl_1/xilinx_core_v_mini_mcu_wrapper_utilization_placed.rpt"
+            )
+
+            # Read report
+            report_text = read_file(path_utilization_rpt)
+            
+            # Parse
+            archi_resources = vurp.parse(report_text, targets)
+            all_archi_results[archi] = archi_resources
+
+            print(f"\n=== {archi} ===")
+            for name, values in archi_resources.items():
+                print(f"{name}: {values}")
 
 
-    # rename microarchitectures: replace 'corev_pulp' with 'pulp'
-    renamed_archis = {}
-    for arch, data in all_archi_results.items():
-        new_arch = arch.replace("corev_pulp", "pulp")
-        renamed_archis[new_arch] = data
-    all_archi_results = renamed_archis
+        # rename microarchitectures: replace 'corev_pulp' with 'pulp'
+        renamed_archis = {}
+        for arch, data in all_archi_results.items():
+            new_arch = arch.replace("corev_pulp", "pulp")
+            renamed_archis[new_arch] = data
+        all_archi_results = renamed_archis
 
-    # remove microarchitectures p and p_pulp
-    filtered_archis = {}
-    for arch, data in all_archi_results.items():
-        if arch == "cv32e40p" or arch == "cv32e40p_pulp":
-            continue
-        filtered_archis[arch] = data
-    all_archi_results = filtered_archis
+        # remove microarchitectures p and p_pulp
+        filtered_archis = {}
+        for arch, data in all_archi_results.items():
+            if arch == "cv32e40p" or arch == "cv32e40p_pulp":
+                continue
+            filtered_archis[arch] = data
+        all_archi_results = filtered_archis
 
-    print(all_archi_results)
+        print(all_archi_results)
 
-    with open("uarchs_ressources.pkl", "wb") as f:
-        pickle.dump(all_archi_results, f)
+        find_cost_one_dsp(all_archi_results)
 
-    find_cost_one_dsp(all_archi_results)
+        # print("available LUTs: " + str(all_archi_results["cv32e20_em1"]["Slice LUTs"][1]))
 
-    #plot_resource_utilization(all_archi_results, targets)
-    #plot_delta_resource_usage(all_archi_results, targets)
+        with open("uarchs_ressources.pkl", "wb") as f:
+            pickle.dump(all_archi_results, f)
+
+    all_archi_results = pickle.load(open("uarchs_ressources.pkl", "rb"))
+
+    # plot_resource_utilization(all_archi_results, targets)
+    # plot_delta_resource_usage(all_archi_results, targets)
+    
     plot_normalised_resource_usage(all_archi_results, targets)
-    print("available LUTs: " + str(all_archi_results["cv32e20_em1"]["Slice LUTs"][1]))
 
 if __name__ == "__main__":
     main()
