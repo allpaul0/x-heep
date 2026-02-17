@@ -52,15 +52,11 @@ else
     COMPILER_PREFIX=""
 fi
 echo "Using compiler prefix: $COMPILER_PREFIX"
+echo "Using compiler: $COMPILER"
 
 # Build application
 echo "make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_PREFIX=$COMPILER_PREFIX COMPILER_FLAGS=\"-DUSE_$DTYPE\" VERBOSE=1"
 
 make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_PREFIX=$COMPILER_PREFIX COMPILER_FLAGS="-DUSE_$DTYPE" VERBOSE=1
 
-# Run simulation
-echo "=== Running simulation ==="
-make verilator-run
-
-# parse simulation ouptput 
-python3 scripts/automatic-simulation/parse_simulation_output.py ${SIMULATOR} ${ISA} ${ABI} ${DTYPE}
+"$COMPILER"/bin/"$COMPILER_PREFIX"elf-objdump -d sw/build/main.elf > sw/build/disassembly.txt
