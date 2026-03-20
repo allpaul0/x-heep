@@ -1,0 +1,14714 @@
+
+main.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .vectors:
+
+00000000 <__vector_start>:
+
+.section .vectors, "ax"
+.option norvc
+vector_table:
+	//  0 : exception Handler and user software interrupt
+	j handler_exception
+   0:	5a00406f          	j	45a0 <handler_exception>
+	//  1 : supervisor software interrupt
+	j __no_irq_handler
+   4:	20c0006f          	j	210 <__no_irq_handler>
+	//  2 : unmapped
+	j __no_irq_handler
+   8:	2080006f          	j	210 <__no_irq_handler>
+	//  3 : machine software interrupt handler
+	j handler_irq_software
+   c:	68c0406f          	j	4698 <handler_irq_software>
+	//  4 : user timer interrupt
+	j __no_irq_handler
+  10:	2000006f          	j	210 <__no_irq_handler>
+	//  5 : supervisor timer interrupt
+	j __no_irq_handler
+  14:	1fc0006f          	j	210 <__no_irq_handler>
+	//  6 : unmapped
+	j __no_irq_handler
+  18:	1f80006f          	j	210 <__no_irq_handler>
+	//  7 : machine timer interrupt handler
+	j handler_irq_timer
+  1c:	6b00406f          	j	46cc <handler_irq_timer>
+	//  8 : user external interrupt
+	j __no_irq_handler
+  20:	1f00006f          	j	210 <__no_irq_handler>
+	//  9 : supervisor external interrupt
+	j __no_irq_handler
+  24:	1ec0006f          	j	210 <__no_irq_handler>
+	// 10 : unmapped
+	j __no_irq_handler
+  28:	1e80006f          	j	210 <__no_irq_handler>
+	// 11 : machine external interrupt handler
+	j handler_irq_external
+  2c:	7240306f          	j	3750 <handler_irq_external>
+	// 12 : unmapped
+	j __no_irq_handler
+  30:	1e00006f          	j	210 <__no_irq_handler>
+	// 13 : unmapped
+	j __no_irq_handler
+  34:	1dc0006f          	j	210 <__no_irq_handler>
+	// 14 : unmapped
+	j __no_irq_handler
+  38:	1d80006f          	j	210 <__no_irq_handler>
+	// 15 : unmapped
+	j __no_irq_handler
+  3c:	1d40006f          	j	210 <__no_irq_handler>
+	// 16 : fast interrupt - timer_1
+	j handler_irq_fast_timer_1
+  40:	1900306f          	j	31d0 <handler_irq_fast_timer_1>
+	// 17 : fast interrupt - timer_2
+	j handler_irq_fast_timer_2
+  44:	1e40306f          	j	3228 <handler_irq_fast_timer_2>
+	// 18 : fast interrupt - timer_3
+	j handler_irq_fast_timer_3
+  48:	2380306f          	j	3280 <handler_irq_fast_timer_3>
+	// 19 : fast interrupt - dma_done
+	j handler_irq_fast_dma_done
+  4c:	28c0306f          	j	32d8 <handler_irq_fast_dma_done>
+	// 20 : fast interrupt - spi
+	j handler_irq_fast_spi
+  50:	3900306f          	j	33e0 <handler_irq_fast_spi>
+	// 21 : fast interrupt - spi_flash
+	j handler_irq_fast_spi_flash
+  54:	3e40306f          	j	3438 <handler_irq_fast_spi_flash>
+	// 22 : fast interrupt - gpio_0
+	j handler_irq_fast_gpio_0
+  58:	4380306f          	j	3490 <handler_irq_fast_gpio_0>
+	// 23 : fast interrupt - gpio_1
+	j handler_irq_fast_gpio_1
+  5c:	48c0306f          	j	34e8 <handler_irq_fast_gpio_1>
+	// 24 : fast interrupt - gpio_2
+	j handler_irq_fast_gpio_2
+  60:	4e00306f          	j	3540 <handler_irq_fast_gpio_2>
+	// 25 : fast interrupt - gpio_3
+	j handler_irq_fast_gpio_3
+  64:	5340306f          	j	3598 <handler_irq_fast_gpio_3>
+	// 26 : fast interrupt - gpio_4
+	j handler_irq_fast_gpio_4
+  68:	5880306f          	j	35f0 <handler_irq_fast_gpio_4>
+	// 27 : fast interrupt - gpio_5
+	j handler_irq_fast_gpio_5
+  6c:	5dc0306f          	j	3648 <handler_irq_fast_gpio_5>
+	// 28 : fast interrupt - gpio_6
+	j handler_irq_fast_gpio_6
+  70:	6300306f          	j	36a0 <handler_irq_fast_gpio_6>
+	// 29 : fast interrupt - gpio_7
+	j handler_irq_fast_gpio_7
+  74:	6840306f          	j	36f8 <handler_irq_fast_gpio_7>
+	// 30 : fast interrupt - dma_window
+	j handler_irq_fast_dma_window
+  78:	2b80306f          	j	3330 <handler_irq_fast_dma_window>
+	// 31 : fast interrupt - external peripheral
+	j handler_irq_fast_external_peripheral
+  7c:	30c0306f          	j	3388 <handler_irq_fast_external_peripheral>
+
+Disassembly of section .init:
+
+00000180 <_start>:
+
+_start:
+/* initialize global pointer */
+.option push
+.option norelax
+1: auipc gp, %pcrel_hi(__global_pointer$)
+ 180:	0000c197          	auipc	gp,0xc
+   addi  gp, gp, %pcrel_lo(1b)
+ 184:	c0418193          	addi	gp,gp,-1020 # bd84 <__global_pointer$>
+.option pop
+
+/* initialize stack pointer */
+   la sp, _sp
+ 188:	0000d117          	auipc	sp,0xd
+ 18c:	8a810113          	addi	sp,sp,-1880 # ca30 <_sp>
+
+/* set the frequency */
+   li a0, SOC_CTRL_START_ADDRESS
+ 190:	20000537          	lui	a0,0x20000
+   li a2, REFERENCE_CLOCK_Hz
+ 194:	05f5e637          	lui	a2,0x5f5e
+ 198:	10060613          	addi	a2,a2,256 # 5f5e100 <syscalls_cpp.cpp.cfa7c3ef+0x5f4651e>
+   sw a2, SOC_CTRL_SYSTEM_FREQUENCY_HZ_REG_OFFSET(a0)
+ 19c:	cd50                	sw	a2,28(a0)
+
+0000019e <_init_bss>:
+
+#endif
+
+/* clear the bss segment */
+_init_bss:
+    la     a0, __bss_start
+ 19e:	0000b517          	auipc	a0,0xb
+ 1a2:	53250513          	addi	a0,a0,1330 # b6d0 <__stdio_exit_handler>
+    la     a2, __bss_end
+ 1a6:	0000c617          	auipc	a2,0xc
+ 1aa:	87e60613          	addi	a2,a2,-1922 # ba24 <__BSS_END__>
+    sub    a2, a2, a0
+ 1ae:	8e09                	sub	a2,a2,a0
+    li     a1, 0
+ 1b0:	4581                	li	a1,0
+    call   memset
+ 1b2:	1cc050ef          	jal	537e <memset>
+    blt a1, a2, loop_init_data
+    end_init_data:
+#endif
+
+/* set vector table address and vectored mode */
+    la a0, __vector_start
+ 1b6:	00000517          	auipc	a0,0x0
+ 1ba:	e4a50513          	addi	a0,a0,-438 # 0 <__vector_start>
+    ori a0, a0, 0x1
+ 1be:	00156513          	ori	a0,a0,1
+    csrw mtvec, a0
+ 1c2:	30551073          	csrw	mtvec,a0
+
+/* new-style constructors and destructors */
+    la a0, __libc_fini_array
+ 1c6:	00005517          	auipc	a0,0x5
+ 1ca:	18650513          	addi	a0,a0,390 # 534c <__libc_fini_array>
+    call atexit
+ 1ce:	67f040ef          	jal	504c <atexit>
+    call __libc_init_array
+ 1d2:	124050ef          	jal	52f6 <__libc_init_array>
+
+/* call main */
+    lw a0, 0(sp)                    /* a0 = argc */
+ 1d6:	4502                	lw	a0,0(sp)
+    addi a1, sp, __SIZEOF_POINTER__ /* a1 = argv */
+ 1d8:	004c                	addi	a1,sp,4
+    li a2, 0                        /* a2 = envp = NULL */
+ 1da:	4601                	li	a2,0
+    call main
+ 1dc:	529070ef          	jal	7f04 <main>
+    tail exit
+ 1e0:	00c0006f          	j	1ec <exit>
+
+000001e4 <_init>:
+.global _init
+.type   _init, @function
+.global _fini
+.type   _fini, @function
+_init:
+    call init
+ 1e4:	596040ef          	jal	477a <init>
+
+000001e8 <_fini>:
+_fini:
+ /* These don't have to do anything since we use init_array/fini_array. Prevent
+    missing symbol error */
+    ret
+ 1e8:	8082                	ret
+
+Disassembly of section .text:
+
+000001ec <exit>:
+     1ec:	1141                	addi	sp,sp,-16
+     1ee:	6795                	lui	a5,0x5
+     1f0:	c422                	sw	s0,8(sp)
+     1f2:	c606                	sw	ra,12(sp)
+     1f4:	40278793          	addi	a5,a5,1026 # 5402 <__call_exitprocs>
+     1f8:	842a                	mv	s0,a0
+     1fa:	c781                	beqz	a5,202 <exit+0x16>
+     1fc:	4581                	li	a1,0
+     1fe:	204050ef          	jal	5402 <__call_exitprocs>
+     202:	94c1a783          	lw	a5,-1716(gp) # b6d0 <__stdio_exit_handler>
+     206:	c391                	beqz	a5,20a <exit+0x1e>
+     208:	9782                	jalr	a5
+     20a:	8522                	mv	a0,s0
+     20c:	5b4040ef          	jal	47c0 <_exit>
+
+00000210 <__no_irq_handler>:
+	This will not print an error message in case of not finding
+	the proper handler to manage an interrupt.
+	la a0, no_exception_handler_msg
+	jal ra, puts
+	*/
+	j __no_irq_handler
+     210:	0000006f          	j	210 <__no_irq_handler>
+
+00000214 <f_pow2>:
+ * to avoid “unresolved external” errors from the linker. That error will occur if 
+ * you put the inline function's definition in a . cpp file and if that function is 
+ * called from some other */
+
+
+static inline fixedpt f_pow2(fixedpt si_b) {
+     214:	7179                	addi	sp,sp,-48
+     216:	d606                	sw	ra,44(sp)
+     218:	d422                	sw	s0,40(sp)
+     21a:	1800                	addi	s0,sp,48
+     21c:	fca42e23          	sw	a0,-36(s0)
+  fixedpt result;
+  if ((si_b < 0) ||
+     220:	fdc42783          	lw	a5,-36(s0)
+     224:	0207c063          	bltz	a5,244 <f_pow2+0x30>
+     228:	fdc42703          	lw	a4,-36(s0)
+     22c:	47f9                	li	a5,30
+     22e:	00e7cb63          	blt	a5,a4,244 <f_pow2+0x30>
+      (si_b > 30) || // si si_b > 30 bits décalage 1<<31 KO | 1<<30 OK
+      (1 > (INT_MAX >> si_b))) { //si 1 > (INT_MAX >> si_b) alors si_b est trop grand 
+     232:	fdc42783          	lw	a5,-36(s0)
+     236:	80000737          	lui	a4,0x80000
+     23a:	177d                	addi	a4,a4,-1 # 7fffffff <syscalls_cpp.cpp.cfa7c3ef+0x7ffe841d>
+     23c:	40f757b3          	sra	a5,a4,a5
+      (si_b > 30) || // si si_b > 30 bits décalage 1<<31 KO | 1<<30 OK
+     240:	00f04563          	bgtz	a5,24a <f_pow2+0x36>
+    // Handle error 
+    result = 0;
+     244:	fe042623          	sw	zero,-20(s0)
+     248:	a801                	j	258 <f_pow2+0x44>
+  } else {
+    result = 1 << si_b;
+     24a:	fdc42783          	lw	a5,-36(s0)
+     24e:	4705                	li	a4,1
+     250:	00f717b3          	sll	a5,a4,a5
+     254:	fef42623          	sw	a5,-20(s0)
+  }
+  return result;
+     258:	fec42783          	lw	a5,-20(s0)
+}
+     25c:	853e                	mv	a0,a5
+     25e:	50b2                	lw	ra,44(sp)
+     260:	5422                	lw	s0,40(sp)
+     262:	6145                	addi	sp,sp,48
+     264:	8082                	ret
+
+00000266 <bestProgram>:
+ */
+
+#include "TPG_program.h"
+#include "TPG.h"
+
+int bestProgram(fixedpt *results, int nb) {
+     266:	7179                	addi	sp,sp,-48
+     268:	d606                	sw	ra,44(sp)
+     26a:	d422                	sw	s0,40(sp)
+     26c:	1800                	addi	s0,sp,48
+     26e:	fca42e23          	sw	a0,-36(s0)
+     272:	fcb42c23          	sw	a1,-40(s0)
+	int bestProgram = 0;
+     276:	fe042623          	sw	zero,-20(s0)
+	fixedpt bestScore = results[0];
+     27a:	fdc42783          	lw	a5,-36(s0)
+     27e:	439c                	lw	a5,0(a5)
+     280:	fef42423          	sw	a5,-24(s0)
+	for (int i = 1; i < nb; i++) {
+     284:	4785                	li	a5,1
+     286:	fef42223          	sw	a5,-28(s0)
+     28a:	a82d                	j	2c4 <bestProgram+0x5e>
+		fixedpt challengerScore = results[i];
+     28c:	fe442783          	lw	a5,-28(s0)
+     290:	078a                	slli	a5,a5,0x2
+     292:	fdc42703          	lw	a4,-36(s0)
+     296:	97ba                	add	a5,a5,a4
+     298:	439c                	lw	a5,0(a5)
+     29a:	fef42023          	sw	a5,-32(s0)
+		if (challengerScore >= bestScore) {
+     29e:	fe042703          	lw	a4,-32(s0)
+     2a2:	fe842783          	lw	a5,-24(s0)
+     2a6:	00f74a63          	blt	a4,a5,2ba <bestProgram+0x54>
+			bestProgram = i;
+     2aa:	fe442783          	lw	a5,-28(s0)
+     2ae:	fef42623          	sw	a5,-20(s0)
+			bestScore = challengerScore;
+     2b2:	fe042783          	lw	a5,-32(s0)
+     2b6:	fef42423          	sw	a5,-24(s0)
+	for (int i = 1; i < nb; i++) {
+     2ba:	fe442783          	lw	a5,-28(s0)
+     2be:	0785                	addi	a5,a5,1
+     2c0:	fef42223          	sw	a5,-28(s0)
+     2c4:	fe442703          	lw	a4,-28(s0)
+     2c8:	fd842783          	lw	a5,-40(s0)
+     2cc:	fcf740e3          	blt	a4,a5,28c <bestProgram+0x26>
+		}
+	}
+	return bestProgram;
+     2d0:	fec42783          	lw	a5,-20(s0)
+}
+     2d4:	853e                	mv	a0,a5
+     2d6:	50b2                	lw	ra,44(sp)
+     2d8:	5422                	lw	s0,40(sp)
+     2da:	6145                	addi	sp,sp,48
+     2dc:	8082                	ret
+
+000002de <T0_func>:
+
+enum vertices T0_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     2de:	7119                	addi	sp,sp,-128
+     2e0:	de86                	sw	ra,124(sp)
+     2e2:	dca2                	sw	s0,120(sp)
+     2e4:	0100                	addi	s0,sp,128
+     2e6:	f8a42623          	sw	a0,-116(s0)
+     2ea:	f8b42423          	sw	a1,-120(s0)
+     2ee:	f8c42223          	sw	a2,-124(s0)
+     2f2:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { A27, A28 };
+     2f6:	47ed                	li	a5,27
+     2f8:	faf42c23          	sw	a5,-72(s0)
+     2fc:	47f1                	li	a5,28
+     2fe:	faf42e23          	sw	a5,-68(s0)
+     302:	f8c42783          	lw	a5,-116(s0)
+     306:	fcf42623          	sw	a5,-52(s0)
+     30a:	f8842783          	lw	a5,-120(s0)
+     30e:	fcf42423          	sw	a5,-56(s0)
+     312:	f8442783          	lw	a5,-124(s0)
+     316:	fcf42223          	sw	a5,-60(s0)
+     31a:	f8042783          	lw	a5,-128(s0)
+     31e:	fcf42023          	sw	a5,-64(s0)
+
+#include "externHeader.h"
+
+
+  inline __attribute__((always_inline)) fixedpt P0(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     322:	f8042823          	sw	zero,-112(s0)
+     326:	f8042a23          	sw	zero,-108(s0)
+     32a:	f8042c23          	sw	zero,-104(s0)
+     32e:	f8042e23          	sw	zero,-100(s0)
+     332:	fa042023          	sw	zero,-96(s0)
+     336:	fa042223          	sw	zero,-92(s0)
+     33a:	fa042423          	sw	zero,-88(s0)
+     33e:	fa042623          	sw	zero,-84(s0)
+	return reg[0];
+     342:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P0(in1, in2, in3, in4);
+     346:	faf42823          	sw	a5,-80(s0)
+     34a:	f8842783          	lw	a5,-120(s0)
+     34e:	fef42623          	sw	a5,-20(s0)
+     352:	f8442783          	lw	a5,-124(s0)
+     356:	fef42423          	sw	a5,-24(s0)
+     35a:	f8c42783          	lw	a5,-116(s0)
+     35e:	fef42223          	sw	a5,-28(s0)
+     362:	f8042783          	lw	a5,-128(s0)
+     366:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P1(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     36a:	f8042823          	sw	zero,-112(s0)
+     36e:	f8042a23          	sw	zero,-108(s0)
+     372:	f8042c23          	sw	zero,-104(s0)
+     376:	f8042e23          	sw	zero,-100(s0)
+     37a:	fa042023          	sw	zero,-96(s0)
+     37e:	fa042223          	sw	zero,-92(s0)
+     382:	fa042423          	sw	zero,-88(s0)
+     386:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in3[2];
+     38a:	fe842783          	lw	a5,-24(s0)
+     38e:	07a1                	addi	a5,a5,8
+     390:	439c                	lw	a5,0(a5)
+     392:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[2];
+     396:	fe842783          	lw	a5,-24(s0)
+     39a:	07a1                	addi	a5,a5,8
+     39c:	439c                	lw	a5,0(a5)
+     39e:	fcf42c23          	sw	a5,-40(s0)
+		reg[1] = op0 + op1;
+     3a2:	fdc42703          	lw	a4,-36(s0)
+     3a6:	fd842783          	lw	a5,-40(s0)
+     3aa:	97ba                	add	a5,a5,a4
+     3ac:	f8f42a23          	sw	a5,-108(s0)
+	}
+	{
+		fixedpt op0 = in2[0];
+     3b0:	fec42783          	lw	a5,-20(s0)
+     3b4:	439c                	lw	a5,0(a5)
+     3b6:	fcf42a23          	sw	a5,-44(s0)
+		fixedpt op1 = reg[1];
+     3ba:	f9442783          	lw	a5,-108(s0)
+     3be:	fcf42823          	sw	a5,-48(s0)
+		reg[0] = op0 - op1;
+     3c2:	fd442703          	lw	a4,-44(s0)
+     3c6:	fd042783          	lw	a5,-48(s0)
+     3ca:	40f707b3          	sub	a5,a4,a5
+     3ce:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+     3d2:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P1(in1, in2, in3, in4);
+     3d6:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+     3da:	fb040793          	addi	a5,s0,-80
+     3de:	4589                	li	a1,2
+     3e0:	853e                	mv	a0,a5
+     3e2:	3551                	jal	266 <bestProgram>
+     3e4:	872a                	mv	a4,a0
+     3e6:	fb840793          	addi	a5,s0,-72
+     3ea:	070a                	slli	a4,a4,0x2
+     3ec:	97ba                	add	a5,a5,a4
+     3ee:	439c                	lw	a5,0(a5)
+}
+     3f0:	853e                	mv	a0,a5
+     3f2:	50f6                	lw	ra,124(sp)
+     3f4:	5466                	lw	s0,120(sp)
+     3f6:	6109                	addi	sp,sp,128
+     3f8:	8082                	ret
+
+000003fa <T1_func>:
+
+enum vertices T1_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     3fa:	7119                	addi	sp,sp,-128
+     3fc:	de86                	sw	ra,124(sp)
+     3fe:	dca2                	sw	s0,120(sp)
+     400:	0100                	addi	s0,sp,128
+     402:	f8a42623          	sw	a0,-116(s0)
+     406:	f8b42423          	sw	a1,-120(s0)
+     40a:	f8c42223          	sw	a2,-124(s0)
+     40e:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { A27, A28 };
+     412:	47ed                	li	a5,27
+     414:	fcf42023          	sw	a5,-64(s0)
+     418:	47f1                	li	a5,28
+     41a:	fcf42223          	sw	a5,-60(s0)
+     41e:	f8c42783          	lw	a5,-116(s0)
+     422:	fcf42a23          	sw	a5,-44(s0)
+     426:	f8842783          	lw	a5,-120(s0)
+     42a:	fcf42823          	sw	a5,-48(s0)
+     42e:	f8442783          	lw	a5,-124(s0)
+     432:	fcf42623          	sw	a5,-52(s0)
+     436:	f8042783          	lw	a5,-128(s0)
+     43a:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P2(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     43e:	f8042c23          	sw	zero,-104(s0)
+     442:	f8042e23          	sw	zero,-100(s0)
+     446:	fa042023          	sw	zero,-96(s0)
+     44a:	fa042223          	sw	zero,-92(s0)
+     44e:	fa042423          	sw	zero,-88(s0)
+     452:	fa042623          	sw	zero,-84(s0)
+     456:	fa042823          	sw	zero,-80(s0)
+     45a:	fa042a23          	sw	zero,-76(s0)
+	return reg[0];
+     45e:	f9842783          	lw	a5,-104(s0)
+	fixedpt scores[2];
+	scores[0] = P2(in1, in2, in3, in4);
+     462:	faf42c23          	sw	a5,-72(s0)
+     466:	f8442783          	lw	a5,-124(s0)
+     46a:	fef42623          	sw	a5,-20(s0)
+     46e:	f8c42783          	lw	a5,-116(s0)
+     472:	fef42423          	sw	a5,-24(s0)
+     476:	f8842783          	lw	a5,-120(s0)
+     47a:	fef42223          	sw	a5,-28(s0)
+     47e:	f8042783          	lw	a5,-128(s0)
+     482:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P3(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     486:	f8042c23          	sw	zero,-104(s0)
+     48a:	f8042e23          	sw	zero,-100(s0)
+     48e:	fa042023          	sw	zero,-96(s0)
+     492:	fa042223          	sw	zero,-92(s0)
+     496:	fa042423          	sw	zero,-88(s0)
+     49a:	fa042623          	sw	zero,-84(s0)
+     49e:	fa042823          	sw	zero,-80(s0)
+     4a2:	fa042a23          	sw	zero,-76(s0)
+	{
+		fixedpt op0 = in3[1];
+     4a6:	fec42783          	lw	a5,-20(s0)
+     4aa:	0791                	addi	a5,a5,4
+     4ac:	439c                	lw	a5,0(a5)
+     4ae:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[2];
+     4b2:	fec42783          	lw	a5,-20(s0)
+     4b6:	07a1                	addi	a5,a5,8
+     4b8:	439c                	lw	a5,0(a5)
+     4ba:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+     4be:	fdc42703          	lw	a4,-36(s0)
+     4c2:	fd842783          	lw	a5,-40(s0)
+     4c6:	40f707b3          	sub	a5,a4,a5
+     4ca:	f8f42c23          	sw	a5,-104(s0)
+	}
+	return reg[0];
+     4ce:	f9842783          	lw	a5,-104(s0)
+	scores[1] = P3(in1, in2, in3, in4);
+     4d2:	faf42e23          	sw	a5,-68(s0)
+	return next[bestProgram(scores, 2)];
+     4d6:	fb840793          	addi	a5,s0,-72
+     4da:	4589                	li	a1,2
+     4dc:	853e                	mv	a0,a5
+     4de:	3361                	jal	266 <bestProgram>
+     4e0:	872a                	mv	a4,a0
+     4e2:	fc040793          	addi	a5,s0,-64
+     4e6:	070a                	slli	a4,a4,0x2
+     4e8:	97ba                	add	a5,a5,a4
+     4ea:	439c                	lw	a5,0(a5)
+}
+     4ec:	853e                	mv	a0,a5
+     4ee:	50f6                	lw	ra,124(sp)
+     4f0:	5466                	lw	s0,120(sp)
+     4f2:	6109                	addi	sp,sp,128
+     4f4:	8082                	ret
+
+000004f6 <T2_func>:
+
+enum vertices T2_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     4f6:	7119                	addi	sp,sp,-128
+     4f8:	de86                	sw	ra,124(sp)
+     4fa:	dca2                	sw	s0,120(sp)
+     4fc:	0100                	addi	s0,sp,128
+     4fe:	f8a42623          	sw	a0,-116(s0)
+     502:	f8b42423          	sw	a1,-120(s0)
+     506:	f8c42223          	sw	a2,-124(s0)
+     50a:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { T1, A26 };
+     50e:	4785                	li	a5,1
+     510:	fcf42023          	sw	a5,-64(s0)
+     514:	47e9                	li	a5,26
+     516:	fcf42223          	sw	a5,-60(s0)
+     51a:	f8442783          	lw	a5,-124(s0)
+     51e:	fcf42e23          	sw	a5,-36(s0)
+     522:	f8c42783          	lw	a5,-116(s0)
+     526:	fcf42c23          	sw	a5,-40(s0)
+     52a:	f8842783          	lw	a5,-120(s0)
+     52e:	fcf42a23          	sw	a5,-44(s0)
+     532:	f8042783          	lw	a5,-128(s0)
+     536:	fcf42823          	sw	a5,-48(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P4(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     53a:	f8042c23          	sw	zero,-104(s0)
+     53e:	f8042e23          	sw	zero,-100(s0)
+     542:	fa042023          	sw	zero,-96(s0)
+     546:	fa042223          	sw	zero,-92(s0)
+     54a:	fa042423          	sw	zero,-88(s0)
+     54e:	fa042623          	sw	zero,-84(s0)
+     552:	fa042823          	sw	zero,-80(s0)
+     556:	fa042a23          	sw	zero,-76(s0)
+	{
+		fixedpt op0 = in3[1];
+     55a:	fdc42783          	lw	a5,-36(s0)
+     55e:	0791                	addi	a5,a5,4
+     560:	439c                	lw	a5,0(a5)
+     562:	fcf42623          	sw	a5,-52(s0)
+     566:	fcc42783          	lw	a5,-52(s0)
+     56a:	fcf42423          	sw	a5,-56(s0)
+  
+//   return result;
+// }
+
+static inline __attribute__((always_inline)) fixedpt f_log2(fixedpt n) {
+    if (n <= 0) {
+     56e:	fc842783          	lw	a5,-56(s0)
+     572:	00f04463          	bgtz	a5,57a <T2_func+0x84>
+        return 0; // Handle error for non-positive input
+     576:	4781                	li	a5,0
+     578:	a801                	j	588 <T2_func+0x92>
+    }
+    return 31 - __builtin_clz(n);
+     57a:	fc842783          	lw	a5,-56(s0)
+     57e:	60079793          	clz	a5,a5
+     582:	477d                	li	a4,31
+     584:	40f707b3          	sub	a5,a4,a5
+		reg[0] = f_log2(op0);
+     588:	f8f42c23          	sw	a5,-104(s0)
+	}
+	return reg[0];
+     58c:	f9842783          	lw	a5,-104(s0)
+	fixedpt scores[2];
+	scores[0] = P4(in1, in2, in3, in4);
+     590:	faf42c23          	sw	a5,-72(s0)
+     594:	f8c42783          	lw	a5,-116(s0)
+     598:	fef42623          	sw	a5,-20(s0)
+     59c:	f8842783          	lw	a5,-120(s0)
+     5a0:	fef42423          	sw	a5,-24(s0)
+     5a4:	f8442783          	lw	a5,-124(s0)
+     5a8:	fef42223          	sw	a5,-28(s0)
+     5ac:	f8042783          	lw	a5,-128(s0)
+     5b0:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P5(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     5b4:	f8042c23          	sw	zero,-104(s0)
+     5b8:	f8042e23          	sw	zero,-100(s0)
+     5bc:	fa042023          	sw	zero,-96(s0)
+     5c0:	fa042223          	sw	zero,-92(s0)
+     5c4:	fa042423          	sw	zero,-88(s0)
+     5c8:	fa042623          	sw	zero,-84(s0)
+     5cc:	fa042823          	sw	zero,-80(s0)
+     5d0:	fa042a23          	sw	zero,-76(s0)
+	return reg[0];
+     5d4:	f9842783          	lw	a5,-104(s0)
+	scores[1] = P5(in1, in2, in3, in4);
+     5d8:	faf42e23          	sw	a5,-68(s0)
+	return next[bestProgram(scores, 2)];
+     5dc:	fb840793          	addi	a5,s0,-72
+     5e0:	4589                	li	a1,2
+     5e2:	853e                	mv	a0,a5
+     5e4:	3149                	jal	266 <bestProgram>
+     5e6:	872a                	mv	a4,a0
+     5e8:	fc040793          	addi	a5,s0,-64
+     5ec:	070a                	slli	a4,a4,0x2
+     5ee:	97ba                	add	a5,a5,a4
+     5f0:	439c                	lw	a5,0(a5)
+}
+     5f2:	853e                	mv	a0,a5
+     5f4:	50f6                	lw	ra,124(sp)
+     5f6:	5466                	lw	s0,120(sp)
+     5f8:	6109                	addi	sp,sp,128
+     5fa:	8082                	ret
+
+000005fc <T3_func>:
+
+enum vertices T3_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     5fc:	7135                	addi	sp,sp,-160
+     5fe:	cf06                	sw	ra,156(sp)
+     600:	cd22                	sw	s0,152(sp)
+     602:	1100                	addi	s0,sp,160
+     604:	f6a42623          	sw	a0,-148(s0)
+     608:	f6b42423          	sw	a1,-152(s0)
+     60c:	f6c42223          	sw	a2,-156(s0)
+     610:	f6d42023          	sw	a3,-160(s0)
+	const enum vertices next[3] = { A28, A27, A30 };
+     614:	47f1                	li	a5,28
+     616:	f8f42e23          	sw	a5,-100(s0)
+     61a:	47ed                	li	a5,27
+     61c:	faf42023          	sw	a5,-96(s0)
+     620:	47f9                	li	a5,30
+     622:	faf42223          	sw	a5,-92(s0)
+     626:	f6442783          	lw	a5,-156(s0)
+     62a:	faf42e23          	sw	a5,-68(s0)
+     62e:	f6c42783          	lw	a5,-148(s0)
+     632:	faf42c23          	sw	a5,-72(s0)
+     636:	f6842783          	lw	a5,-152(s0)
+     63a:	faf42a23          	sw	a5,-76(s0)
+     63e:	f6042783          	lw	a5,-160(s0)
+     642:	faf42823          	sw	a5,-80(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     646:	f6042823          	sw	zero,-144(s0)
+     64a:	f6042a23          	sw	zero,-140(s0)
+     64e:	f6042c23          	sw	zero,-136(s0)
+     652:	f6042e23          	sw	zero,-132(s0)
+     656:	f8042023          	sw	zero,-128(s0)
+     65a:	f8042223          	sw	zero,-124(s0)
+     65e:	f8042423          	sw	zero,-120(s0)
+     662:	f8042623          	sw	zero,-116(s0)
+		fixedpt op0 = in3[1];
+     666:	fbc42783          	lw	a5,-68(s0)
+     66a:	0791                	addi	a5,a5,4
+     66c:	439c                	lw	a5,0(a5)
+     66e:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in3[2];
+     672:	fbc42783          	lw	a5,-68(s0)
+     676:	07a1                	addi	a5,a5,8
+     678:	439c                	lw	a5,0(a5)
+     67a:	faf42423          	sw	a5,-88(s0)
+		reg[0] = op0 - op1;
+     67e:	fac42703          	lw	a4,-84(s0)
+     682:	fa842783          	lw	a5,-88(s0)
+     686:	40f707b3          	sub	a5,a4,a5
+     68a:	f6f42823          	sw	a5,-144(s0)
+	return reg[0];
+     68e:	f7042783          	lw	a5,-144(s0)
+	fixedpt scores[3];
+	scores[0] = P3(in1, in2, in3, in4);
+     692:	f8f42823          	sw	a5,-112(s0)
+     696:	f6442783          	lw	a5,-156(s0)
+     69a:	fcf42a23          	sw	a5,-44(s0)
+     69e:	f6c42783          	lw	a5,-148(s0)
+     6a2:	fcf42823          	sw	a5,-48(s0)
+     6a6:	f6842783          	lw	a5,-152(s0)
+     6aa:	fcf42623          	sw	a5,-52(s0)
+     6ae:	f6042783          	lw	a5,-160(s0)
+     6b2:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P6(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     6b6:	f6042823          	sw	zero,-144(s0)
+     6ba:	f6042a23          	sw	zero,-140(s0)
+     6be:	f6042c23          	sw	zero,-136(s0)
+     6c2:	f6042e23          	sw	zero,-132(s0)
+     6c6:	f8042023          	sw	zero,-128(s0)
+     6ca:	f8042223          	sw	zero,-124(s0)
+     6ce:	f8042423          	sw	zero,-120(s0)
+     6d2:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = reg[4];
+     6d6:	f8042783          	lw	a5,-128(s0)
+     6da:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in3[1];
+     6de:	fd442783          	lw	a5,-44(s0)
+     6e2:	0791                	addi	a5,a5,4
+     6e4:	439c                	lw	a5,0(a5)
+     6e6:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+     6ea:	fc442703          	lw	a4,-60(s0)
+     6ee:	fc042783          	lw	a5,-64(s0)
+     6f2:	0af767b3          	max	a5,a4,a5
+     6f6:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     6fa:	f7042783          	lw	a5,-144(s0)
+	scores[1] = P6(in1, in2, in3, in4);
+     6fe:	f8f42a23          	sw	a5,-108(s0)
+     702:	f6042783          	lw	a5,-160(s0)
+     706:	fef42623          	sw	a5,-20(s0)
+     70a:	f6c42783          	lw	a5,-148(s0)
+     70e:	fef42423          	sw	a5,-24(s0)
+     712:	f6842783          	lw	a5,-152(s0)
+     716:	fef42223          	sw	a5,-28(s0)
+     71a:	f6442783          	lw	a5,-156(s0)
+     71e:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P7(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     722:	f6042823          	sw	zero,-144(s0)
+     726:	f6042a23          	sw	zero,-140(s0)
+     72a:	f6042c23          	sw	zero,-136(s0)
+     72e:	f6042e23          	sw	zero,-132(s0)
+     732:	f8042023          	sw	zero,-128(s0)
+     736:	f8042223          	sw	zero,-124(s0)
+     73a:	f8042423          	sw	zero,-120(s0)
+     73e:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in4[2];
+     742:	fec42783          	lw	a5,-20(s0)
+     746:	07a1                	addi	a5,a5,8
+     748:	439c                	lw	a5,0(a5)
+     74a:	fcf42e23          	sw	a5,-36(s0)
+     74e:	fdc42783          	lw	a5,-36(s0)
+     752:	fcf42c23          	sw	a5,-40(s0)
+    if (n <= 0) {
+     756:	fd842783          	lw	a5,-40(s0)
+     75a:	00f04463          	bgtz	a5,762 <T3_func+0x166>
+        return 0; // Handle error for non-positive input
+     75e:	4781                	li	a5,0
+     760:	a801                	j	770 <T3_func+0x174>
+    return 31 - __builtin_clz(n);
+     762:	fd842783          	lw	a5,-40(s0)
+     766:	60079793          	clz	a5,a5
+     76a:	477d                	li	a4,31
+     76c:	40f707b3          	sub	a5,a4,a5
+		reg[0] = f_log2(op0);
+     770:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     774:	f7042783          	lw	a5,-144(s0)
+	scores[2] = P7(in1, in2, in3, in4);
+     778:	f8f42c23          	sw	a5,-104(s0)
+	return next[bestProgram(scores, 3)];
+     77c:	f9040793          	addi	a5,s0,-112
+     780:	458d                	li	a1,3
+     782:	853e                	mv	a0,a5
+     784:	34cd                	jal	266 <bestProgram>
+     786:	872a                	mv	a4,a0
+     788:	f9c40793          	addi	a5,s0,-100
+     78c:	070a                	slli	a4,a4,0x2
+     78e:	97ba                	add	a5,a5,a4
+     790:	439c                	lw	a5,0(a5)
+}
+     792:	853e                	mv	a0,a5
+     794:	40fa                	lw	ra,156(sp)
+     796:	446a                	lw	s0,152(sp)
+     798:	610d                	addi	sp,sp,160
+     79a:	8082                	ret
+
+0000079c <T4_func>:
+
+enum vertices T4_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     79c:	7135                	addi	sp,sp,-160
+     79e:	cf06                	sw	ra,156(sp)
+     7a0:	cd22                	sw	s0,152(sp)
+     7a2:	1100                	addi	s0,sp,160
+     7a4:	f6a42623          	sw	a0,-148(s0)
+     7a8:	f6b42423          	sw	a1,-152(s0)
+     7ac:	f6c42223          	sw	a2,-156(s0)
+     7b0:	f6d42023          	sw	a3,-160(s0)
+	const enum vertices next[3] = { A28, A30, T0 };
+     7b4:	47f1                	li	a5,28
+     7b6:	f8f42e23          	sw	a5,-100(s0)
+     7ba:	47f9                	li	a5,30
+     7bc:	faf42023          	sw	a5,-96(s0)
+     7c0:	fa042223          	sw	zero,-92(s0)
+     7c4:	f6442783          	lw	a5,-156(s0)
+     7c8:	faf42e23          	sw	a5,-68(s0)
+     7cc:	f6c42783          	lw	a5,-148(s0)
+     7d0:	faf42c23          	sw	a5,-72(s0)
+     7d4:	f6842783          	lw	a5,-152(s0)
+     7d8:	faf42a23          	sw	a5,-76(s0)
+     7dc:	f6042783          	lw	a5,-160(s0)
+     7e0:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P8(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     7e4:	f6042823          	sw	zero,-144(s0)
+     7e8:	f6042a23          	sw	zero,-140(s0)
+     7ec:	f6042c23          	sw	zero,-136(s0)
+     7f0:	f6042e23          	sw	zero,-132(s0)
+     7f4:	f8042023          	sw	zero,-128(s0)
+     7f8:	f8042223          	sw	zero,-124(s0)
+     7fc:	f8042423          	sw	zero,-120(s0)
+     800:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in3[1];
+     804:	fbc42783          	lw	a5,-68(s0)
+     808:	0791                	addi	a5,a5,4
+     80a:	439c                	lw	a5,0(a5)
+     80c:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in3[2];
+     810:	fbc42783          	lw	a5,-68(s0)
+     814:	07a1                	addi	a5,a5,8
+     816:	439c                	lw	a5,0(a5)
+     818:	faf42423          	sw	a5,-88(s0)
+		reg[0] = op0 - op1;
+     81c:	fac42703          	lw	a4,-84(s0)
+     820:	fa842783          	lw	a5,-88(s0)
+     824:	40f707b3          	sub	a5,a4,a5
+     828:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     82c:	f7042783          	lw	a5,-144(s0)
+	fixedpt scores[3];
+	scores[0] = P8(in1, in2, in3, in4);
+     830:	f8f42823          	sw	a5,-112(s0)
+     834:	f6c42783          	lw	a5,-148(s0)
+     838:	fcf42a23          	sw	a5,-44(s0)
+     83c:	f6842783          	lw	a5,-152(s0)
+     840:	fcf42823          	sw	a5,-48(s0)
+     844:	f6442783          	lw	a5,-156(s0)
+     848:	fcf42623          	sw	a5,-52(s0)
+     84c:	f6042783          	lw	a5,-160(s0)
+     850:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P9(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     854:	f6042823          	sw	zero,-144(s0)
+     858:	f6042a23          	sw	zero,-140(s0)
+     85c:	f6042c23          	sw	zero,-136(s0)
+     860:	f6042e23          	sw	zero,-132(s0)
+     864:	f8042023          	sw	zero,-128(s0)
+     868:	f8042223          	sw	zero,-124(s0)
+     86c:	f8042423          	sw	zero,-120(s0)
+     870:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in1[2];
+     874:	fd442783          	lw	a5,-44(s0)
+     878:	07a1                	addi	a5,a5,8
+     87a:	439c                	lw	a5,0(a5)
+     87c:	fcf42223          	sw	a5,-60(s0)
+     880:	fc442783          	lw	a5,-60(s0)
+     884:	fcf42023          	sw	a5,-64(s0)
+    if (n <= 0) {
+     888:	fc042783          	lw	a5,-64(s0)
+     88c:	00f04463          	bgtz	a5,894 <__heap_size+0x94>
+        return 0; // Handle error for non-positive input
+     890:	4781                	li	a5,0
+     892:	a801                	j	8a2 <__heap_size+0xa2>
+    return 31 - __builtin_clz(n);
+     894:	fc042783          	lw	a5,-64(s0)
+     898:	60079793          	clz	a5,a5
+     89c:	477d                	li	a4,31
+     89e:	40f707b3          	sub	a5,a4,a5
+		reg[0] = f_log2(op0);
+     8a2:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     8a6:	f7042783          	lw	a5,-144(s0)
+	scores[1] = P9(in1, in2, in3, in4);
+     8aa:	f8f42a23          	sw	a5,-108(s0)
+     8ae:	f6442783          	lw	a5,-156(s0)
+     8b2:	fef42623          	sw	a5,-20(s0)
+     8b6:	f6c42783          	lw	a5,-148(s0)
+     8ba:	fef42423          	sw	a5,-24(s0)
+     8be:	f6842783          	lw	a5,-152(s0)
+     8c2:	fef42223          	sw	a5,-28(s0)
+     8c6:	f6042783          	lw	a5,-160(s0)
+     8ca:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P10(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     8ce:	f6042823          	sw	zero,-144(s0)
+     8d2:	f6042a23          	sw	zero,-140(s0)
+     8d6:	f6042c23          	sw	zero,-136(s0)
+     8da:	f6042e23          	sw	zero,-132(s0)
+     8de:	f8042023          	sw	zero,-128(s0)
+     8e2:	f8042223          	sw	zero,-124(s0)
+     8e6:	f8042423          	sw	zero,-120(s0)
+     8ea:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in3[0];
+     8ee:	fec42783          	lw	a5,-20(s0)
+     8f2:	439c                	lw	a5,0(a5)
+     8f4:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[1];
+     8f8:	fec42783          	lw	a5,-20(s0)
+     8fc:	0791                	addi	a5,a5,4
+     8fe:	439c                	lw	a5,0(a5)
+     900:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 + op1;
+     904:	fdc42703          	lw	a4,-36(s0)
+     908:	fd842783          	lw	a5,-40(s0)
+     90c:	97ba                	add	a5,a5,a4
+     90e:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     912:	f7042783          	lw	a5,-144(s0)
+	scores[2] = P10(in1, in2, in3, in4);
+     916:	f8f42c23          	sw	a5,-104(s0)
+	return next[bestProgram(scores, 3)];
+     91a:	f9040793          	addi	a5,s0,-112
+     91e:	458d                	li	a1,3
+     920:	853e                	mv	a0,a5
+     922:	3291                	jal	266 <bestProgram>
+     924:	872a                	mv	a4,a0
+     926:	f9c40793          	addi	a5,s0,-100
+     92a:	070a                	slli	a4,a4,0x2
+     92c:	97ba                	add	a5,a5,a4
+     92e:	439c                	lw	a5,0(a5)
+}
+     930:	853e                	mv	a0,a5
+     932:	40fa                	lw	ra,156(sp)
+     934:	446a                	lw	s0,152(sp)
+     936:	610d                	addi	sp,sp,160
+     938:	8082                	ret
+
+0000093a <T5_func>:
+
+enum vertices T5_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     93a:	7159                	addi	sp,sp,-112
+     93c:	d686                	sw	ra,108(sp)
+     93e:	d4a2                	sw	s0,104(sp)
+     940:	1880                	addi	s0,sp,112
+     942:	f8a42e23          	sw	a0,-100(s0)
+     946:	f8b42c23          	sw	a1,-104(s0)
+     94a:	f8c42a23          	sw	a2,-108(s0)
+     94e:	f8d42823          	sw	a3,-112(s0)
+	const enum vertices next[1] = { T2 };
+     952:	4789                	li	a5,2
+     954:	fcf42623          	sw	a5,-52(s0)
+     958:	f9c42783          	lw	a5,-100(s0)
+     95c:	fef42623          	sw	a5,-20(s0)
+     960:	f9042783          	lw	a5,-112(s0)
+     964:	fef42423          	sw	a5,-24(s0)
+     968:	f9842783          	lw	a5,-104(s0)
+     96c:	fef42223          	sw	a5,-28(s0)
+     970:	f9442783          	lw	a5,-108(s0)
+     974:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P11(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     978:	fa042423          	sw	zero,-88(s0)
+     97c:	fa042623          	sw	zero,-84(s0)
+     980:	fa042823          	sw	zero,-80(s0)
+     984:	fa042a23          	sw	zero,-76(s0)
+     988:	fa042c23          	sw	zero,-72(s0)
+     98c:	fa042e23          	sw	zero,-68(s0)
+     990:	fc042023          	sw	zero,-64(s0)
+     994:	fc042223          	sw	zero,-60(s0)
+	{
+		fixedpt op0 = in4[4];
+     998:	fe842783          	lw	a5,-24(s0)
+     99c:	07c1                	addi	a5,a5,16
+     99e:	439c                	lw	a5,0(a5)
+     9a0:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in4[1];
+     9a4:	fe842783          	lw	a5,-24(s0)
+     9a8:	0791                	addi	a5,a5,4
+     9aa:	439c                	lw	a5,0(a5)
+     9ac:	fcf42c23          	sw	a5,-40(s0)
+		reg[4] = op0 + op1;
+     9b0:	fdc42703          	lw	a4,-36(s0)
+     9b4:	fd842783          	lw	a5,-40(s0)
+     9b8:	97ba                	add	a5,a5,a4
+     9ba:	faf42c23          	sw	a5,-72(s0)
+	}
+	{
+		fixedpt op0 = reg[4];
+     9be:	fb842783          	lw	a5,-72(s0)
+     9c2:	fcf42a23          	sw	a5,-44(s0)
+		fixedpt op1 = in1[1];
+     9c6:	fec42783          	lw	a5,-20(s0)
+     9ca:	0791                	addi	a5,a5,4
+     9cc:	439c                	lw	a5,0(a5)
+     9ce:	fcf42823          	sw	a5,-48(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+     9d2:	fd442703          	lw	a4,-44(s0)
+     9d6:	fd042783          	lw	a5,-48(s0)
+     9da:	0af767b3          	max	a5,a4,a5
+     9de:	faf42423          	sw	a5,-88(s0)
+	}
+	return reg[0];
+     9e2:	fa842783          	lw	a5,-88(s0)
+	fixedpt scores[1];
+	scores[0] = P11(in1, in2, in3, in4);
+     9e6:	fcf42423          	sw	a5,-56(s0)
+	return next[bestProgram(scores, 1)];
+     9ea:	fc840793          	addi	a5,s0,-56
+     9ee:	4585                	li	a1,1
+     9f0:	853e                	mv	a0,a5
+     9f2:	3895                	jal	266 <bestProgram>
+     9f4:	872a                	mv	a4,a0
+     9f6:	fcc40793          	addi	a5,s0,-52
+     9fa:	070a                	slli	a4,a4,0x2
+     9fc:	97ba                	add	a5,a5,a4
+     9fe:	439c                	lw	a5,0(a5)
+}
+     a00:	853e                	mv	a0,a5
+     a02:	50b6                	lw	ra,108(sp)
+     a04:	5426                	lw	s0,104(sp)
+     a06:	6165                	addi	sp,sp,112
+     a08:	8082                	ret
+
+00000a0a <T6_func>:
+
+enum vertices T6_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     a0a:	7115                	addi	sp,sp,-224
+     a0c:	cf86                	sw	ra,220(sp)
+     a0e:	cda2                	sw	s0,216(sp)
+     a10:	1180                	addi	s0,sp,224
+     a12:	f2a42623          	sw	a0,-212(s0)
+     a16:	f2b42423          	sw	a1,-216(s0)
+     a1a:	f2c42223          	sw	a2,-220(s0)
+     a1e:	f2d42023          	sw	a3,-224(s0)
+	const enum vertices next[5] = { A26, A30, A28, A25, A28 };
+     a22:	67a9                	lui	a5,0xa
+     a24:	50078793          	addi	a5,a5,1280 # a500 <TPG.c.205146a8+0xcc2>
+     a28:	438c                	lw	a1,0(a5)
+     a2a:	43d0                	lw	a2,4(a5)
+     a2c:	4794                	lw	a3,8(a5)
+     a2e:	47d8                	lw	a4,12(a5)
+     a30:	f6b42423          	sw	a1,-152(s0)
+     a34:	f6c42623          	sw	a2,-148(s0)
+     a38:	f6d42823          	sw	a3,-144(s0)
+     a3c:	f6e42a23          	sw	a4,-140(s0)
+     a40:	4b9c                	lw	a5,16(a5)
+     a42:	f6f42c23          	sw	a5,-136(s0)
+     a46:	f2c42783          	lw	a5,-212(s0)
+     a4a:	f8f42823          	sw	a5,-112(s0)
+     a4e:	f2442783          	lw	a5,-220(s0)
+     a52:	f8f42623          	sw	a5,-116(s0)
+     a56:	f2842783          	lw	a5,-216(s0)
+     a5a:	f8f42423          	sw	a5,-120(s0)
+     a5e:	f2042783          	lw	a5,-224(s0)
+     a62:	f8f42223          	sw	a5,-124(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P12(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     a66:	f2042a23          	sw	zero,-204(s0)
+     a6a:	f2042c23          	sw	zero,-200(s0)
+     a6e:	f2042e23          	sw	zero,-196(s0)
+     a72:	f4042023          	sw	zero,-192(s0)
+     a76:	f4042223          	sw	zero,-188(s0)
+     a7a:	f4042423          	sw	zero,-184(s0)
+     a7e:	f4042623          	sw	zero,-180(s0)
+     a82:	f4042823          	sw	zero,-176(s0)
+	{
+		fixedpt op0 = in3[1];
+     a86:	f8c42783          	lw	a5,-116(s0)
+     a8a:	0791                	addi	a5,a5,4
+     a8c:	439c                	lw	a5,0(a5)
+     a8e:	f8f42023          	sw	a5,-128(s0)
+		fixedpt op1 = in1[0];
+     a92:	f9042783          	lw	a5,-112(s0)
+     a96:	439c                	lw	a5,0(a5)
+     a98:	f6f42e23          	sw	a5,-132(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+     a9c:	f8042703          	lw	a4,-128(s0)
+     aa0:	f7c42783          	lw	a5,-132(s0)
+     aa4:	0af767b3          	max	a5,a4,a5
+     aa8:	f2f42a23          	sw	a5,-204(s0)
+	}
+	return reg[0];
+     aac:	f3442783          	lw	a5,-204(s0)
+	fixedpt scores[5];
+	scores[0] = P12(in1, in2, in3, in4);
+     ab0:	f4f42a23          	sw	a5,-172(s0)
+     ab4:	f2442783          	lw	a5,-220(s0)
+     ab8:	faf42223          	sw	a5,-92(s0)
+     abc:	f2c42783          	lw	a5,-212(s0)
+     ac0:	faf42023          	sw	a5,-96(s0)
+     ac4:	f2842783          	lw	a5,-216(s0)
+     ac8:	f8f42e23          	sw	a5,-100(s0)
+     acc:	f2042783          	lw	a5,-224(s0)
+     ad0:	f8f42c23          	sw	a5,-104(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P13(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     ad4:	f2042a23          	sw	zero,-204(s0)
+     ad8:	f2042c23          	sw	zero,-200(s0)
+     adc:	f2042e23          	sw	zero,-196(s0)
+     ae0:	f4042023          	sw	zero,-192(s0)
+     ae4:	f4042223          	sw	zero,-188(s0)
+     ae8:	f4042423          	sw	zero,-184(s0)
+     aec:	f4042623          	sw	zero,-180(s0)
+     af0:	f4042823          	sw	zero,-176(s0)
+	{
+		fixedpt op0 = in3[1];
+     af4:	fa442783          	lw	a5,-92(s0)
+     af8:	0791                	addi	a5,a5,4
+     afa:	439c                	lw	a5,0(a5)
+     afc:	f8f42a23          	sw	a5,-108(s0)
+		reg[0] = f_pow2(op0);
+     b00:	f9442503          	lw	a0,-108(s0)
+     b04:	f10ff0ef          	jal	214 <f_pow2>
+     b08:	87aa                	mv	a5,a0
+     b0a:	f2f42a23          	sw	a5,-204(s0)
+	}
+	return reg[0];
+     b0e:	f3442783          	lw	a5,-204(s0)
+	scores[1] = P13(in1, in2, in3, in4);
+     b12:	f4f42c23          	sw	a5,-168(s0)
+     b16:	f2442783          	lw	a5,-220(s0)
+     b1a:	faf42e23          	sw	a5,-68(s0)
+     b1e:	f2c42783          	lw	a5,-212(s0)
+     b22:	faf42c23          	sw	a5,-72(s0)
+     b26:	f2842783          	lw	a5,-216(s0)
+     b2a:	faf42a23          	sw	a5,-76(s0)
+     b2e:	f2042783          	lw	a5,-224(s0)
+     b32:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P14(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     b36:	f2042a23          	sw	zero,-204(s0)
+     b3a:	f2042c23          	sw	zero,-200(s0)
+     b3e:	f2042e23          	sw	zero,-196(s0)
+     b42:	f4042023          	sw	zero,-192(s0)
+     b46:	f4042223          	sw	zero,-188(s0)
+     b4a:	f4042423          	sw	zero,-184(s0)
+     b4e:	f4042623          	sw	zero,-180(s0)
+     b52:	f4042823          	sw	zero,-176(s0)
+	{
+		fixedpt op0 = in3[0];
+     b56:	fbc42783          	lw	a5,-68(s0)
+     b5a:	439c                	lw	a5,0(a5)
+     b5c:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in3[1];
+     b60:	fbc42783          	lw	a5,-68(s0)
+     b64:	0791                	addi	a5,a5,4
+     b66:	439c                	lw	a5,0(a5)
+     b68:	faf42423          	sw	a5,-88(s0)
+		reg[0] = op0 + op1;
+     b6c:	fac42703          	lw	a4,-84(s0)
+     b70:	fa842783          	lw	a5,-88(s0)
+     b74:	97ba                	add	a5,a5,a4
+     b76:	f2f42a23          	sw	a5,-204(s0)
+	}
+	return reg[0];
+     b7a:	f3442783          	lw	a5,-204(s0)
+	scores[2] = P14(in1, in2, in3, in4);
+     b7e:	f4f42e23          	sw	a5,-164(s0)
+     b82:	f2442783          	lw	a5,-220(s0)
+     b86:	fcf42a23          	sw	a5,-44(s0)
+     b8a:	f2c42783          	lw	a5,-212(s0)
+     b8e:	fcf42823          	sw	a5,-48(s0)
+     b92:	f2842783          	lw	a5,-216(s0)
+     b96:	fcf42623          	sw	a5,-52(s0)
+     b9a:	f2042783          	lw	a5,-224(s0)
+     b9e:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P15(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     ba2:	f2042a23          	sw	zero,-204(s0)
+     ba6:	f2042c23          	sw	zero,-200(s0)
+     baa:	f2042e23          	sw	zero,-196(s0)
+     bae:	f4042023          	sw	zero,-192(s0)
+     bb2:	f4042223          	sw	zero,-188(s0)
+     bb6:	f4042423          	sw	zero,-184(s0)
+     bba:	f4042623          	sw	zero,-180(s0)
+     bbe:	f4042823          	sw	zero,-176(s0)
+	{
+		fixedpt op0 = in3[2];
+     bc2:	fd442783          	lw	a5,-44(s0)
+     bc6:	07a1                	addi	a5,a5,8
+     bc8:	439c                	lw	a5,0(a5)
+     bca:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = reg[0];
+     bce:	f3442783          	lw	a5,-204(s0)
+     bd2:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 - op1;
+     bd6:	fc442703          	lw	a4,-60(s0)
+     bda:	fc042783          	lw	a5,-64(s0)
+     bde:	40f707b3          	sub	a5,a4,a5
+     be2:	f2f42a23          	sw	a5,-204(s0)
+	}
+	return reg[0];
+     be6:	f3442783          	lw	a5,-204(s0)
+	scores[3] = P15(in1, in2, in3, in4);
+     bea:	f6f42023          	sw	a5,-160(s0)
+     bee:	f2442783          	lw	a5,-220(s0)
+     bf2:	fef42623          	sw	a5,-20(s0)
+     bf6:	f2c42783          	lw	a5,-212(s0)
+     bfa:	fef42423          	sw	a5,-24(s0)
+     bfe:	f2842783          	lw	a5,-216(s0)
+     c02:	fef42223          	sw	a5,-28(s0)
+     c06:	f2042783          	lw	a5,-224(s0)
+     c0a:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P16(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     c0e:	f2042a23          	sw	zero,-204(s0)
+     c12:	f2042c23          	sw	zero,-200(s0)
+     c16:	f2042e23          	sw	zero,-196(s0)
+     c1a:	f4042023          	sw	zero,-192(s0)
+     c1e:	f4042223          	sw	zero,-188(s0)
+     c22:	f4042423          	sw	zero,-184(s0)
+     c26:	f4042623          	sw	zero,-180(s0)
+     c2a:	f4042823          	sw	zero,-176(s0)
+	{
+		fixedpt op0 = in3[1];
+     c2e:	fec42783          	lw	a5,-20(s0)
+     c32:	0791                	addi	a5,a5,4
+     c34:	439c                	lw	a5,0(a5)
+     c36:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[2];
+     c3a:	fec42783          	lw	a5,-20(s0)
+     c3e:	07a1                	addi	a5,a5,8
+     c40:	439c                	lw	a5,0(a5)
+     c42:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+     c46:	fdc42703          	lw	a4,-36(s0)
+     c4a:	fd842783          	lw	a5,-40(s0)
+     c4e:	40f707b3          	sub	a5,a4,a5
+     c52:	f2f42a23          	sw	a5,-204(s0)
+	}
+	return reg[0];
+     c56:	f3442783          	lw	a5,-204(s0)
+	scores[4] = P16(in1, in2, in3, in4);
+     c5a:	f6f42223          	sw	a5,-156(s0)
+	return next[bestProgram(scores, 5)];
+     c5e:	f5440793          	addi	a5,s0,-172
+     c62:	4595                	li	a1,5
+     c64:	853e                	mv	a0,a5
+     c66:	e00ff0ef          	jal	266 <bestProgram>
+     c6a:	872a                	mv	a4,a0
+     c6c:	f6840793          	addi	a5,s0,-152
+     c70:	070a                	slli	a4,a4,0x2
+     c72:	97ba                	add	a5,a5,a4
+     c74:	439c                	lw	a5,0(a5)
+}
+     c76:	853e                	mv	a0,a5
+     c78:	40fe                	lw	ra,220(sp)
+     c7a:	446e                	lw	s0,216(sp)
+     c7c:	612d                	addi	sp,sp,224
+     c7e:	8082                	ret
+
+00000c80 <T7_func>:
+
+enum vertices T7_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     c80:	711d                	addi	sp,sp,-96
+     c82:	ce86                	sw	ra,92(sp)
+     c84:	cca2                	sw	s0,88(sp)
+     c86:	1080                	addi	s0,sp,96
+     c88:	faa42623          	sw	a0,-84(s0)
+     c8c:	fab42423          	sw	a1,-88(s0)
+     c90:	fac42223          	sw	a2,-92(s0)
+     c94:	fad42023          	sw	a3,-96(s0)
+	const enum vertices next[1] = { T4 };
+     c98:	4791                	li	a5,4
+     c9a:	fcf42a23          	sw	a5,-44(s0)
+     c9e:	fa042783          	lw	a5,-96(s0)
+     ca2:	fef42623          	sw	a5,-20(s0)
+     ca6:	fac42783          	lw	a5,-84(s0)
+     caa:	fef42423          	sw	a5,-24(s0)
+     cae:	fa842783          	lw	a5,-88(s0)
+     cb2:	fef42223          	sw	a5,-28(s0)
+     cb6:	fa442783          	lw	a5,-92(s0)
+     cba:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P17(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     cbe:	fa042823          	sw	zero,-80(s0)
+     cc2:	fa042a23          	sw	zero,-76(s0)
+     cc6:	fa042c23          	sw	zero,-72(s0)
+     cca:	fa042e23          	sw	zero,-68(s0)
+     cce:	fc042023          	sw	zero,-64(s0)
+     cd2:	fc042223          	sw	zero,-60(s0)
+     cd6:	fc042423          	sw	zero,-56(s0)
+     cda:	fc042623          	sw	zero,-52(s0)
+	{
+		fixedpt op0 = in4[2];
+     cde:	fec42783          	lw	a5,-20(s0)
+     ce2:	07a1                	addi	a5,a5,8
+     ce4:	439c                	lw	a5,0(a5)
+     ce6:	fcf42e23          	sw	a5,-36(s0)
+     cea:	fdc42783          	lw	a5,-36(s0)
+     cee:	fcf42c23          	sw	a5,-40(s0)
+    if (n <= 0) {
+     cf2:	fd842783          	lw	a5,-40(s0)
+     cf6:	00f04463          	bgtz	a5,cfe <T7_func+0x7e>
+        return 0; // Handle error for non-positive input
+     cfa:	4781                	li	a5,0
+     cfc:	a801                	j	d0c <T7_func+0x8c>
+    return 31 - __builtin_clz(n);
+     cfe:	fd842783          	lw	a5,-40(s0)
+     d02:	60079793          	clz	a5,a5
+     d06:	477d                	li	a4,31
+     d08:	40f707b3          	sub	a5,a4,a5
+		reg[0] = f_log2(op0);
+     d0c:	faf42823          	sw	a5,-80(s0)
+	}
+	return reg[0];
+     d10:	fb042783          	lw	a5,-80(s0)
+	fixedpt scores[1];
+	scores[0] = P17(in1, in2, in3, in4);
+     d14:	fcf42823          	sw	a5,-48(s0)
+	return next[bestProgram(scores, 1)];
+     d18:	fd040793          	addi	a5,s0,-48
+     d1c:	4585                	li	a1,1
+     d1e:	853e                	mv	a0,a5
+     d20:	d46ff0ef          	jal	266 <bestProgram>
+     d24:	872a                	mv	a4,a0
+     d26:	fd440793          	addi	a5,s0,-44
+     d2a:	070a                	slli	a4,a4,0x2
+     d2c:	97ba                	add	a5,a5,a4
+     d2e:	439c                	lw	a5,0(a5)
+}
+     d30:	853e                	mv	a0,a5
+     d32:	40f6                	lw	ra,92(sp)
+     d34:	4466                	lw	s0,88(sp)
+     d36:	6125                	addi	sp,sp,96
+     d38:	8082                	ret
+
+00000d3a <T8_func>:
+
+enum vertices T8_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     d3a:	711d                	addi	sp,sp,-96
+     d3c:	ce86                	sw	ra,92(sp)
+     d3e:	cca2                	sw	s0,88(sp)
+     d40:	1080                	addi	s0,sp,96
+     d42:	faa42623          	sw	a0,-84(s0)
+     d46:	fab42423          	sw	a1,-88(s0)
+     d4a:	fac42223          	sw	a2,-92(s0)
+     d4e:	fad42023          	sw	a3,-96(s0)
+	const enum vertices next[1] = { T3 };
+     d52:	478d                	li	a5,3
+     d54:	fcf42a23          	sw	a5,-44(s0)
+     d58:	fac42783          	lw	a5,-84(s0)
+     d5c:	fef42623          	sw	a5,-20(s0)
+     d60:	fa842783          	lw	a5,-88(s0)
+     d64:	fef42423          	sw	a5,-24(s0)
+     d68:	fa442783          	lw	a5,-92(s0)
+     d6c:	fef42223          	sw	a5,-28(s0)
+     d70:	fa042783          	lw	a5,-96(s0)
+     d74:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P18(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     d78:	fa042823          	sw	zero,-80(s0)
+     d7c:	fa042a23          	sw	zero,-76(s0)
+     d80:	fa042c23          	sw	zero,-72(s0)
+     d84:	fa042e23          	sw	zero,-68(s0)
+     d88:	fc042023          	sw	zero,-64(s0)
+     d8c:	fc042223          	sw	zero,-60(s0)
+     d90:	fc042423          	sw	zero,-56(s0)
+     d94:	fc042623          	sw	zero,-52(s0)
+	{
+		fixedpt op0 = in1[2];
+     d98:	fec42783          	lw	a5,-20(s0)
+     d9c:	07a1                	addi	a5,a5,8
+     d9e:	439c                	lw	a5,0(a5)
+     da0:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = reg[2];
+     da4:	fb842783          	lw	a5,-72(s0)
+     da8:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+     dac:	fdc42703          	lw	a4,-36(s0)
+     db0:	fd842783          	lw	a5,-40(s0)
+     db4:	0af767b3          	max	a5,a4,a5
+     db8:	faf42823          	sw	a5,-80(s0)
+	}
+	return reg[0];
+     dbc:	fb042783          	lw	a5,-80(s0)
+	fixedpt scores[1];
+	scores[0] = P18(in1, in2, in3, in4);
+     dc0:	fcf42823          	sw	a5,-48(s0)
+	return next[bestProgram(scores, 1)];
+     dc4:	fd040793          	addi	a5,s0,-48
+     dc8:	4585                	li	a1,1
+     dca:	853e                	mv	a0,a5
+     dcc:	c9aff0ef          	jal	266 <bestProgram>
+     dd0:	872a                	mv	a4,a0
+     dd2:	fd440793          	addi	a5,s0,-44
+     dd6:	070a                	slli	a4,a4,0x2
+     dd8:	97ba                	add	a5,a5,a4
+     dda:	439c                	lw	a5,0(a5)
+}
+     ddc:	853e                	mv	a0,a5
+     dde:	40f6                	lw	ra,92(sp)
+     de0:	4466                	lw	s0,88(sp)
+     de2:	6125                	addi	sp,sp,96
+     de4:	8082                	ret
+
+00000de6 <T9_func>:
+
+enum vertices T9_func(const fixedpt * restrict in1,
+                      const fixedpt * restrict in2,
+                      const fixedpt * restrict in3,
+                      const fixedpt * restrict in4)
+{
+     de6:	7135                	addi	sp,sp,-160
+     de8:	cf06                	sw	ra,156(sp)
+     dea:	cd22                	sw	s0,152(sp)
+     dec:	1100                	addi	s0,sp,160
+     dee:	f6a42623          	sw	a0,-148(s0)
+     df2:	f6b42423          	sw	a1,-152(s0)
+     df6:	f6c42223          	sw	a2,-156(s0)
+     dfa:	f6d42023          	sw	a3,-160(s0)
+	const enum vertices next[3] = { T6, A25, A28 };
+     dfe:	4799                	li	a5,6
+     e00:	f8f42e23          	sw	a5,-100(s0)
+     e04:	47e5                	li	a5,25
+     e06:	faf42023          	sw	a5,-96(s0)
+     e0a:	47f1                	li	a5,28
+     e0c:	faf42223          	sw	a5,-92(s0)
+     e10:	f6442783          	lw	a5,-156(s0)
+     e14:	faf42e23          	sw	a5,-68(s0)
+     e18:	f6c42783          	lw	a5,-148(s0)
+     e1c:	faf42c23          	sw	a5,-72(s0)
+     e20:	f6842783          	lw	a5,-152(s0)
+     e24:	faf42a23          	sw	a5,-76(s0)
+     e28:	f6042783          	lw	a5,-160(s0)
+     e2c:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P19(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     e30:	f6042823          	sw	zero,-144(s0)
+     e34:	f6042a23          	sw	zero,-140(s0)
+     e38:	f6042c23          	sw	zero,-136(s0)
+     e3c:	f6042e23          	sw	zero,-132(s0)
+     e40:	f8042023          	sw	zero,-128(s0)
+     e44:	f8042223          	sw	zero,-124(s0)
+     e48:	f8042423          	sw	zero,-120(s0)
+     e4c:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in3[1];
+     e50:	fbc42783          	lw	a5,-68(s0)
+     e54:	0791                	addi	a5,a5,4
+     e56:	439c                	lw	a5,0(a5)
+     e58:	faf42623          	sw	a5,-84(s0)
+     e5c:	fac42783          	lw	a5,-84(s0)
+     e60:	faf42423          	sw	a5,-88(s0)
+    if (n <= 0) {
+     e64:	fa842783          	lw	a5,-88(s0)
+     e68:	00f04463          	bgtz	a5,e70 <T9_func+0x8a>
+        return 0; // Handle error for non-positive input
+     e6c:	4781                	li	a5,0
+     e6e:	a801                	j	e7e <T9_func+0x98>
+    return 31 - __builtin_clz(n);
+     e70:	fa842783          	lw	a5,-88(s0)
+     e74:	60079793          	clz	a5,a5
+     e78:	477d                	li	a4,31
+     e7a:	40f707b3          	sub	a5,a4,a5
+		reg[0] = f_log2(op0);
+     e7e:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     e82:	f7042783          	lw	a5,-144(s0)
+	fixedpt scores[3];
+	scores[0] = P19(in1, in2, in3, in4);
+     e86:	f8f42823          	sw	a5,-112(s0)
+     e8a:	f6442783          	lw	a5,-156(s0)
+     e8e:	fcf42a23          	sw	a5,-44(s0)
+     e92:	f6c42783          	lw	a5,-148(s0)
+     e96:	fcf42823          	sw	a5,-48(s0)
+     e9a:	f6842783          	lw	a5,-152(s0)
+     e9e:	fcf42623          	sw	a5,-52(s0)
+     ea2:	f6042783          	lw	a5,-160(s0)
+     ea6:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P20(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     eaa:	f6042823          	sw	zero,-144(s0)
+     eae:	f6042a23          	sw	zero,-140(s0)
+     eb2:	f6042c23          	sw	zero,-136(s0)
+     eb6:	f6042e23          	sw	zero,-132(s0)
+     eba:	f8042023          	sw	zero,-128(s0)
+     ebe:	f8042223          	sw	zero,-124(s0)
+     ec2:	f8042423          	sw	zero,-120(s0)
+     ec6:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in3[1];
+     eca:	fd442783          	lw	a5,-44(s0)
+     ece:	0791                	addi	a5,a5,4
+     ed0:	439c                	lw	a5,0(a5)
+     ed2:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = reg[0];
+     ed6:	f7042783          	lw	a5,-144(s0)
+     eda:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 - op1;
+     ede:	fc442703          	lw	a4,-60(s0)
+     ee2:	fc042783          	lw	a5,-64(s0)
+     ee6:	40f707b3          	sub	a5,a4,a5
+     eea:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     eee:	f7042783          	lw	a5,-144(s0)
+	scores[1] = P20(in1, in2, in3, in4);
+     ef2:	f8f42a23          	sw	a5,-108(s0)
+     ef6:	f6442783          	lw	a5,-156(s0)
+     efa:	fef42623          	sw	a5,-20(s0)
+     efe:	f6c42783          	lw	a5,-148(s0)
+     f02:	fef42423          	sw	a5,-24(s0)
+     f06:	f6842783          	lw	a5,-152(s0)
+     f0a:	fef42223          	sw	a5,-28(s0)
+     f0e:	f6042783          	lw	a5,-160(s0)
+     f12:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P21(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     f16:	f6042823          	sw	zero,-144(s0)
+     f1a:	f6042a23          	sw	zero,-140(s0)
+     f1e:	f6042c23          	sw	zero,-136(s0)
+     f22:	f6042e23          	sw	zero,-132(s0)
+     f26:	f8042023          	sw	zero,-128(s0)
+     f2a:	f8042223          	sw	zero,-124(s0)
+     f2e:	f8042423          	sw	zero,-120(s0)
+     f32:	f8042623          	sw	zero,-116(s0)
+	{
+		fixedpt op0 = in3[1];
+     f36:	fec42783          	lw	a5,-20(s0)
+     f3a:	0791                	addi	a5,a5,4
+     f3c:	439c                	lw	a5,0(a5)
+     f3e:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[2];
+     f42:	fec42783          	lw	a5,-20(s0)
+     f46:	07a1                	addi	a5,a5,8
+     f48:	439c                	lw	a5,0(a5)
+     f4a:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+     f4e:	fdc42703          	lw	a4,-36(s0)
+     f52:	fd842783          	lw	a5,-40(s0)
+     f56:	40f707b3          	sub	a5,a4,a5
+     f5a:	f6f42823          	sw	a5,-144(s0)
+	}
+	return reg[0];
+     f5e:	f7042783          	lw	a5,-144(s0)
+	scores[2] = P21(in1, in2, in3, in4);
+     f62:	f8f42c23          	sw	a5,-104(s0)
+	return next[bestProgram(scores, 3)];
+     f66:	f9040793          	addi	a5,s0,-112
+     f6a:	458d                	li	a1,3
+     f6c:	853e                	mv	a0,a5
+     f6e:	af8ff0ef          	jal	266 <bestProgram>
+     f72:	872a                	mv	a4,a0
+     f74:	f9c40793          	addi	a5,s0,-100
+     f78:	070a                	slli	a4,a4,0x2
+     f7a:	97ba                	add	a5,a5,a4
+     f7c:	439c                	lw	a5,0(a5)
+}
+     f7e:	853e                	mv	a0,a5
+     f80:	40fa                	lw	ra,156(sp)
+     f82:	446a                	lw	s0,152(sp)
+     f84:	610d                	addi	sp,sp,160
+     f86:	8082                	ret
+
+00000f88 <T10_func>:
+
+enum vertices T10_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+     f88:	7119                	addi	sp,sp,-128
+     f8a:	de86                	sw	ra,124(sp)
+     f8c:	dca2                	sw	s0,120(sp)
+     f8e:	0100                	addi	s0,sp,128
+     f90:	f8a42623          	sw	a0,-116(s0)
+     f94:	f8b42423          	sw	a1,-120(s0)
+     f98:	f8c42223          	sw	a2,-124(s0)
+     f9c:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { A27, T9 };
+     fa0:	47ed                	li	a5,27
+     fa2:	faf42c23          	sw	a5,-72(s0)
+     fa6:	47a5                	li	a5,9
+     fa8:	faf42e23          	sw	a5,-68(s0)
+     fac:	f8c42783          	lw	a5,-116(s0)
+     fb0:	fcf42a23          	sw	a5,-44(s0)
+     fb4:	f8842783          	lw	a5,-120(s0)
+     fb8:	fcf42823          	sw	a5,-48(s0)
+     fbc:	f8442783          	lw	a5,-124(s0)
+     fc0:	fcf42623          	sw	a5,-52(s0)
+     fc4:	f8042783          	lw	a5,-128(s0)
+     fc8:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P22(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+     fcc:	f8042823          	sw	zero,-112(s0)
+     fd0:	f8042a23          	sw	zero,-108(s0)
+     fd4:	f8042c23          	sw	zero,-104(s0)
+     fd8:	f8042e23          	sw	zero,-100(s0)
+     fdc:	fa042023          	sw	zero,-96(s0)
+     fe0:	fa042223          	sw	zero,-92(s0)
+     fe4:	fa042423          	sw	zero,-88(s0)
+     fe8:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in1[2];
+     fec:	fd442783          	lw	a5,-44(s0)
+     ff0:	07a1                	addi	a5,a5,8
+     ff2:	439c                	lw	a5,0(a5)
+     ff4:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = reg[5];
+     ff8:	fa442783          	lw	a5,-92(s0)
+     ffc:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 + op1;
+    1000:	fc442703          	lw	a4,-60(s0)
+    1004:	fc042783          	lw	a5,-64(s0)
+    1008:	97ba                	add	a5,a5,a4
+    100a:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    100e:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P22(in1, in2, in3, in4);
+    1012:	faf42823          	sw	a5,-80(s0)
+    1016:	f8842783          	lw	a5,-120(s0)
+    101a:	fef42623          	sw	a5,-20(s0)
+    101e:	f8042783          	lw	a5,-128(s0)
+    1022:	fef42423          	sw	a5,-24(s0)
+    1026:	f8c42783          	lw	a5,-116(s0)
+    102a:	fef42223          	sw	a5,-28(s0)
+    102e:	f8442783          	lw	a5,-124(s0)
+    1032:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P23(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1036:	f8042823          	sw	zero,-112(s0)
+    103a:	f8042a23          	sw	zero,-108(s0)
+    103e:	f8042c23          	sw	zero,-104(s0)
+    1042:	f8042e23          	sw	zero,-100(s0)
+    1046:	fa042023          	sw	zero,-96(s0)
+    104a:	fa042223          	sw	zero,-92(s0)
+    104e:	fa042423          	sw	zero,-88(s0)
+    1052:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in2[1];
+    1056:	fec42783          	lw	a5,-20(s0)
+    105a:	0791                	addi	a5,a5,4
+    105c:	439c                	lw	a5,0(a5)
+    105e:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in4[4];
+    1062:	fe842783          	lw	a5,-24(s0)
+    1066:	07c1                	addi	a5,a5,16
+    1068:	439c                	lw	a5,0(a5)
+    106a:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    106e:	fdc42703          	lw	a4,-36(s0)
+    1072:	fd842783          	lw	a5,-40(s0)
+    1076:	0af767b3          	max	a5,a4,a5
+    107a:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    107e:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P23(in1, in2, in3, in4);
+    1082:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    1086:	fb040793          	addi	a5,s0,-80
+    108a:	4589                	li	a1,2
+    108c:	853e                	mv	a0,a5
+    108e:	9d8ff0ef          	jal	266 <bestProgram>
+    1092:	872a                	mv	a4,a0
+    1094:	fb840793          	addi	a5,s0,-72
+    1098:	070a                	slli	a4,a4,0x2
+    109a:	97ba                	add	a5,a5,a4
+    109c:	439c                	lw	a5,0(a5)
+}
+    109e:	853e                	mv	a0,a5
+    10a0:	50f6                	lw	ra,124(sp)
+    10a2:	5466                	lw	s0,120(sp)
+    10a4:	6109                	addi	sp,sp,128
+    10a6:	8082                	ret
+
+000010a8 <T11_func>:
+
+enum vertices T11_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    10a8:	7119                	addi	sp,sp,-128
+    10aa:	de86                	sw	ra,124(sp)
+    10ac:	dca2                	sw	s0,120(sp)
+    10ae:	0100                	addi	s0,sp,128
+    10b0:	f8a42623          	sw	a0,-116(s0)
+    10b4:	f8b42423          	sw	a1,-120(s0)
+    10b8:	f8c42223          	sw	a2,-124(s0)
+    10bc:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { T6, T7 };
+    10c0:	4799                	li	a5,6
+    10c2:	faf42c23          	sw	a5,-72(s0)
+    10c6:	479d                	li	a5,7
+    10c8:	faf42e23          	sw	a5,-68(s0)
+    10cc:	f8042783          	lw	a5,-128(s0)
+    10d0:	fcf42a23          	sw	a5,-44(s0)
+    10d4:	f8c42783          	lw	a5,-116(s0)
+    10d8:	fcf42823          	sw	a5,-48(s0)
+    10dc:	f8842783          	lw	a5,-120(s0)
+    10e0:	fcf42623          	sw	a5,-52(s0)
+    10e4:	f8442783          	lw	a5,-124(s0)
+    10e8:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P24(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    10ec:	f8042823          	sw	zero,-112(s0)
+    10f0:	f8042a23          	sw	zero,-108(s0)
+    10f4:	f8042c23          	sw	zero,-104(s0)
+    10f8:	f8042e23          	sw	zero,-100(s0)
+    10fc:	fa042023          	sw	zero,-96(s0)
+    1100:	fa042223          	sw	zero,-92(s0)
+    1104:	fa042423          	sw	zero,-88(s0)
+    1108:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = reg[6];
+    110c:	fa842783          	lw	a5,-88(s0)
+    1110:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in4[1];
+    1114:	fd442783          	lw	a5,-44(s0)
+    1118:	0791                	addi	a5,a5,4
+    111a:	439c                	lw	a5,0(a5)
+    111c:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1120:	fc442703          	lw	a4,-60(s0)
+    1124:	fc042783          	lw	a5,-64(s0)
+    1128:	0af767b3          	max	a5,a4,a5
+    112c:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    1130:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P24(in1, in2, in3, in4);
+    1134:	faf42823          	sw	a5,-80(s0)
+    1138:	f8042783          	lw	a5,-128(s0)
+    113c:	fef42623          	sw	a5,-20(s0)
+    1140:	f8c42783          	lw	a5,-116(s0)
+    1144:	fef42423          	sw	a5,-24(s0)
+    1148:	f8842783          	lw	a5,-120(s0)
+    114c:	fef42223          	sw	a5,-28(s0)
+    1150:	f8442783          	lw	a5,-124(s0)
+    1154:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P25(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1158:	f8042823          	sw	zero,-112(s0)
+    115c:	f8042a23          	sw	zero,-108(s0)
+    1160:	f8042c23          	sw	zero,-104(s0)
+    1164:	f8042e23          	sw	zero,-100(s0)
+    1168:	fa042023          	sw	zero,-96(s0)
+    116c:	fa042223          	sw	zero,-92(s0)
+    1170:	fa042423          	sw	zero,-88(s0)
+    1174:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in4[3];
+    1178:	fec42783          	lw	a5,-20(s0)
+    117c:	07b1                	addi	a5,a5,12
+    117e:	439c                	lw	a5,0(a5)
+    1180:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in4[4];
+    1184:	fec42783          	lw	a5,-20(s0)
+    1188:	07c1                	addi	a5,a5,16
+    118a:	439c                	lw	a5,0(a5)
+    118c:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+    1190:	fdc42703          	lw	a4,-36(s0)
+    1194:	fd842783          	lw	a5,-40(s0)
+    1198:	40f707b3          	sub	a5,a4,a5
+    119c:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    11a0:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P25(in1, in2, in3, in4);
+    11a4:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    11a8:	fb040793          	addi	a5,s0,-80
+    11ac:	4589                	li	a1,2
+    11ae:	853e                	mv	a0,a5
+    11b0:	8b6ff0ef          	jal	266 <bestProgram>
+    11b4:	872a                	mv	a4,a0
+    11b6:	fb840793          	addi	a5,s0,-72
+    11ba:	070a                	slli	a4,a4,0x2
+    11bc:	97ba                	add	a5,a5,a4
+    11be:	439c                	lw	a5,0(a5)
+}
+    11c0:	853e                	mv	a0,a5
+    11c2:	50f6                	lw	ra,124(sp)
+    11c4:	5466                	lw	s0,120(sp)
+    11c6:	6109                	addi	sp,sp,128
+    11c8:	8082                	ret
+
+000011ca <T12_func>:
+
+enum vertices T12_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    11ca:	7115                	addi	sp,sp,-224
+    11cc:	cf86                	sw	ra,220(sp)
+    11ce:	cda2                	sw	s0,216(sp)
+    11d0:	1180                	addi	s0,sp,224
+    11d2:	f2a42623          	sw	a0,-212(s0)
+    11d6:	f2b42423          	sw	a1,-216(s0)
+    11da:	f2c42223          	sw	a2,-220(s0)
+    11de:	f2d42023          	sw	a3,-224(s0)
+	const enum vertices next[4] = { A29, T4, A29, T5 };
+    11e2:	67a9                	lui	a5,0xa
+    11e4:	51478793          	addi	a5,a5,1300 # a514 <TPG.c.205146a8+0xcd6>
+    11e8:	4390                	lw	a2,0(a5)
+    11ea:	43d4                	lw	a3,4(a5)
+    11ec:	4798                	lw	a4,8(a5)
+    11ee:	f6c42423          	sw	a2,-152(s0)
+    11f2:	f6d42623          	sw	a3,-148(s0)
+    11f6:	f6e42823          	sw	a4,-144(s0)
+    11fa:	47dc                	lw	a5,12(a5)
+    11fc:	f6f42a23          	sw	a5,-140(s0)
+    1200:	f2c42783          	lw	a5,-212(s0)
+    1204:	f8f42a23          	sw	a5,-108(s0)
+    1208:	f2442783          	lw	a5,-220(s0)
+    120c:	f8f42823          	sw	a5,-112(s0)
+    1210:	f2842783          	lw	a5,-216(s0)
+    1214:	f8f42623          	sw	a5,-116(s0)
+    1218:	f2042783          	lw	a5,-224(s0)
+    121c:	f8f42423          	sw	a5,-120(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P26(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1220:	f2042c23          	sw	zero,-200(s0)
+    1224:	f2042e23          	sw	zero,-196(s0)
+    1228:	f4042023          	sw	zero,-192(s0)
+    122c:	f4042223          	sw	zero,-188(s0)
+    1230:	f4042423          	sw	zero,-184(s0)
+    1234:	f4042623          	sw	zero,-180(s0)
+    1238:	f4042823          	sw	zero,-176(s0)
+    123c:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in3[1];
+    1240:	f9042783          	lw	a5,-112(s0)
+    1244:	0791                	addi	a5,a5,4
+    1246:	439c                	lw	a5,0(a5)
+    1248:	f8f42223          	sw	a5,-124(s0)
+		fixedpt op1 = reg[6];
+    124c:	f5042783          	lw	a5,-176(s0)
+    1250:	f8f42023          	sw	a5,-128(s0)
+		reg[6] = op0 + op1;
+    1254:	f8442703          	lw	a4,-124(s0)
+    1258:	f8042783          	lw	a5,-128(s0)
+    125c:	97ba                	add	a5,a5,a4
+    125e:	f4f42823          	sw	a5,-176(s0)
+	}
+	{
+		fixedpt op0 = in1[0];
+    1262:	f9442783          	lw	a5,-108(s0)
+    1266:	439c                	lw	a5,0(a5)
+    1268:	f6f42e23          	sw	a5,-132(s0)
+		fixedpt op1 = reg[6];
+    126c:	f5042783          	lw	a5,-176(s0)
+    1270:	f6f42c23          	sw	a5,-136(s0)
+		reg[0] = op0 + op1;
+    1274:	f7c42703          	lw	a4,-132(s0)
+    1278:	f7842783          	lw	a5,-136(s0)
+    127c:	97ba                	add	a5,a5,a4
+    127e:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    1282:	f3842783          	lw	a5,-200(s0)
+	fixedpt scores[4];
+	scores[0] = P26(in1, in2, in3, in4);
+    1286:	f4f42c23          	sw	a5,-168(s0)
+    128a:	f2042783          	lw	a5,-224(s0)
+    128e:	faf42623          	sw	a5,-84(s0)
+    1292:	f2c42783          	lw	a5,-212(s0)
+    1296:	faf42423          	sw	a5,-88(s0)
+    129a:	f2842783          	lw	a5,-216(s0)
+    129e:	faf42223          	sw	a5,-92(s0)
+    12a2:	f2442783          	lw	a5,-220(s0)
+    12a6:	faf42023          	sw	a5,-96(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P27(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    12aa:	f2042c23          	sw	zero,-200(s0)
+    12ae:	f2042e23          	sw	zero,-196(s0)
+    12b2:	f4042023          	sw	zero,-192(s0)
+    12b6:	f4042223          	sw	zero,-188(s0)
+    12ba:	f4042423          	sw	zero,-184(s0)
+    12be:	f4042623          	sw	zero,-180(s0)
+    12c2:	f4042823          	sw	zero,-176(s0)
+    12c6:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in4[2];
+    12ca:	fac42783          	lw	a5,-84(s0)
+    12ce:	07a1                	addi	a5,a5,8
+    12d0:	439c                	lw	a5,0(a5)
+    12d2:	f8f42e23          	sw	a5,-100(s0)
+    12d6:	f9c42783          	lw	a5,-100(s0)
+    12da:	f8f42c23          	sw	a5,-104(s0)
+    if (n <= 0) {
+    12de:	f9842783          	lw	a5,-104(s0)
+    12e2:	00f04463          	bgtz	a5,12ea <T12_func+0x120>
+        return 0; // Handle error for non-positive input
+    12e6:	4781                	li	a5,0
+    12e8:	a801                	j	12f8 <T12_func+0x12e>
+    return 31 - __builtin_clz(n);
+    12ea:	f9842783          	lw	a5,-104(s0)
+    12ee:	60079793          	clz	a5,a5
+    12f2:	477d                	li	a4,31
+    12f4:	40f707b3          	sub	a5,a4,a5
+		reg[0] = f_log2(op0);
+    12f8:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    12fc:	f3842783          	lw	a5,-200(s0)
+	scores[1] = P27(in1, in2, in3, in4);
+    1300:	f4f42e23          	sw	a5,-164(s0)
+    1304:	f2c42783          	lw	a5,-212(s0)
+    1308:	fcf42a23          	sw	a5,-44(s0)
+    130c:	f2442783          	lw	a5,-220(s0)
+    1310:	fcf42823          	sw	a5,-48(s0)
+    1314:	f2042783          	lw	a5,-224(s0)
+    1318:	fcf42623          	sw	a5,-52(s0)
+    131c:	f2842783          	lw	a5,-216(s0)
+    1320:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P28(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1324:	f2042c23          	sw	zero,-200(s0)
+    1328:	f2042e23          	sw	zero,-196(s0)
+    132c:	f4042023          	sw	zero,-192(s0)
+    1330:	f4042223          	sw	zero,-188(s0)
+    1334:	f4042423          	sw	zero,-184(s0)
+    1338:	f4042623          	sw	zero,-180(s0)
+    133c:	f4042823          	sw	zero,-176(s0)
+    1340:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in4[1];
+    1344:	fcc42783          	lw	a5,-52(s0)
+    1348:	0791                	addi	a5,a5,4
+    134a:	439c                	lw	a5,0(a5)
+    134c:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in1[0];
+    1350:	fd442783          	lw	a5,-44(s0)
+    1354:	439c                	lw	a5,0(a5)
+    1356:	fcf42023          	sw	a5,-64(s0)
+		reg[7] = (op0 > op1) ? op0 : op1;
+    135a:	fc442703          	lw	a4,-60(s0)
+    135e:	fc042783          	lw	a5,-64(s0)
+    1362:	0af767b3          	max	a5,a4,a5
+    1366:	f4f42a23          	sw	a5,-172(s0)
+	}
+	{
+		fixedpt op0 = reg[7];
+    136a:	f5442783          	lw	a5,-172(s0)
+    136e:	faf42e23          	sw	a5,-68(s0)
+    1372:	fbc42783          	lw	a5,-68(s0)
+    1376:	faf42c23          	sw	a5,-72(s0)
+    if (n <= 0) {
+    137a:	fb842783          	lw	a5,-72(s0)
+    137e:	00f04463          	bgtz	a5,1386 <T12_func+0x1bc>
+        return 0; // Handle error for non-positive input
+    1382:	4781                	li	a5,0
+    1384:	a801                	j	1394 <T12_func+0x1ca>
+    return 31 - __builtin_clz(n);
+    1386:	fb842783          	lw	a5,-72(s0)
+    138a:	60079793          	clz	a5,a5
+    138e:	477d                	li	a4,31
+    1390:	40f707b3          	sub	a5,a4,a5
+		reg[6] = f_log2(op0);
+    1394:	f4f42823          	sw	a5,-176(s0)
+	}
+	{
+		fixedpt op0 = in3[1];
+    1398:	fd042783          	lw	a5,-48(s0)
+    139c:	0791                	addi	a5,a5,4
+    139e:	439c                	lw	a5,0(a5)
+    13a0:	faf42a23          	sw	a5,-76(s0)
+		fixedpt op1 = reg[6];
+    13a4:	f5042783          	lw	a5,-176(s0)
+    13a8:	faf42823          	sw	a5,-80(s0)
+		reg[0] = op0 + op1;
+    13ac:	fb442703          	lw	a4,-76(s0)
+    13b0:	fb042783          	lw	a5,-80(s0)
+    13b4:	97ba                	add	a5,a5,a4
+    13b6:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    13ba:	f3842783          	lw	a5,-200(s0)
+	scores[2] = P28(in1, in2, in3, in4);
+    13be:	f6f42023          	sw	a5,-160(s0)
+    13c2:	f2c42783          	lw	a5,-212(s0)
+    13c6:	fef42623          	sw	a5,-20(s0)
+    13ca:	f2842783          	lw	a5,-216(s0)
+    13ce:	fef42423          	sw	a5,-24(s0)
+    13d2:	f2442783          	lw	a5,-220(s0)
+    13d6:	fef42223          	sw	a5,-28(s0)
+    13da:	f2042783          	lw	a5,-224(s0)
+    13de:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P29(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    13e2:	f2042c23          	sw	zero,-200(s0)
+    13e6:	f2042e23          	sw	zero,-196(s0)
+    13ea:	f4042023          	sw	zero,-192(s0)
+    13ee:	f4042223          	sw	zero,-188(s0)
+    13f2:	f4042423          	sw	zero,-184(s0)
+    13f6:	f4042623          	sw	zero,-180(s0)
+    13fa:	f4042823          	sw	zero,-176(s0)
+    13fe:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in2[0];
+    1402:	fe842783          	lw	a5,-24(s0)
+    1406:	439c                	lw	a5,0(a5)
+    1408:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in1[0];
+    140c:	fec42783          	lw	a5,-20(s0)
+    1410:	439c                	lw	a5,0(a5)
+    1412:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1416:	fdc42703          	lw	a4,-36(s0)
+    141a:	fd842783          	lw	a5,-40(s0)
+    141e:	0af767b3          	max	a5,a4,a5
+    1422:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    1426:	f3842783          	lw	a5,-200(s0)
+	scores[3] = P29(in1, in2, in3, in4);
+    142a:	f6f42223          	sw	a5,-156(s0)
+	return next[bestProgram(scores, 4)];
+    142e:	f5840793          	addi	a5,s0,-168
+    1432:	4591                	li	a1,4
+    1434:	853e                	mv	a0,a5
+    1436:	e31fe0ef          	jal	266 <bestProgram>
+    143a:	872a                	mv	a4,a0
+    143c:	f6840793          	addi	a5,s0,-152
+    1440:	070a                	slli	a4,a4,0x2
+    1442:	97ba                	add	a5,a5,a4
+    1444:	439c                	lw	a5,0(a5)
+}
+    1446:	853e                	mv	a0,a5
+    1448:	40fe                	lw	ra,220(sp)
+    144a:	446e                	lw	s0,216(sp)
+    144c:	612d                	addi	sp,sp,224
+    144e:	8082                	ret
+
+00001450 <T13_func>:
+
+enum vertices T13_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    1450:	7119                	addi	sp,sp,-128
+    1452:	de86                	sw	ra,124(sp)
+    1454:	dca2                	sw	s0,120(sp)
+    1456:	0100                	addi	s0,sp,128
+    1458:	f8a42623          	sw	a0,-116(s0)
+    145c:	f8b42423          	sw	a1,-120(s0)
+    1460:	f8c42223          	sw	a2,-124(s0)
+    1464:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { T11, A26 };
+    1468:	47ad                	li	a5,11
+    146a:	faf42c23          	sw	a5,-72(s0)
+    146e:	47e9                	li	a5,26
+    1470:	faf42e23          	sw	a5,-68(s0)
+    1474:	f8442783          	lw	a5,-124(s0)
+    1478:	fcf42a23          	sw	a5,-44(s0)
+    147c:	f8c42783          	lw	a5,-116(s0)
+    1480:	fcf42823          	sw	a5,-48(s0)
+    1484:	f8842783          	lw	a5,-120(s0)
+    1488:	fcf42623          	sw	a5,-52(s0)
+    148c:	f8042783          	lw	a5,-128(s0)
+    1490:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P30(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1494:	f8042823          	sw	zero,-112(s0)
+    1498:	f8042a23          	sw	zero,-108(s0)
+    149c:	f8042c23          	sw	zero,-104(s0)
+    14a0:	f8042e23          	sw	zero,-100(s0)
+    14a4:	fa042023          	sw	zero,-96(s0)
+    14a8:	fa042223          	sw	zero,-92(s0)
+    14ac:	fa042423          	sw	zero,-88(s0)
+    14b0:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = reg[1];
+    14b4:	f9442783          	lw	a5,-108(s0)
+    14b8:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in3[1];
+    14bc:	fd442783          	lw	a5,-44(s0)
+    14c0:	0791                	addi	a5,a5,4
+    14c2:	439c                	lw	a5,0(a5)
+    14c4:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 - op1;
+    14c8:	fc442703          	lw	a4,-60(s0)
+    14cc:	fc042783          	lw	a5,-64(s0)
+    14d0:	40f707b3          	sub	a5,a4,a5
+    14d4:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    14d8:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P30(in1, in2, in3, in4);
+    14dc:	faf42823          	sw	a5,-80(s0)
+    14e0:	f8c42783          	lw	a5,-116(s0)
+    14e4:	fef42623          	sw	a5,-20(s0)
+    14e8:	f8442783          	lw	a5,-124(s0)
+    14ec:	fef42423          	sw	a5,-24(s0)
+    14f0:	f8842783          	lw	a5,-120(s0)
+    14f4:	fef42223          	sw	a5,-28(s0)
+    14f8:	f8042783          	lw	a5,-128(s0)
+    14fc:	fef42023          	sw	a5,-32(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1500:	f8042823          	sw	zero,-112(s0)
+    1504:	f8042a23          	sw	zero,-108(s0)
+    1508:	f8042c23          	sw	zero,-104(s0)
+    150c:	f8042e23          	sw	zero,-100(s0)
+    1510:	fa042023          	sw	zero,-96(s0)
+    1514:	fa042223          	sw	zero,-92(s0)
+    1518:	fa042423          	sw	zero,-88(s0)
+    151c:	fa042623          	sw	zero,-84(s0)
+		fixedpt op0 = in3[1];
+    1520:	fe842783          	lw	a5,-24(s0)
+    1524:	0791                	addi	a5,a5,4
+    1526:	439c                	lw	a5,0(a5)
+    1528:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in1[0];
+    152c:	fec42783          	lw	a5,-20(s0)
+    1530:	439c                	lw	a5,0(a5)
+    1532:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1536:	fdc42703          	lw	a4,-36(s0)
+    153a:	fd842783          	lw	a5,-40(s0)
+    153e:	0af767b3          	max	a5,a4,a5
+    1542:	f8f42823          	sw	a5,-112(s0)
+	return reg[0];
+    1546:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P12(in1, in2, in3, in4);
+    154a:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    154e:	fb040793          	addi	a5,s0,-80
+    1552:	4589                	li	a1,2
+    1554:	853e                	mv	a0,a5
+    1556:	d11fe0ef          	jal	266 <bestProgram>
+    155a:	872a                	mv	a4,a0
+    155c:	fb840793          	addi	a5,s0,-72
+    1560:	070a                	slli	a4,a4,0x2
+    1562:	97ba                	add	a5,a5,a4
+    1564:	439c                	lw	a5,0(a5)
+}
+    1566:	853e                	mv	a0,a5
+    1568:	50f6                	lw	ra,124(sp)
+    156a:	5466                	lw	s0,120(sp)
+    156c:	6109                	addi	sp,sp,128
+    156e:	8082                	ret
+
+00001570 <T14_func>:
+
+enum vertices T14_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    1570:	711d                	addi	sp,sp,-96
+    1572:	ce86                	sw	ra,92(sp)
+    1574:	cca2                	sw	s0,88(sp)
+    1576:	1080                	addi	s0,sp,96
+    1578:	faa42623          	sw	a0,-84(s0)
+    157c:	fab42423          	sw	a1,-88(s0)
+    1580:	fac42223          	sw	a2,-92(s0)
+    1584:	fad42023          	sw	a3,-96(s0)
+	const enum vertices next[1] = { T12 };
+    1588:	47b1                	li	a5,12
+    158a:	fcf42a23          	sw	a5,-44(s0)
+    158e:	fac42783          	lw	a5,-84(s0)
+    1592:	fef42623          	sw	a5,-20(s0)
+    1596:	fa042783          	lw	a5,-96(s0)
+    159a:	fef42423          	sw	a5,-24(s0)
+    159e:	fa842783          	lw	a5,-88(s0)
+    15a2:	fef42223          	sw	a5,-28(s0)
+    15a6:	fa442783          	lw	a5,-92(s0)
+    15aa:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P31(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    15ae:	fa042823          	sw	zero,-80(s0)
+    15b2:	fa042a23          	sw	zero,-76(s0)
+    15b6:	fa042c23          	sw	zero,-72(s0)
+    15ba:	fa042e23          	sw	zero,-68(s0)
+    15be:	fc042023          	sw	zero,-64(s0)
+    15c2:	fc042223          	sw	zero,-60(s0)
+    15c6:	fc042423          	sw	zero,-56(s0)
+    15ca:	fc042623          	sw	zero,-52(s0)
+	{
+		fixedpt op0 = in4[1];
+    15ce:	fe842783          	lw	a5,-24(s0)
+    15d2:	0791                	addi	a5,a5,4
+    15d4:	439c                	lw	a5,0(a5)
+    15d6:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in1[1];
+    15da:	fec42783          	lw	a5,-20(s0)
+    15de:	0791                	addi	a5,a5,4
+    15e0:	439c                	lw	a5,0(a5)
+    15e2:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 + op1;
+    15e6:	fdc42703          	lw	a4,-36(s0)
+    15ea:	fd842783          	lw	a5,-40(s0)
+    15ee:	97ba                	add	a5,a5,a4
+    15f0:	faf42823          	sw	a5,-80(s0)
+	}
+	return reg[0];
+    15f4:	fb042783          	lw	a5,-80(s0)
+	fixedpt scores[1];
+	scores[0] = P31(in1, in2, in3, in4);
+    15f8:	fcf42823          	sw	a5,-48(s0)
+	return next[bestProgram(scores, 1)];
+    15fc:	fd040793          	addi	a5,s0,-48
+    1600:	4585                	li	a1,1
+    1602:	853e                	mv	a0,a5
+    1604:	c63fe0ef          	jal	266 <bestProgram>
+    1608:	872a                	mv	a4,a0
+    160a:	fd440793          	addi	a5,s0,-44
+    160e:	070a                	slli	a4,a4,0x2
+    1610:	97ba                	add	a5,a5,a4
+    1612:	439c                	lw	a5,0(a5)
+}
+    1614:	853e                	mv	a0,a5
+    1616:	40f6                	lw	ra,92(sp)
+    1618:	4466                	lw	s0,88(sp)
+    161a:	6125                	addi	sp,sp,96
+    161c:	8082                	ret
+
+0000161e <T15_func>:
+
+enum vertices T15_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    161e:	711d                	addi	sp,sp,-96
+    1620:	ce86                	sw	ra,92(sp)
+    1622:	cca2                	sw	s0,88(sp)
+    1624:	1080                	addi	s0,sp,96
+    1626:	faa42623          	sw	a0,-84(s0)
+    162a:	fab42423          	sw	a1,-88(s0)
+    162e:	fac42223          	sw	a2,-92(s0)
+    1632:	fad42023          	sw	a3,-96(s0)
+	const enum vertices next[1] = { T13 };
+    1636:	47b5                	li	a5,13
+    1638:	fcf42a23          	sw	a5,-44(s0)
+    163c:	fa042783          	lw	a5,-96(s0)
+    1640:	fef42623          	sw	a5,-20(s0)
+    1644:	fac42783          	lw	a5,-84(s0)
+    1648:	fef42423          	sw	a5,-24(s0)
+    164c:	fa842783          	lw	a5,-88(s0)
+    1650:	fef42223          	sw	a5,-28(s0)
+    1654:	fa442783          	lw	a5,-92(s0)
+    1658:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P32(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    165c:	fa042823          	sw	zero,-80(s0)
+    1660:	fa042a23          	sw	zero,-76(s0)
+    1664:	fa042c23          	sw	zero,-72(s0)
+    1668:	fa042e23          	sw	zero,-68(s0)
+    166c:	fc042023          	sw	zero,-64(s0)
+    1670:	fc042223          	sw	zero,-60(s0)
+    1674:	fc042423          	sw	zero,-56(s0)
+    1678:	fc042623          	sw	zero,-52(s0)
+	{
+		fixedpt op0 = reg[6];
+    167c:	fc842783          	lw	a5,-56(s0)
+    1680:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in4[0];
+    1684:	fec42783          	lw	a5,-20(s0)
+    1688:	439c                	lw	a5,0(a5)
+    168a:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    168e:	fdc42703          	lw	a4,-36(s0)
+    1692:	fd842783          	lw	a5,-40(s0)
+    1696:	0af767b3          	max	a5,a4,a5
+    169a:	faf42823          	sw	a5,-80(s0)
+	}
+	return reg[0];
+    169e:	fb042783          	lw	a5,-80(s0)
+	fixedpt scores[1];
+	scores[0] = P32(in1, in2, in3, in4);
+    16a2:	fcf42823          	sw	a5,-48(s0)
+	return next[bestProgram(scores, 1)];
+    16a6:	fd040793          	addi	a5,s0,-48
+    16aa:	4585                	li	a1,1
+    16ac:	853e                	mv	a0,a5
+    16ae:	bb9fe0ef          	jal	266 <bestProgram>
+    16b2:	872a                	mv	a4,a0
+    16b4:	fd440793          	addi	a5,s0,-44
+    16b8:	070a                	slli	a4,a4,0x2
+    16ba:	97ba                	add	a5,a5,a4
+    16bc:	439c                	lw	a5,0(a5)
+}
+    16be:	853e                	mv	a0,a5
+    16c0:	40f6                	lw	ra,92(sp)
+    16c2:	4466                	lw	s0,88(sp)
+    16c4:	6125                	addi	sp,sp,96
+    16c6:	8082                	ret
+
+000016c8 <T16_func>:
+
+enum vertices T16_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    16c8:	7119                	addi	sp,sp,-128
+    16ca:	de86                	sw	ra,124(sp)
+    16cc:	dca2                	sw	s0,120(sp)
+    16ce:	0100                	addi	s0,sp,128
+    16d0:	f8a42623          	sw	a0,-116(s0)
+    16d4:	f8b42423          	sw	a1,-120(s0)
+    16d8:	f8c42223          	sw	a2,-124(s0)
+    16dc:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { T10, T14 };
+    16e0:	47a9                	li	a5,10
+    16e2:	faf42c23          	sw	a5,-72(s0)
+    16e6:	47b9                	li	a5,14
+    16e8:	faf42e23          	sw	a5,-68(s0)
+    16ec:	f8042783          	lw	a5,-128(s0)
+    16f0:	fcf42a23          	sw	a5,-44(s0)
+    16f4:	f8c42783          	lw	a5,-116(s0)
+    16f8:	fcf42823          	sw	a5,-48(s0)
+    16fc:	f8842783          	lw	a5,-120(s0)
+    1700:	fcf42623          	sw	a5,-52(s0)
+    1704:	f8442783          	lw	a5,-124(s0)
+    1708:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P33(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    170c:	f8042823          	sw	zero,-112(s0)
+    1710:	f8042a23          	sw	zero,-108(s0)
+    1714:	f8042c23          	sw	zero,-104(s0)
+    1718:	f8042e23          	sw	zero,-100(s0)
+    171c:	fa042023          	sw	zero,-96(s0)
+    1720:	fa042223          	sw	zero,-92(s0)
+    1724:	fa042423          	sw	zero,-88(s0)
+    1728:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in4[1];
+    172c:	fd442783          	lw	a5,-44(s0)
+    1730:	0791                	addi	a5,a5,4
+    1732:	439c                	lw	a5,0(a5)
+    1734:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = reg[2];
+    1738:	f9842783          	lw	a5,-104(s0)
+    173c:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1740:	fc442703          	lw	a4,-60(s0)
+    1744:	fc042783          	lw	a5,-64(s0)
+    1748:	0af767b3          	max	a5,a4,a5
+    174c:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    1750:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P33(in1, in2, in3, in4);
+    1754:	faf42823          	sw	a5,-80(s0)
+    1758:	f8442783          	lw	a5,-124(s0)
+    175c:	fef42623          	sw	a5,-20(s0)
+    1760:	f8042783          	lw	a5,-128(s0)
+    1764:	fef42423          	sw	a5,-24(s0)
+    1768:	f8c42783          	lw	a5,-116(s0)
+    176c:	fef42223          	sw	a5,-28(s0)
+    1770:	f8842783          	lw	a5,-120(s0)
+    1774:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P34(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1778:	f8042823          	sw	zero,-112(s0)
+    177c:	f8042a23          	sw	zero,-108(s0)
+    1780:	f8042c23          	sw	zero,-104(s0)
+    1784:	f8042e23          	sw	zero,-100(s0)
+    1788:	fa042023          	sw	zero,-96(s0)
+    178c:	fa042223          	sw	zero,-92(s0)
+    1790:	fa042423          	sw	zero,-88(s0)
+    1794:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in3[0];
+    1798:	fec42783          	lw	a5,-20(s0)
+    179c:	439c                	lw	a5,0(a5)
+    179e:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in4[3];
+    17a2:	fe842783          	lw	a5,-24(s0)
+    17a6:	07b1                	addi	a5,a5,12
+    17a8:	439c                	lw	a5,0(a5)
+    17aa:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 + op1;
+    17ae:	fdc42703          	lw	a4,-36(s0)
+    17b2:	fd842783          	lw	a5,-40(s0)
+    17b6:	97ba                	add	a5,a5,a4
+    17b8:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    17bc:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P34(in1, in2, in3, in4);
+    17c0:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    17c4:	fb040793          	addi	a5,s0,-80
+    17c8:	4589                	li	a1,2
+    17ca:	853e                	mv	a0,a5
+    17cc:	a9bfe0ef          	jal	266 <bestProgram>
+    17d0:	872a                	mv	a4,a0
+    17d2:	fb840793          	addi	a5,s0,-72
+    17d6:	070a                	slli	a4,a4,0x2
+    17d8:	97ba                	add	a5,a5,a4
+    17da:	439c                	lw	a5,0(a5)
+}
+    17dc:	853e                	mv	a0,a5
+    17de:	50f6                	lw	ra,124(sp)
+    17e0:	5466                	lw	s0,120(sp)
+    17e2:	6109                	addi	sp,sp,128
+    17e4:	8082                	ret
+
+000017e6 <T17_func>:
+
+enum vertices T17_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    17e6:	7119                	addi	sp,sp,-128
+    17e8:	de86                	sw	ra,124(sp)
+    17ea:	dca2                	sw	s0,120(sp)
+    17ec:	0100                	addi	s0,sp,128
+    17ee:	f8a42623          	sw	a0,-116(s0)
+    17f2:	f8b42423          	sw	a1,-120(s0)
+    17f6:	f8c42223          	sw	a2,-124(s0)
+    17fa:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { A31, T12 };
+    17fe:	47fd                	li	a5,31
+    1800:	faf42c23          	sw	a5,-72(s0)
+    1804:	47b1                	li	a5,12
+    1806:	faf42e23          	sw	a5,-68(s0)
+    180a:	f8c42783          	lw	a5,-116(s0)
+    180e:	fcf42a23          	sw	a5,-44(s0)
+    1812:	f8042783          	lw	a5,-128(s0)
+    1816:	fcf42823          	sw	a5,-48(s0)
+    181a:	f8842783          	lw	a5,-120(s0)
+    181e:	fcf42623          	sw	a5,-52(s0)
+    1822:	f8442783          	lw	a5,-124(s0)
+    1826:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P35(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    182a:	f8042823          	sw	zero,-112(s0)
+    182e:	f8042a23          	sw	zero,-108(s0)
+    1832:	f8042c23          	sw	zero,-104(s0)
+    1836:	f8042e23          	sw	zero,-100(s0)
+    183a:	fa042023          	sw	zero,-96(s0)
+    183e:	fa042223          	sw	zero,-92(s0)
+    1842:	fa042423          	sw	zero,-88(s0)
+    1846:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in1[0];
+    184a:	fd442783          	lw	a5,-44(s0)
+    184e:	439c                	lw	a5,0(a5)
+    1850:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in4[0];
+    1854:	fd042783          	lw	a5,-48(s0)
+    1858:	439c                	lw	a5,0(a5)
+    185a:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 + op1;
+    185e:	fc442703          	lw	a4,-60(s0)
+    1862:	fc042783          	lw	a5,-64(s0)
+    1866:	97ba                	add	a5,a5,a4
+    1868:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    186c:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P35(in1, in2, in3, in4);
+    1870:	faf42823          	sw	a5,-80(s0)
+    1874:	f8c42783          	lw	a5,-116(s0)
+    1878:	fef42623          	sw	a5,-20(s0)
+    187c:	f8042783          	lw	a5,-128(s0)
+    1880:	fef42423          	sw	a5,-24(s0)
+    1884:	f8842783          	lw	a5,-120(s0)
+    1888:	fef42223          	sw	a5,-28(s0)
+    188c:	f8442783          	lw	a5,-124(s0)
+    1890:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P36(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1894:	f8042823          	sw	zero,-112(s0)
+    1898:	f8042a23          	sw	zero,-108(s0)
+    189c:	f8042c23          	sw	zero,-104(s0)
+    18a0:	f8042e23          	sw	zero,-100(s0)
+    18a4:	fa042023          	sw	zero,-96(s0)
+    18a8:	fa042223          	sw	zero,-92(s0)
+    18ac:	fa042423          	sw	zero,-88(s0)
+    18b0:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in4[1];
+    18b4:	fe842783          	lw	a5,-24(s0)
+    18b8:	0791                	addi	a5,a5,4
+    18ba:	439c                	lw	a5,0(a5)
+    18bc:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in1[2];
+    18c0:	fec42783          	lw	a5,-20(s0)
+    18c4:	07a1                	addi	a5,a5,8
+    18c6:	439c                	lw	a5,0(a5)
+    18c8:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 + op1;
+    18cc:	fdc42703          	lw	a4,-36(s0)
+    18d0:	fd842783          	lw	a5,-40(s0)
+    18d4:	97ba                	add	a5,a5,a4
+    18d6:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    18da:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P36(in1, in2, in3, in4);
+    18de:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    18e2:	fb040793          	addi	a5,s0,-80
+    18e6:	4589                	li	a1,2
+    18e8:	853e                	mv	a0,a5
+    18ea:	97dfe0ef          	jal	266 <bestProgram>
+    18ee:	872a                	mv	a4,a0
+    18f0:	fb840793          	addi	a5,s0,-72
+    18f4:	070a                	slli	a4,a4,0x2
+    18f6:	97ba                	add	a5,a5,a4
+    18f8:	439c                	lw	a5,0(a5)
+}
+    18fa:	853e                	mv	a0,a5
+    18fc:	50f6                	lw	ra,124(sp)
+    18fe:	5466                	lw	s0,120(sp)
+    1900:	6109                	addi	sp,sp,128
+    1902:	8082                	ret
+
+00001904 <T18_func>:
+
+enum vertices T18_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    1904:	716d                	addi	sp,sp,-272
+    1906:	10112623          	sw	ra,268(sp)
+    190a:	10812423          	sw	s0,264(sp)
+    190e:	0a00                	addi	s0,sp,272
+    1910:	eea42e23          	sw	a0,-260(s0)
+    1914:	eeb42c23          	sw	a1,-264(s0)
+    1918:	eec42a23          	sw	a2,-268(s0)
+    191c:	eed42823          	sw	a3,-272(s0)
+	const enum vertices next[6] = { T16, T15, A30, T13, A31, T13 };
+    1920:	67a9                	lui	a5,0xa
+    1922:	52478793          	addi	a5,a5,1316 # a524 <TPG.c.205146a8+0xce6>
+    1926:	4388                	lw	a0,0(a5)
+    1928:	43cc                	lw	a1,4(a5)
+    192a:	4790                	lw	a2,8(a5)
+    192c:	47d4                	lw	a3,12(a5)
+    192e:	4b98                	lw	a4,16(a5)
+    1930:	f2a42c23          	sw	a0,-200(s0)
+    1934:	f2b42e23          	sw	a1,-196(s0)
+    1938:	f4c42023          	sw	a2,-192(s0)
+    193c:	f4d42223          	sw	a3,-188(s0)
+    1940:	f4e42423          	sw	a4,-184(s0)
+    1944:	4bdc                	lw	a5,20(a5)
+    1946:	f4f42623          	sw	a5,-180(s0)
+    194a:	efc42783          	lw	a5,-260(s0)
+    194e:	f6f42a23          	sw	a5,-140(s0)
+    1952:	ef442783          	lw	a5,-268(s0)
+    1956:	f6f42823          	sw	a5,-144(s0)
+    195a:	ef042783          	lw	a5,-272(s0)
+    195e:	f6f42623          	sw	a5,-148(s0)
+    1962:	ef842783          	lw	a5,-264(s0)
+    1966:	f6f42423          	sw	a5,-152(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P37(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    196a:	f0042023          	sw	zero,-256(s0)
+    196e:	f0042223          	sw	zero,-252(s0)
+    1972:	f0042423          	sw	zero,-248(s0)
+    1976:	f0042623          	sw	zero,-244(s0)
+    197a:	f0042823          	sw	zero,-240(s0)
+    197e:	f0042a23          	sw	zero,-236(s0)
+    1982:	f0042c23          	sw	zero,-232(s0)
+    1986:	f0042e23          	sw	zero,-228(s0)
+	{
+		fixedpt op0 = in3[1];
+    198a:	f7042783          	lw	a5,-144(s0)
+    198e:	0791                	addi	a5,a5,4
+    1990:	439c                	lw	a5,0(a5)
+    1992:	f6f42223          	sw	a5,-156(s0)
+    1996:	f6442783          	lw	a5,-156(s0)
+    199a:	f6f42023          	sw	a5,-160(s0)
+    if (n <= 0) {
+    199e:	f6042783          	lw	a5,-160(s0)
+    19a2:	00f04463          	bgtz	a5,19aa <T18_func+0xa6>
+        return 0; // Handle error for non-positive input
+    19a6:	4781                	li	a5,0
+    19a8:	a801                	j	19b8 <T18_func+0xb4>
+    return 31 - __builtin_clz(n);
+    19aa:	f6042783          	lw	a5,-160(s0)
+    19ae:	60079793          	clz	a5,a5
+    19b2:	477d                	li	a4,31
+    19b4:	40f707b3          	sub	a5,a4,a5
+		reg[7] = f_log2(op0);
+    19b8:	f0f42e23          	sw	a5,-228(s0)
+	}
+	{
+		fixedpt op0 = in1[2];
+    19bc:	f7442783          	lw	a5,-140(s0)
+    19c0:	07a1                	addi	a5,a5,8
+    19c2:	439c                	lw	a5,0(a5)
+    19c4:	f4f42e23          	sw	a5,-164(s0)
+		fixedpt op1 = in4[1];
+    19c8:	f6c42783          	lw	a5,-148(s0)
+    19cc:	0791                	addi	a5,a5,4
+    19ce:	439c                	lw	a5,0(a5)
+    19d0:	f4f42c23          	sw	a5,-168(s0)
+		reg[3] = op0 + op1;
+    19d4:	f5c42703          	lw	a4,-164(s0)
+    19d8:	f5842783          	lw	a5,-168(s0)
+    19dc:	97ba                	add	a5,a5,a4
+    19de:	f0f42623          	sw	a5,-244(s0)
+	}
+	{
+		fixedpt op0 = reg[3];
+    19e2:	f0c42783          	lw	a5,-244(s0)
+    19e6:	f4f42a23          	sw	a5,-172(s0)
+		fixedpt op1 = reg[7];
+    19ea:	f1c42783          	lw	a5,-228(s0)
+    19ee:	f4f42823          	sw	a5,-176(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    19f2:	f5442703          	lw	a4,-172(s0)
+    19f6:	f5042783          	lw	a5,-176(s0)
+    19fa:	0af767b3          	max	a5,a4,a5
+    19fe:	f0f42023          	sw	a5,-256(s0)
+	}
+	return reg[0];
+    1a02:	f0042783          	lw	a5,-256(s0)
+	fixedpt scores[6];
+	scores[0] = P37(in1, in2, in3, in4);
+    1a06:	f2f42023          	sw	a5,-224(s0)
+    1a0a:	ef442783          	lw	a5,-268(s0)
+    1a0e:	f8f42623          	sw	a5,-116(s0)
+    1a12:	ef042783          	lw	a5,-272(s0)
+    1a16:	f8f42423          	sw	a5,-120(s0)
+    1a1a:	efc42783          	lw	a5,-260(s0)
+    1a1e:	f8f42223          	sw	a5,-124(s0)
+    1a22:	ef842783          	lw	a5,-264(s0)
+    1a26:	f8f42023          	sw	a5,-128(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P38(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1a2a:	f0042023          	sw	zero,-256(s0)
+    1a2e:	f0042223          	sw	zero,-252(s0)
+    1a32:	f0042423          	sw	zero,-248(s0)
+    1a36:	f0042623          	sw	zero,-244(s0)
+    1a3a:	f0042823          	sw	zero,-240(s0)
+    1a3e:	f0042a23          	sw	zero,-236(s0)
+    1a42:	f0042c23          	sw	zero,-232(s0)
+    1a46:	f0042e23          	sw	zero,-228(s0)
+	{
+		fixedpt op0 = in3[2];
+    1a4a:	f8c42783          	lw	a5,-116(s0)
+    1a4e:	07a1                	addi	a5,a5,8
+    1a50:	439c                	lw	a5,0(a5)
+    1a52:	f6f42e23          	sw	a5,-132(s0)
+		fixedpt op1 = in4[3];
+    1a56:	f8842783          	lw	a5,-120(s0)
+    1a5a:	07b1                	addi	a5,a5,12
+    1a5c:	439c                	lw	a5,0(a5)
+    1a5e:	f6f42c23          	sw	a5,-136(s0)
+		reg[0] = op0 + op1;
+    1a62:	f7c42703          	lw	a4,-132(s0)
+    1a66:	f7842783          	lw	a5,-136(s0)
+    1a6a:	97ba                	add	a5,a5,a4
+    1a6c:	f0f42023          	sw	a5,-256(s0)
+	}
+	return reg[0];
+    1a70:	f0042783          	lw	a5,-256(s0)
+	scores[1] = P38(in1, in2, in3, in4);
+    1a74:	f2f42223          	sw	a5,-220(s0)
+    1a78:	efc42783          	lw	a5,-260(s0)
+    1a7c:	faf42223          	sw	a5,-92(s0)
+    1a80:	ef042783          	lw	a5,-272(s0)
+    1a84:	faf42023          	sw	a5,-96(s0)
+    1a88:	ef842783          	lw	a5,-264(s0)
+    1a8c:	f8f42e23          	sw	a5,-100(s0)
+    1a90:	ef442783          	lw	a5,-268(s0)
+    1a94:	f8f42c23          	sw	a5,-104(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P39(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1a98:	f0042023          	sw	zero,-256(s0)
+    1a9c:	f0042223          	sw	zero,-252(s0)
+    1aa0:	f0042423          	sw	zero,-248(s0)
+    1aa4:	f0042623          	sw	zero,-244(s0)
+    1aa8:	f0042823          	sw	zero,-240(s0)
+    1aac:	f0042a23          	sw	zero,-236(s0)
+    1ab0:	f0042c23          	sw	zero,-232(s0)
+    1ab4:	f0042e23          	sw	zero,-228(s0)
+	{
+		fixedpt op0 = in4[2];
+    1ab8:	fa042783          	lw	a5,-96(s0)
+    1abc:	07a1                	addi	a5,a5,8
+    1abe:	439c                	lw	a5,0(a5)
+    1ac0:	f8f42a23          	sw	a5,-108(s0)
+		fixedpt op1 = in1[1];
+    1ac4:	fa442783          	lw	a5,-92(s0)
+    1ac8:	0791                	addi	a5,a5,4
+    1aca:	439c                	lw	a5,0(a5)
+    1acc:	f8f42823          	sw	a5,-112(s0)
+		reg[0] = op0 - op1;
+    1ad0:	f9442703          	lw	a4,-108(s0)
+    1ad4:	f9042783          	lw	a5,-112(s0)
+    1ad8:	40f707b3          	sub	a5,a4,a5
+    1adc:	f0f42023          	sw	a5,-256(s0)
+	}
+	return reg[0];
+    1ae0:	f0042783          	lw	a5,-256(s0)
+	scores[2] = P39(in1, in2, in3, in4);
+    1ae4:	f2f42423          	sw	a5,-216(s0)
+    1ae8:	ef042783          	lw	a5,-272(s0)
+    1aec:	faf42e23          	sw	a5,-68(s0)
+    1af0:	efc42783          	lw	a5,-260(s0)
+    1af4:	faf42c23          	sw	a5,-72(s0)
+    1af8:	ef842783          	lw	a5,-264(s0)
+    1afc:	faf42a23          	sw	a5,-76(s0)
+    1b00:	ef442783          	lw	a5,-268(s0)
+    1b04:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P40(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1b08:	f0042023          	sw	zero,-256(s0)
+    1b0c:	f0042223          	sw	zero,-252(s0)
+    1b10:	f0042423          	sw	zero,-248(s0)
+    1b14:	f0042623          	sw	zero,-244(s0)
+    1b18:	f0042823          	sw	zero,-240(s0)
+    1b1c:	f0042a23          	sw	zero,-236(s0)
+    1b20:	f0042c23          	sw	zero,-232(s0)
+    1b24:	f0042e23          	sw	zero,-228(s0)
+	{
+		fixedpt op0 = in4[3];
+    1b28:	fbc42783          	lw	a5,-68(s0)
+    1b2c:	07b1                	addi	a5,a5,12
+    1b2e:	439c                	lw	a5,0(a5)
+    1b30:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in4[4];
+    1b34:	fbc42783          	lw	a5,-68(s0)
+    1b38:	07c1                	addi	a5,a5,16
+    1b3a:	439c                	lw	a5,0(a5)
+    1b3c:	faf42423          	sw	a5,-88(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1b40:	fac42703          	lw	a4,-84(s0)
+    1b44:	fa842783          	lw	a5,-88(s0)
+    1b48:	0af767b3          	max	a5,a4,a5
+    1b4c:	f0f42023          	sw	a5,-256(s0)
+	}
+	return reg[0];
+    1b50:	f0042783          	lw	a5,-256(s0)
+	scores[3] = P40(in1, in2, in3, in4);
+    1b54:	f2f42623          	sw	a5,-212(s0)
+    1b58:	efc42783          	lw	a5,-260(s0)
+    1b5c:	fcf42a23          	sw	a5,-44(s0)
+    1b60:	ef042783          	lw	a5,-272(s0)
+    1b64:	fcf42823          	sw	a5,-48(s0)
+    1b68:	ef842783          	lw	a5,-264(s0)
+    1b6c:	fcf42623          	sw	a5,-52(s0)
+    1b70:	ef442783          	lw	a5,-268(s0)
+    1b74:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P41(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1b78:	f0042023          	sw	zero,-256(s0)
+    1b7c:	f0042223          	sw	zero,-252(s0)
+    1b80:	f0042423          	sw	zero,-248(s0)
+    1b84:	f0042623          	sw	zero,-244(s0)
+    1b88:	f0042823          	sw	zero,-240(s0)
+    1b8c:	f0042a23          	sw	zero,-236(s0)
+    1b90:	f0042c23          	sw	zero,-232(s0)
+    1b94:	f0042e23          	sw	zero,-228(s0)
+	{
+		fixedpt op0 = in1[0];
+    1b98:	fd442783          	lw	a5,-44(s0)
+    1b9c:	439c                	lw	a5,0(a5)
+    1b9e:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in4[0];
+    1ba2:	fd042783          	lw	a5,-48(s0)
+    1ba6:	439c                	lw	a5,0(a5)
+    1ba8:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 + op1;
+    1bac:	fc442703          	lw	a4,-60(s0)
+    1bb0:	fc042783          	lw	a5,-64(s0)
+    1bb4:	97ba                	add	a5,a5,a4
+    1bb6:	f0f42023          	sw	a5,-256(s0)
+	}
+	return reg[0];
+    1bba:	f0042783          	lw	a5,-256(s0)
+	scores[4] = P41(in1, in2, in3, in4);
+    1bbe:	f2f42823          	sw	a5,-208(s0)
+    1bc2:	ef042783          	lw	a5,-272(s0)
+    1bc6:	fef42623          	sw	a5,-20(s0)
+    1bca:	efc42783          	lw	a5,-260(s0)
+    1bce:	fef42423          	sw	a5,-24(s0)
+    1bd2:	ef842783          	lw	a5,-264(s0)
+    1bd6:	fef42223          	sw	a5,-28(s0)
+    1bda:	ef442783          	lw	a5,-268(s0)
+    1bde:	fef42023          	sw	a5,-32(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1be2:	f0042023          	sw	zero,-256(s0)
+    1be6:	f0042223          	sw	zero,-252(s0)
+    1bea:	f0042423          	sw	zero,-248(s0)
+    1bee:	f0042623          	sw	zero,-244(s0)
+    1bf2:	f0042823          	sw	zero,-240(s0)
+    1bf6:	f0042a23          	sw	zero,-236(s0)
+    1bfa:	f0042c23          	sw	zero,-232(s0)
+    1bfe:	f0042e23          	sw	zero,-228(s0)
+		fixedpt op0 = reg[6];
+    1c02:	f1842783          	lw	a5,-232(s0)
+    1c06:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in4[0];
+    1c0a:	fec42783          	lw	a5,-20(s0)
+    1c0e:	439c                	lw	a5,0(a5)
+    1c10:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1c14:	fdc42703          	lw	a4,-36(s0)
+    1c18:	fd842783          	lw	a5,-40(s0)
+    1c1c:	0af767b3          	max	a5,a4,a5
+    1c20:	f0f42023          	sw	a5,-256(s0)
+	return reg[0];
+    1c24:	f0042783          	lw	a5,-256(s0)
+	scores[5] = P32(in1, in2, in3, in4);
+    1c28:	f2f42a23          	sw	a5,-204(s0)
+	return next[bestProgram(scores, 6)];
+    1c2c:	f2040793          	addi	a5,s0,-224
+    1c30:	4599                	li	a1,6
+    1c32:	853e                	mv	a0,a5
+    1c34:	e32fe0ef          	jal	266 <bestProgram>
+    1c38:	872a                	mv	a4,a0
+    1c3a:	f3840793          	addi	a5,s0,-200
+    1c3e:	070a                	slli	a4,a4,0x2
+    1c40:	97ba                	add	a5,a5,a4
+    1c42:	439c                	lw	a5,0(a5)
+}
+    1c44:	853e                	mv	a0,a5
+    1c46:	10c12083          	lw	ra,268(sp)
+    1c4a:	10812403          	lw	s0,264(sp)
+    1c4e:	6151                	addi	sp,sp,272
+    1c50:	8082                	ret
+
+00001c52 <T19_func>:
+
+enum vertices T19_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    1c52:	7129                	addi	sp,sp,-320
+    1c54:	12112e23          	sw	ra,316(sp)
+    1c58:	12812c23          	sw	s0,312(sp)
+    1c5c:	0280                	addi	s0,sp,320
+    1c5e:	eca42623          	sw	a0,-308(s0)
+    1c62:	ecb42423          	sw	a1,-312(s0)
+    1c66:	ecc42223          	sw	a2,-316(s0)
+    1c6a:	ecd42023          	sw	a3,-320(s0)
+	const enum vertices next[7] = { T16, A31, A31, T13, T10, T18, T17 };
+    1c6e:	67a9                	lui	a5,0xa
+    1c70:	53c78793          	addi	a5,a5,1340 # a53c <TPG.c.205146a8+0xcfe>
+    1c74:	0007a803          	lw	a6,0(a5)
+    1c78:	43c8                	lw	a0,4(a5)
+    1c7a:	478c                	lw	a1,8(a5)
+    1c7c:	47d0                	lw	a2,12(a5)
+    1c7e:	4b94                	lw	a3,16(a5)
+    1c80:	4bd8                	lw	a4,20(a5)
+    1c82:	f1042a23          	sw	a6,-236(s0)
+    1c86:	f0a42c23          	sw	a0,-232(s0)
+    1c8a:	f0b42e23          	sw	a1,-228(s0)
+    1c8e:	f2c42023          	sw	a2,-224(s0)
+    1c92:	f2d42223          	sw	a3,-220(s0)
+    1c96:	f2e42423          	sw	a4,-216(s0)
+    1c9a:	4f9c                	lw	a5,24(a5)
+    1c9c:	f2f42623          	sw	a5,-212(s0)
+    1ca0:	ecc42783          	lw	a5,-308(s0)
+    1ca4:	f4f42a23          	sw	a5,-172(s0)
+    1ca8:	ec442783          	lw	a5,-316(s0)
+    1cac:	f4f42823          	sw	a5,-176(s0)
+    1cb0:	ec042783          	lw	a5,-320(s0)
+    1cb4:	f4f42623          	sw	a5,-180(s0)
+    1cb8:	ec842783          	lw	a5,-312(s0)
+    1cbc:	f4f42423          	sw	a5,-184(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P42(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1cc0:	ec042c23          	sw	zero,-296(s0)
+    1cc4:	ec042e23          	sw	zero,-292(s0)
+    1cc8:	ee042023          	sw	zero,-288(s0)
+    1ccc:	ee042223          	sw	zero,-284(s0)
+    1cd0:	ee042423          	sw	zero,-280(s0)
+    1cd4:	ee042623          	sw	zero,-276(s0)
+    1cd8:	ee042823          	sw	zero,-272(s0)
+    1cdc:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in3[1];
+    1ce0:	f5042783          	lw	a5,-176(s0)
+    1ce4:	0791                	addi	a5,a5,4
+    1ce6:	439c                	lw	a5,0(a5)
+    1ce8:	f4f42223          	sw	a5,-188(s0)
+    1cec:	f4442783          	lw	a5,-188(s0)
+    1cf0:	f4f42023          	sw	a5,-192(s0)
+    if (n <= 0) {
+    1cf4:	f4042783          	lw	a5,-192(s0)
+    1cf8:	00f04463          	bgtz	a5,1d00 <T19_func+0xae>
+        return 0; // Handle error for non-positive input
+    1cfc:	4781                	li	a5,0
+    1cfe:	a801                	j	1d0e <T19_func+0xbc>
+    return 31 - __builtin_clz(n);
+    1d00:	f4042783          	lw	a5,-192(s0)
+    1d04:	60079793          	clz	a5,a5
+    1d08:	477d                	li	a4,31
+    1d0a:	40f707b3          	sub	a5,a4,a5
+		reg[7] = f_log2(op0);
+    1d0e:	eef42a23          	sw	a5,-268(s0)
+	}
+	{
+		fixedpt op0 = in1[2];
+    1d12:	f5442783          	lw	a5,-172(s0)
+    1d16:	07a1                	addi	a5,a5,8
+    1d18:	439c                	lw	a5,0(a5)
+    1d1a:	f2f42e23          	sw	a5,-196(s0)
+		fixedpt op1 = in4[1];
+    1d1e:	f4c42783          	lw	a5,-180(s0)
+    1d22:	0791                	addi	a5,a5,4
+    1d24:	439c                	lw	a5,0(a5)
+    1d26:	f2f42c23          	sw	a5,-200(s0)
+		reg[3] = op0 + op1;
+    1d2a:	f3c42703          	lw	a4,-196(s0)
+    1d2e:	f3842783          	lw	a5,-200(s0)
+    1d32:	97ba                	add	a5,a5,a4
+    1d34:	eef42223          	sw	a5,-284(s0)
+	}
+	{
+		fixedpt op0 = reg[3];
+    1d38:	ee442783          	lw	a5,-284(s0)
+    1d3c:	f2f42a23          	sw	a5,-204(s0)
+		fixedpt op1 = reg[7];
+    1d40:	ef442783          	lw	a5,-268(s0)
+    1d44:	f2f42823          	sw	a5,-208(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    1d48:	f3442703          	lw	a4,-204(s0)
+    1d4c:	f3042783          	lw	a5,-208(s0)
+    1d50:	0af767b3          	max	a5,a4,a5
+    1d54:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    1d58:	ed842783          	lw	a5,-296(s0)
+	fixedpt scores[7];
+	scores[0] = P42(in1, in2, in3, in4);
+    1d5c:	eef42c23          	sw	a5,-264(s0)
+    1d60:	ecc42783          	lw	a5,-308(s0)
+    1d64:	f6f42a23          	sw	a5,-140(s0)
+    1d68:	ec442783          	lw	a5,-316(s0)
+    1d6c:	f6f42823          	sw	a5,-144(s0)
+    1d70:	ec042783          	lw	a5,-320(s0)
+    1d74:	f6f42623          	sw	a5,-148(s0)
+    1d78:	ec842783          	lw	a5,-312(s0)
+    1d7c:	f6f42423          	sw	a5,-152(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P43(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1d80:	ec042c23          	sw	zero,-296(s0)
+    1d84:	ec042e23          	sw	zero,-292(s0)
+    1d88:	ee042023          	sw	zero,-288(s0)
+    1d8c:	ee042223          	sw	zero,-284(s0)
+    1d90:	ee042423          	sw	zero,-280(s0)
+    1d94:	ee042623          	sw	zero,-276(s0)
+    1d98:	ee042823          	sw	zero,-272(s0)
+    1d9c:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in4[2];
+    1da0:	f6c42783          	lw	a5,-148(s0)
+    1da4:	07a1                	addi	a5,a5,8
+    1da6:	439c                	lw	a5,0(a5)
+    1da8:	f6f42223          	sw	a5,-156(s0)
+		fixedpt op1 = in3[2];
+    1dac:	f7042783          	lw	a5,-144(s0)
+    1db0:	07a1                	addi	a5,a5,8
+    1db2:	439c                	lw	a5,0(a5)
+    1db4:	f6f42023          	sw	a5,-160(s0)
+		reg[6] = op0 - op1;
+    1db8:	f6442703          	lw	a4,-156(s0)
+    1dbc:	f6042783          	lw	a5,-160(s0)
+    1dc0:	40f707b3          	sub	a5,a4,a5
+    1dc4:	eef42823          	sw	a5,-272(s0)
+	}
+	{
+		fixedpt op0 = reg[6];
+    1dc8:	ef042783          	lw	a5,-272(s0)
+    1dcc:	f4f42e23          	sw	a5,-164(s0)
+		fixedpt op1 = in1[0];
+    1dd0:	f7442783          	lw	a5,-140(s0)
+    1dd4:	439c                	lw	a5,0(a5)
+    1dd6:	f4f42c23          	sw	a5,-168(s0)
+		reg[0] = op0 - op1;
+    1dda:	f5c42703          	lw	a4,-164(s0)
+    1dde:	f5842783          	lw	a5,-168(s0)
+    1de2:	40f707b3          	sub	a5,a4,a5
+    1de6:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    1dea:	ed842783          	lw	a5,-296(s0)
+	scores[1] = P43(in1, in2, in3, in4);
+    1dee:	eef42e23          	sw	a5,-260(s0)
+    1df2:	ecc42783          	lw	a5,-308(s0)
+    1df6:	f8f42623          	sw	a5,-116(s0)
+    1dfa:	ec042783          	lw	a5,-320(s0)
+    1dfe:	f8f42423          	sw	a5,-120(s0)
+    1e02:	ec842783          	lw	a5,-312(s0)
+    1e06:	f8f42223          	sw	a5,-124(s0)
+    1e0a:	ec442783          	lw	a5,-316(s0)
+    1e0e:	f8f42023          	sw	a5,-128(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P44(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1e12:	ec042c23          	sw	zero,-296(s0)
+    1e16:	ec042e23          	sw	zero,-292(s0)
+    1e1a:	ee042023          	sw	zero,-288(s0)
+    1e1e:	ee042223          	sw	zero,-284(s0)
+    1e22:	ee042423          	sw	zero,-280(s0)
+    1e26:	ee042623          	sw	zero,-276(s0)
+    1e2a:	ee042823          	sw	zero,-272(s0)
+    1e2e:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in1[1];
+    1e32:	f8c42783          	lw	a5,-116(s0)
+    1e36:	0791                	addi	a5,a5,4
+    1e38:	439c                	lw	a5,0(a5)
+    1e3a:	f6f42e23          	sw	a5,-132(s0)
+		fixedpt op1 = in4[2];
+    1e3e:	f8842783          	lw	a5,-120(s0)
+    1e42:	07a1                	addi	a5,a5,8
+    1e44:	439c                	lw	a5,0(a5)
+    1e46:	f6f42c23          	sw	a5,-136(s0)
+		reg[0] = op0 + op1;
+    1e4a:	f7c42703          	lw	a4,-132(s0)
+    1e4e:	f7842783          	lw	a5,-136(s0)
+    1e52:	97ba                	add	a5,a5,a4
+    1e54:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    1e58:	ed842783          	lw	a5,-296(s0)
+	scores[2] = P44(in1, in2, in3, in4);
+    1e5c:	f0f42023          	sw	a5,-256(s0)
+    1e60:	ecc42783          	lw	a5,-308(s0)
+    1e64:	faf42223          	sw	a5,-92(s0)
+    1e68:	ec042783          	lw	a5,-320(s0)
+    1e6c:	faf42023          	sw	a5,-96(s0)
+    1e70:	ec842783          	lw	a5,-312(s0)
+    1e74:	f8f42e23          	sw	a5,-100(s0)
+    1e78:	ec442783          	lw	a5,-316(s0)
+    1e7c:	f8f42c23          	sw	a5,-104(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P45(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1e80:	ec042c23          	sw	zero,-296(s0)
+    1e84:	ec042e23          	sw	zero,-292(s0)
+    1e88:	ee042023          	sw	zero,-288(s0)
+    1e8c:	ee042223          	sw	zero,-284(s0)
+    1e90:	ee042423          	sw	zero,-280(s0)
+    1e94:	ee042623          	sw	zero,-276(s0)
+    1e98:	ee042823          	sw	zero,-272(s0)
+    1e9c:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in4[0];
+    1ea0:	fa042783          	lw	a5,-96(s0)
+    1ea4:	439c                	lw	a5,0(a5)
+    1ea6:	f8f42a23          	sw	a5,-108(s0)
+		fixedpt op1 = in1[0];
+    1eaa:	fa442783          	lw	a5,-92(s0)
+    1eae:	439c                	lw	a5,0(a5)
+    1eb0:	f8f42823          	sw	a5,-112(s0)
+		reg[0] = op0 - op1;
+    1eb4:	f9442703          	lw	a4,-108(s0)
+    1eb8:	f9042783          	lw	a5,-112(s0)
+    1ebc:	40f707b3          	sub	a5,a4,a5
+    1ec0:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    1ec4:	ed842783          	lw	a5,-296(s0)
+	scores[3] = P45(in1, in2, in3, in4);
+    1ec8:	f0f42223          	sw	a5,-252(s0)
+    1ecc:	ec442783          	lw	a5,-316(s0)
+    1ed0:	faf42e23          	sw	a5,-68(s0)
+    1ed4:	ec042783          	lw	a5,-320(s0)
+    1ed8:	faf42c23          	sw	a5,-72(s0)
+    1edc:	ecc42783          	lw	a5,-308(s0)
+    1ee0:	faf42a23          	sw	a5,-76(s0)
+    1ee4:	ec842783          	lw	a5,-312(s0)
+    1ee8:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P46(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1eec:	ec042c23          	sw	zero,-296(s0)
+    1ef0:	ec042e23          	sw	zero,-292(s0)
+    1ef4:	ee042023          	sw	zero,-288(s0)
+    1ef8:	ee042223          	sw	zero,-284(s0)
+    1efc:	ee042423          	sw	zero,-280(s0)
+    1f00:	ee042623          	sw	zero,-276(s0)
+    1f04:	ee042823          	sw	zero,-272(s0)
+    1f08:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in4[1];
+    1f0c:	fb842783          	lw	a5,-72(s0)
+    1f10:	0791                	addi	a5,a5,4
+    1f12:	439c                	lw	a5,0(a5)
+    1f14:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in3[2];
+    1f18:	fbc42783          	lw	a5,-68(s0)
+    1f1c:	07a1                	addi	a5,a5,8
+    1f1e:	439c                	lw	a5,0(a5)
+    1f20:	faf42423          	sw	a5,-88(s0)
+		reg[0] = op0 - op1;
+    1f24:	fac42703          	lw	a4,-84(s0)
+    1f28:	fa842783          	lw	a5,-88(s0)
+    1f2c:	40f707b3          	sub	a5,a4,a5
+    1f30:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    1f34:	ed842783          	lw	a5,-296(s0)
+	scores[4] = P46(in1, in2, in3, in4);
+    1f38:	f0f42423          	sw	a5,-248(s0)
+    1f3c:	ecc42783          	lw	a5,-308(s0)
+    1f40:	fcf42a23          	sw	a5,-44(s0)
+    1f44:	ec042783          	lw	a5,-320(s0)
+    1f48:	fcf42823          	sw	a5,-48(s0)
+    1f4c:	ec842783          	lw	a5,-312(s0)
+    1f50:	fcf42623          	sw	a5,-52(s0)
+    1f54:	ec442783          	lw	a5,-316(s0)
+    1f58:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P47(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1f5c:	ec042c23          	sw	zero,-296(s0)
+    1f60:	ec042e23          	sw	zero,-292(s0)
+    1f64:	ee042023          	sw	zero,-288(s0)
+    1f68:	ee042223          	sw	zero,-284(s0)
+    1f6c:	ee042423          	sw	zero,-280(s0)
+    1f70:	ee042623          	sw	zero,-276(s0)
+    1f74:	ee042823          	sw	zero,-272(s0)
+    1f78:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in4[0];
+    1f7c:	fd042783          	lw	a5,-48(s0)
+    1f80:	439c                	lw	a5,0(a5)
+    1f82:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in1[1];
+    1f86:	fd442783          	lw	a5,-44(s0)
+    1f8a:	0791                	addi	a5,a5,4
+    1f8c:	439c                	lw	a5,0(a5)
+    1f8e:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 - op1;
+    1f92:	fc442703          	lw	a4,-60(s0)
+    1f96:	fc042783          	lw	a5,-64(s0)
+    1f9a:	40f707b3          	sub	a5,a4,a5
+    1f9e:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    1fa2:	ed842783          	lw	a5,-296(s0)
+	scores[5] = P47(in1, in2, in3, in4);
+    1fa6:	f0f42623          	sw	a5,-244(s0)
+    1faa:	ec442783          	lw	a5,-316(s0)
+    1fae:	fef42623          	sw	a5,-20(s0)
+    1fb2:	ec042783          	lw	a5,-320(s0)
+    1fb6:	fef42423          	sw	a5,-24(s0)
+    1fba:	ecc42783          	lw	a5,-308(s0)
+    1fbe:	fef42223          	sw	a5,-28(s0)
+    1fc2:	ec842783          	lw	a5,-312(s0)
+    1fc6:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P48(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    1fca:	ec042c23          	sw	zero,-296(s0)
+    1fce:	ec042e23          	sw	zero,-292(s0)
+    1fd2:	ee042023          	sw	zero,-288(s0)
+    1fd6:	ee042223          	sw	zero,-284(s0)
+    1fda:	ee042423          	sw	zero,-280(s0)
+    1fde:	ee042623          	sw	zero,-276(s0)
+    1fe2:	ee042823          	sw	zero,-272(s0)
+    1fe6:	ee042a23          	sw	zero,-268(s0)
+	{
+		fixedpt op0 = in4[1];
+    1fea:	fe842783          	lw	a5,-24(s0)
+    1fee:	0791                	addi	a5,a5,4
+    1ff0:	439c                	lw	a5,0(a5)
+    1ff2:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[0];
+    1ff6:	fec42783          	lw	a5,-20(s0)
+    1ffa:	439c                	lw	a5,0(a5)
+    1ffc:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 + op1;
+    2000:	fdc42703          	lw	a4,-36(s0)
+    2004:	fd842783          	lw	a5,-40(s0)
+    2008:	97ba                	add	a5,a5,a4
+    200a:	ecf42c23          	sw	a5,-296(s0)
+	}
+	return reg[0];
+    200e:	ed842783          	lw	a5,-296(s0)
+	scores[6] = P48(in1, in2, in3, in4);
+    2012:	f0f42823          	sw	a5,-240(s0)
+	return next[bestProgram(scores, 7)];
+    2016:	ef840793          	addi	a5,s0,-264
+    201a:	459d                	li	a1,7
+    201c:	853e                	mv	a0,a5
+    201e:	a48fe0ef          	jal	266 <bestProgram>
+    2022:	872a                	mv	a4,a0
+    2024:	f1440793          	addi	a5,s0,-236
+    2028:	070a                	slli	a4,a4,0x2
+    202a:	97ba                	add	a5,a5,a4
+    202c:	439c                	lw	a5,0(a5)
+}
+    202e:	853e                	mv	a0,a5
+    2030:	13c12083          	lw	ra,316(sp)
+    2034:	13812403          	lw	s0,312(sp)
+    2038:	6131                	addi	sp,sp,320
+    203a:	8082                	ret
+
+0000203c <T20_func>:
+
+enum vertices T20_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    203c:	7119                	addi	sp,sp,-128
+    203e:	de86                	sw	ra,124(sp)
+    2040:	dca2                	sw	s0,120(sp)
+    2042:	0100                	addi	s0,sp,128
+    2044:	f8a42623          	sw	a0,-116(s0)
+    2048:	f8b42423          	sw	a1,-120(s0)
+    204c:	f8c42223          	sw	a2,-124(s0)
+    2050:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { T13, T8 };
+    2054:	47b5                	li	a5,13
+    2056:	faf42c23          	sw	a5,-72(s0)
+    205a:	47a1                	li	a5,8
+    205c:	faf42e23          	sw	a5,-68(s0)
+    2060:	f8c42783          	lw	a5,-116(s0)
+    2064:	fcf42a23          	sw	a5,-44(s0)
+    2068:	f8042783          	lw	a5,-128(s0)
+    206c:	fcf42823          	sw	a5,-48(s0)
+    2070:	f8842783          	lw	a5,-120(s0)
+    2074:	fcf42623          	sw	a5,-52(s0)
+    2078:	f8442783          	lw	a5,-124(s0)
+    207c:	fcf42423          	sw	a5,-56(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    2080:	f8042823          	sw	zero,-112(s0)
+    2084:	f8042a23          	sw	zero,-108(s0)
+    2088:	f8042c23          	sw	zero,-104(s0)
+    208c:	f8042e23          	sw	zero,-100(s0)
+    2090:	fa042023          	sw	zero,-96(s0)
+    2094:	fa042223          	sw	zero,-92(s0)
+    2098:	fa042423          	sw	zero,-88(s0)
+    209c:	fa042623          	sw	zero,-84(s0)
+		fixedpt op0 = in4[0];
+    20a0:	fd042783          	lw	a5,-48(s0)
+    20a4:	439c                	lw	a5,0(a5)
+    20a6:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in1[0];
+    20aa:	fd442783          	lw	a5,-44(s0)
+    20ae:	439c                	lw	a5,0(a5)
+    20b0:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 - op1;
+    20b4:	fc442703          	lw	a4,-60(s0)
+    20b8:	fc042783          	lw	a5,-64(s0)
+    20bc:	40f707b3          	sub	a5,a4,a5
+    20c0:	f8f42823          	sw	a5,-112(s0)
+	return reg[0];
+    20c4:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P45(in1, in2, in3, in4);
+    20c8:	faf42823          	sw	a5,-80(s0)
+    20cc:	f8c42783          	lw	a5,-116(s0)
+    20d0:	fef42623          	sw	a5,-20(s0)
+    20d4:	f8042783          	lw	a5,-128(s0)
+    20d8:	fef42423          	sw	a5,-24(s0)
+    20dc:	f8842783          	lw	a5,-120(s0)
+    20e0:	fef42223          	sw	a5,-28(s0)
+    20e4:	f8442783          	lw	a5,-124(s0)
+    20e8:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P49(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    20ec:	f8042823          	sw	zero,-112(s0)
+    20f0:	f8042a23          	sw	zero,-108(s0)
+    20f4:	f8042c23          	sw	zero,-104(s0)
+    20f8:	f8042e23          	sw	zero,-100(s0)
+    20fc:	fa042023          	sw	zero,-96(s0)
+    2100:	fa042223          	sw	zero,-92(s0)
+    2104:	fa042423          	sw	zero,-88(s0)
+    2108:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in4[0];
+    210c:	fe842783          	lw	a5,-24(s0)
+    2110:	439c                	lw	a5,0(a5)
+    2112:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in1[1];
+    2116:	fec42783          	lw	a5,-20(s0)
+    211a:	0791                	addi	a5,a5,4
+    211c:	439c                	lw	a5,0(a5)
+    211e:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+    2122:	fdc42703          	lw	a4,-36(s0)
+    2126:	fd842783          	lw	a5,-40(s0)
+    212a:	40f707b3          	sub	a5,a4,a5
+    212e:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    2132:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P49(in1, in2, in3, in4);
+    2136:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    213a:	fb040793          	addi	a5,s0,-80
+    213e:	4589                	li	a1,2
+    2140:	853e                	mv	a0,a5
+    2142:	924fe0ef          	jal	266 <bestProgram>
+    2146:	872a                	mv	a4,a0
+    2148:	fb840793          	addi	a5,s0,-72
+    214c:	070a                	slli	a4,a4,0x2
+    214e:	97ba                	add	a5,a5,a4
+    2150:	439c                	lw	a5,0(a5)
+}
+    2152:	853e                	mv	a0,a5
+    2154:	50f6                	lw	ra,124(sp)
+    2156:	5466                	lw	s0,120(sp)
+    2158:	6109                	addi	sp,sp,128
+    215a:	8082                	ret
+
+0000215c <T21_func>:
+
+enum vertices T21_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    215c:	7119                	addi	sp,sp,-128
+    215e:	de86                	sw	ra,124(sp)
+    2160:	dca2                	sw	s0,120(sp)
+    2162:	0100                	addi	s0,sp,128
+    2164:	f8a42623          	sw	a0,-116(s0)
+    2168:	f8b42423          	sw	a1,-120(s0)
+    216c:	f8c42223          	sw	a2,-124(s0)
+    2170:	f8d42023          	sw	a3,-128(s0)
+	const enum vertices next[2] = { T13, T18 };
+    2174:	47b5                	li	a5,13
+    2176:	faf42c23          	sw	a5,-72(s0)
+    217a:	47c9                	li	a5,18
+    217c:	faf42e23          	sw	a5,-68(s0)
+    2180:	f8c42783          	lw	a5,-116(s0)
+    2184:	fcf42a23          	sw	a5,-44(s0)
+    2188:	f8042783          	lw	a5,-128(s0)
+    218c:	fcf42823          	sw	a5,-48(s0)
+    2190:	f8842783          	lw	a5,-120(s0)
+    2194:	fcf42623          	sw	a5,-52(s0)
+    2198:	f8442783          	lw	a5,-124(s0)
+    219c:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P50(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    21a0:	f8042823          	sw	zero,-112(s0)
+    21a4:	f8042a23          	sw	zero,-108(s0)
+    21a8:	f8042c23          	sw	zero,-104(s0)
+    21ac:	f8042e23          	sw	zero,-100(s0)
+    21b0:	fa042023          	sw	zero,-96(s0)
+    21b4:	fa042223          	sw	zero,-92(s0)
+    21b8:	fa042423          	sw	zero,-88(s0)
+    21bc:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in1[2];
+    21c0:	fd442783          	lw	a5,-44(s0)
+    21c4:	07a1                	addi	a5,a5,8
+    21c6:	439c                	lw	a5,0(a5)
+    21c8:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in4[0];
+    21cc:	fd042783          	lw	a5,-48(s0)
+    21d0:	439c                	lw	a5,0(a5)
+    21d2:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 + op1;
+    21d6:	fc442703          	lw	a4,-60(s0)
+    21da:	fc042783          	lw	a5,-64(s0)
+    21de:	97ba                	add	a5,a5,a4
+    21e0:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    21e4:	f9042783          	lw	a5,-112(s0)
+	fixedpt scores[2];
+	scores[0] = P50(in1, in2, in3, in4);
+    21e8:	faf42823          	sw	a5,-80(s0)
+    21ec:	f8c42783          	lw	a5,-116(s0)
+    21f0:	fef42623          	sw	a5,-20(s0)
+    21f4:	f8042783          	lw	a5,-128(s0)
+    21f8:	fef42423          	sw	a5,-24(s0)
+    21fc:	f8842783          	lw	a5,-120(s0)
+    2200:	fef42223          	sw	a5,-28(s0)
+    2204:	f8442783          	lw	a5,-124(s0)
+    2208:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P51(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    220c:	f8042823          	sw	zero,-112(s0)
+    2210:	f8042a23          	sw	zero,-108(s0)
+    2214:	f8042c23          	sw	zero,-104(s0)
+    2218:	f8042e23          	sw	zero,-100(s0)
+    221c:	fa042023          	sw	zero,-96(s0)
+    2220:	fa042223          	sw	zero,-92(s0)
+    2224:	fa042423          	sw	zero,-88(s0)
+    2228:	fa042623          	sw	zero,-84(s0)
+	{
+		fixedpt op0 = in4[0];
+    222c:	fe842783          	lw	a5,-24(s0)
+    2230:	439c                	lw	a5,0(a5)
+    2232:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in1[1];
+    2236:	fec42783          	lw	a5,-20(s0)
+    223a:	0791                	addi	a5,a5,4
+    223c:	439c                	lw	a5,0(a5)
+    223e:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+    2242:	fdc42703          	lw	a4,-36(s0)
+    2246:	fd842783          	lw	a5,-40(s0)
+    224a:	40f707b3          	sub	a5,a4,a5
+    224e:	f8f42823          	sw	a5,-112(s0)
+	}
+	return reg[0];
+    2252:	f9042783          	lw	a5,-112(s0)
+	scores[1] = P51(in1, in2, in3, in4);
+    2256:	faf42a23          	sw	a5,-76(s0)
+	return next[bestProgram(scores, 2)];
+    225a:	fb040793          	addi	a5,s0,-80
+    225e:	4589                	li	a1,2
+    2260:	853e                	mv	a0,a5
+    2262:	804fe0ef          	jal	266 <bestProgram>
+    2266:	872a                	mv	a4,a0
+    2268:	fb840793          	addi	a5,s0,-72
+    226c:	070a                	slli	a4,a4,0x2
+    226e:	97ba                	add	a5,a5,a4
+    2270:	439c                	lw	a5,0(a5)
+}
+    2272:	853e                	mv	a0,a5
+    2274:	50f6                	lw	ra,124(sp)
+    2276:	5466                	lw	s0,120(sp)
+    2278:	6109                	addi	sp,sp,128
+    227a:	8082                	ret
+
+0000227c <T22_func>:
+
+enum vertices T22_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    227c:	7155                	addi	sp,sp,-208
+    227e:	c786                	sw	ra,204(sp)
+    2280:	c5a2                	sw	s0,200(sp)
+    2282:	0980                	addi	s0,sp,208
+    2284:	f2a42e23          	sw	a0,-196(s0)
+    2288:	f2b42c23          	sw	a1,-200(s0)
+    228c:	f2c42a23          	sw	a2,-204(s0)
+    2290:	f2d42823          	sw	a3,-208(s0)
+	const enum vertices next[4] = { T15, T20, T19, T21 };
+    2294:	67a9                	lui	a5,0xa
+    2296:	55878793          	addi	a5,a5,1368 # a558 <TPG.c.205146a8+0xd1a>
+    229a:	4390                	lw	a2,0(a5)
+    229c:	43d4                	lw	a3,4(a5)
+    229e:	4798                	lw	a4,8(a5)
+    22a0:	f6c42823          	sw	a2,-144(s0)
+    22a4:	f6d42a23          	sw	a3,-140(s0)
+    22a8:	f6e42c23          	sw	a4,-136(s0)
+    22ac:	47dc                	lw	a5,12(a5)
+    22ae:	f6f42e23          	sw	a5,-132(s0)
+    22b2:	f3442783          	lw	a5,-204(s0)
+    22b6:	f8f42a23          	sw	a5,-108(s0)
+    22ba:	f3042783          	lw	a5,-208(s0)
+    22be:	f8f42823          	sw	a5,-112(s0)
+    22c2:	f3c42783          	lw	a5,-196(s0)
+    22c6:	f8f42623          	sw	a5,-116(s0)
+    22ca:	f3842783          	lw	a5,-200(s0)
+    22ce:	f8f42423          	sw	a5,-120(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P52(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    22d2:	f4042023          	sw	zero,-192(s0)
+    22d6:	f4042223          	sw	zero,-188(s0)
+    22da:	f4042423          	sw	zero,-184(s0)
+    22de:	f4042623          	sw	zero,-180(s0)
+    22e2:	f4042823          	sw	zero,-176(s0)
+    22e6:	f4042a23          	sw	zero,-172(s0)
+    22ea:	f4042c23          	sw	zero,-168(s0)
+    22ee:	f4042e23          	sw	zero,-164(s0)
+	{
+		fixedpt op0 = in3[2];
+    22f2:	f9442783          	lw	a5,-108(s0)
+    22f6:	07a1                	addi	a5,a5,8
+    22f8:	439c                	lw	a5,0(a5)
+    22fa:	f8f42223          	sw	a5,-124(s0)
+		fixedpt op1 = in4[3];
+    22fe:	f9042783          	lw	a5,-112(s0)
+    2302:	07b1                	addi	a5,a5,12
+    2304:	439c                	lw	a5,0(a5)
+    2306:	f8f42023          	sw	a5,-128(s0)
+		reg[0] = op0 + op1;
+    230a:	f8442703          	lw	a4,-124(s0)
+    230e:	f8042783          	lw	a5,-128(s0)
+    2312:	97ba                	add	a5,a5,a4
+    2314:	f4f42023          	sw	a5,-192(s0)
+	}
+	return reg[0];
+    2318:	f4042783          	lw	a5,-192(s0)
+	fixedpt scores[4];
+	scores[0] = P52(in1, in2, in3, in4);
+    231c:	f6f42023          	sw	a5,-160(s0)
+    2320:	f3042783          	lw	a5,-208(s0)
+    2324:	faf42a23          	sw	a5,-76(s0)
+    2328:	f3c42783          	lw	a5,-196(s0)
+    232c:	faf42823          	sw	a5,-80(s0)
+    2330:	f3842783          	lw	a5,-200(s0)
+    2334:	faf42623          	sw	a5,-84(s0)
+    2338:	f3442783          	lw	a5,-204(s0)
+    233c:	faf42423          	sw	a5,-88(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P53(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    2340:	f4042023          	sw	zero,-192(s0)
+    2344:	f4042223          	sw	zero,-188(s0)
+    2348:	f4042423          	sw	zero,-184(s0)
+    234c:	f4042623          	sw	zero,-180(s0)
+    2350:	f4042823          	sw	zero,-176(s0)
+    2354:	f4042a23          	sw	zero,-172(s0)
+    2358:	f4042c23          	sw	zero,-168(s0)
+    235c:	f4042e23          	sw	zero,-164(s0)
+	{
+		fixedpt op0 = in4[0];
+    2360:	fb442783          	lw	a5,-76(s0)
+    2364:	439c                	lw	a5,0(a5)
+    2366:	faf42223          	sw	a5,-92(s0)
+    236a:	fa442783          	lw	a5,-92(s0)
+    236e:	faf42023          	sw	a5,-96(s0)
+    if (n <= 0) {
+    2372:	fa042783          	lw	a5,-96(s0)
+    2376:	00f04463          	bgtz	a5,237e <T22_func+0x102>
+        return 0; // Handle error for non-positive input
+    237a:	4781                	li	a5,0
+    237c:	a801                	j	238c <T22_func+0x110>
+    return 31 - __builtin_clz(n);
+    237e:	fa042783          	lw	a5,-96(s0)
+    2382:	60079793          	clz	a5,a5
+    2386:	477d                	li	a4,31
+    2388:	40f707b3          	sub	a5,a4,a5
+		reg[4] = f_log2(op0);
+    238c:	f4f42823          	sw	a5,-176(s0)
+	}
+	{
+		fixedpt op0 = in4[0];
+    2390:	fb442783          	lw	a5,-76(s0)
+    2394:	439c                	lw	a5,0(a5)
+    2396:	f8f42e23          	sw	a5,-100(s0)
+		fixedpt op1 = reg[4];
+    239a:	f5042783          	lw	a5,-176(s0)
+    239e:	f8f42c23          	sw	a5,-104(s0)
+		reg[0] = op0 - op1;
+    23a2:	f9c42703          	lw	a4,-100(s0)
+    23a6:	f9842783          	lw	a5,-104(s0)
+    23aa:	40f707b3          	sub	a5,a4,a5
+    23ae:	f4f42023          	sw	a5,-192(s0)
+	}
+	return reg[0];
+    23b2:	f4042783          	lw	a5,-192(s0)
+	scores[1] = P53(in1, in2, in3, in4);
+    23b6:	f6f42223          	sw	a5,-156(s0)
+    23ba:	f3842783          	lw	a5,-200(s0)
+    23be:	fcf42623          	sw	a5,-52(s0)
+    23c2:	f3042783          	lw	a5,-208(s0)
+    23c6:	fcf42423          	sw	a5,-56(s0)
+    23ca:	f3c42783          	lw	a5,-196(s0)
+    23ce:	fcf42223          	sw	a5,-60(s0)
+    23d2:	f3442783          	lw	a5,-204(s0)
+    23d6:	fcf42023          	sw	a5,-64(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P54(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    23da:	f4042023          	sw	zero,-192(s0)
+    23de:	f4042223          	sw	zero,-188(s0)
+    23e2:	f4042423          	sw	zero,-184(s0)
+    23e6:	f4042623          	sw	zero,-180(s0)
+    23ea:	f4042823          	sw	zero,-176(s0)
+    23ee:	f4042a23          	sw	zero,-172(s0)
+    23f2:	f4042c23          	sw	zero,-168(s0)
+    23f6:	f4042e23          	sw	zero,-164(s0)
+	{
+		fixedpt op0 = in2[1];
+    23fa:	fcc42783          	lw	a5,-52(s0)
+    23fe:	0791                	addi	a5,a5,4
+    2400:	439c                	lw	a5,0(a5)
+    2402:	faf42e23          	sw	a5,-68(s0)
+		fixedpt op1 = in4[0];
+    2406:	fc842783          	lw	a5,-56(s0)
+    240a:	439c                	lw	a5,0(a5)
+    240c:	faf42c23          	sw	a5,-72(s0)
+		reg[0] = op0 + op1;
+    2410:	fbc42703          	lw	a4,-68(s0)
+    2414:	fb842783          	lw	a5,-72(s0)
+    2418:	97ba                	add	a5,a5,a4
+    241a:	f4f42023          	sw	a5,-192(s0)
+	}
+	return reg[0];
+    241e:	f4042783          	lw	a5,-192(s0)
+	scores[2] = P54(in1, in2, in3, in4);
+    2422:	f6f42423          	sw	a5,-152(s0)
+    2426:	f3442783          	lw	a5,-204(s0)
+    242a:	fef42623          	sw	a5,-20(s0)
+    242e:	f3042783          	lw	a5,-208(s0)
+    2432:	fef42423          	sw	a5,-24(s0)
+    2436:	f3c42783          	lw	a5,-196(s0)
+    243a:	fef42223          	sw	a5,-28(s0)
+    243e:	f3842783          	lw	a5,-200(s0)
+    2442:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P55(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    2446:	f4042023          	sw	zero,-192(s0)
+    244a:	f4042223          	sw	zero,-188(s0)
+    244e:	f4042423          	sw	zero,-184(s0)
+    2452:	f4042623          	sw	zero,-180(s0)
+    2456:	f4042823          	sw	zero,-176(s0)
+    245a:	f4042a23          	sw	zero,-172(s0)
+    245e:	f4042c23          	sw	zero,-168(s0)
+    2462:	f4042e23          	sw	zero,-164(s0)
+	{
+		fixedpt op0 = in4[0];
+    2466:	fe842783          	lw	a5,-24(s0)
+    246a:	439c                	lw	a5,0(a5)
+    246c:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[0];
+    2470:	fec42783          	lw	a5,-20(s0)
+    2474:	439c                	lw	a5,0(a5)
+    2476:	fcf42c23          	sw	a5,-40(s0)
+		reg[3] = op0 - op1;
+    247a:	fdc42703          	lw	a4,-36(s0)
+    247e:	fd842783          	lw	a5,-40(s0)
+    2482:	40f707b3          	sub	a5,a4,a5
+    2486:	f4f42623          	sw	a5,-180(s0)
+	}
+	{
+		fixedpt op0 = reg[0];
+    248a:	f4042783          	lw	a5,-192(s0)
+    248e:	fcf42a23          	sw	a5,-44(s0)
+		fixedpt op1 = reg[3];
+    2492:	f4c42783          	lw	a5,-180(s0)
+    2496:	fcf42823          	sw	a5,-48(s0)
+		reg[0] = op0 + op1;
+    249a:	fd442703          	lw	a4,-44(s0)
+    249e:	fd042783          	lw	a5,-48(s0)
+    24a2:	97ba                	add	a5,a5,a4
+    24a4:	f4f42023          	sw	a5,-192(s0)
+	}
+	return reg[0];
+    24a8:	f4042783          	lw	a5,-192(s0)
+	scores[3] = P55(in1, in2, in3, in4);
+    24ac:	f6f42623          	sw	a5,-148(s0)
+	return next[bestProgram(scores, 4)];
+    24b0:	f6040793          	addi	a5,s0,-160
+    24b4:	4591                	li	a1,4
+    24b6:	853e                	mv	a0,a5
+    24b8:	daffd0ef          	jal	266 <bestProgram>
+    24bc:	872a                	mv	a4,a0
+    24be:	f7040793          	addi	a5,s0,-144
+    24c2:	070a                	slli	a4,a4,0x2
+    24c4:	97ba                	add	a5,a5,a4
+    24c6:	439c                	lw	a5,0(a5)
+}
+    24c8:	853e                	mv	a0,a5
+    24ca:	40be                	lw	ra,204(sp)
+    24cc:	442e                	lw	s0,200(sp)
+    24ce:	6169                	addi	sp,sp,208
+    24d0:	8082                	ret
+
+000024d2 <T23_func>:
+
+enum vertices T23_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    24d2:	7115                	addi	sp,sp,-224
+    24d4:	cf86                	sw	ra,220(sp)
+    24d6:	cda2                	sw	s0,216(sp)
+    24d8:	1180                	addi	s0,sp,224
+    24da:	f2a42623          	sw	a0,-212(s0)
+    24de:	f2b42423          	sw	a1,-216(s0)
+    24e2:	f2c42223          	sw	a2,-220(s0)
+    24e6:	f2d42023          	sw	a3,-224(s0)
+	const enum vertices next[4] = { T16, T22, T19, T17 };
+    24ea:	67a9                	lui	a5,0xa
+    24ec:	56878793          	addi	a5,a5,1384 # a568 <TPG.c.205146a8+0xd2a>
+    24f0:	4390                	lw	a2,0(a5)
+    24f2:	43d4                	lw	a3,4(a5)
+    24f4:	4798                	lw	a4,8(a5)
+    24f6:	f6c42423          	sw	a2,-152(s0)
+    24fa:	f6d42623          	sw	a3,-148(s0)
+    24fe:	f6e42823          	sw	a4,-144(s0)
+    2502:	47dc                	lw	a5,12(a5)
+    2504:	f6f42a23          	sw	a5,-140(s0)
+    2508:	f2c42783          	lw	a5,-212(s0)
+    250c:	f8f42e23          	sw	a5,-100(s0)
+    2510:	f2442783          	lw	a5,-220(s0)
+    2514:	f8f42c23          	sw	a5,-104(s0)
+    2518:	f2042783          	lw	a5,-224(s0)
+    251c:	f8f42a23          	sw	a5,-108(s0)
+    2520:	f2842783          	lw	a5,-216(s0)
+    2524:	f8f42823          	sw	a5,-112(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    2528:	f2042c23          	sw	zero,-200(s0)
+    252c:	f2042e23          	sw	zero,-196(s0)
+    2530:	f4042023          	sw	zero,-192(s0)
+    2534:	f4042223          	sw	zero,-188(s0)
+    2538:	f4042423          	sw	zero,-184(s0)
+    253c:	f4042623          	sw	zero,-180(s0)
+    2540:	f4042823          	sw	zero,-176(s0)
+    2544:	f4042a23          	sw	zero,-172(s0)
+		fixedpt op0 = in3[1];
+    2548:	f9842783          	lw	a5,-104(s0)
+    254c:	0791                	addi	a5,a5,4
+    254e:	439c                	lw	a5,0(a5)
+    2550:	f8f42623          	sw	a5,-116(s0)
+    2554:	f8c42783          	lw	a5,-116(s0)
+    2558:	f8f42423          	sw	a5,-120(s0)
+    if (n <= 0) {
+    255c:	f8842783          	lw	a5,-120(s0)
+    2560:	00f04463          	bgtz	a5,2568 <T23_func+0x96>
+        return 0; // Handle error for non-positive input
+    2564:	4781                	li	a5,0
+    2566:	a801                	j	2576 <T23_func+0xa4>
+    return 31 - __builtin_clz(n);
+    2568:	f8842783          	lw	a5,-120(s0)
+    256c:	60079793          	clz	a5,a5
+    2570:	477d                	li	a4,31
+    2572:	40f707b3          	sub	a5,a4,a5
+		reg[7] = f_log2(op0);
+    2576:	f4f42a23          	sw	a5,-172(s0)
+		fixedpt op0 = in1[2];
+    257a:	f9c42783          	lw	a5,-100(s0)
+    257e:	07a1                	addi	a5,a5,8
+    2580:	439c                	lw	a5,0(a5)
+    2582:	f8f42223          	sw	a5,-124(s0)
+		fixedpt op1 = in4[1];
+    2586:	f9442783          	lw	a5,-108(s0)
+    258a:	0791                	addi	a5,a5,4
+    258c:	439c                	lw	a5,0(a5)
+    258e:	f8f42023          	sw	a5,-128(s0)
+		reg[3] = op0 + op1;
+    2592:	f8442703          	lw	a4,-124(s0)
+    2596:	f8042783          	lw	a5,-128(s0)
+    259a:	97ba                	add	a5,a5,a4
+    259c:	f4f42223          	sw	a5,-188(s0)
+		fixedpt op0 = reg[3];
+    25a0:	f4442783          	lw	a5,-188(s0)
+    25a4:	f6f42e23          	sw	a5,-132(s0)
+		fixedpt op1 = reg[7];
+    25a8:	f5442783          	lw	a5,-172(s0)
+    25ac:	f6f42c23          	sw	a5,-136(s0)
+		reg[0] = (op0 > op1) ? op0 : op1;
+    25b0:	f7c42703          	lw	a4,-132(s0)
+    25b4:	f7842783          	lw	a5,-136(s0)
+    25b8:	0af767b3          	max	a5,a4,a5
+    25bc:	f2f42c23          	sw	a5,-200(s0)
+	return reg[0];
+    25c0:	f3842783          	lw	a5,-200(s0)
+	fixedpt scores[4];
+	scores[0] = P42(in1, in2, in3, in4);
+    25c4:	f4f42c23          	sw	a5,-168(s0)
+    25c8:	f2c42783          	lw	a5,-212(s0)
+    25cc:	faf42e23          	sw	a5,-68(s0)
+    25d0:	f2442783          	lw	a5,-220(s0)
+    25d4:	faf42c23          	sw	a5,-72(s0)
+    25d8:	f2042783          	lw	a5,-224(s0)
+    25dc:	faf42a23          	sw	a5,-76(s0)
+    25e0:	f2842783          	lw	a5,-216(s0)
+    25e4:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P56(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    25e8:	f2042c23          	sw	zero,-200(s0)
+    25ec:	f2042e23          	sw	zero,-196(s0)
+    25f0:	f4042023          	sw	zero,-192(s0)
+    25f4:	f4042223          	sw	zero,-188(s0)
+    25f8:	f4042423          	sw	zero,-184(s0)
+    25fc:	f4042623          	sw	zero,-180(s0)
+    2600:	f4042823          	sw	zero,-176(s0)
+    2604:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in4[0];
+    2608:	fb442783          	lw	a5,-76(s0)
+    260c:	439c                	lw	a5,0(a5)
+    260e:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in3[2];
+    2612:	fb842783          	lw	a5,-72(s0)
+    2616:	07a1                	addi	a5,a5,8
+    2618:	439c                	lw	a5,0(a5)
+    261a:	faf42423          	sw	a5,-88(s0)
+		reg[6] = op0 - op1;
+    261e:	fac42703          	lw	a4,-84(s0)
+    2622:	fa842783          	lw	a5,-88(s0)
+    2626:	40f707b3          	sub	a5,a4,a5
+    262a:	f4f42823          	sw	a5,-176(s0)
+	}
+	{
+		fixedpt op0 = reg[6];
+    262e:	f5042783          	lw	a5,-176(s0)
+    2632:	faf42223          	sw	a5,-92(s0)
+		fixedpt op1 = in1[0];
+    2636:	fbc42783          	lw	a5,-68(s0)
+    263a:	439c                	lw	a5,0(a5)
+    263c:	faf42023          	sw	a5,-96(s0)
+		reg[0] = op0 - op1;
+    2640:	fa442703          	lw	a4,-92(s0)
+    2644:	fa042783          	lw	a5,-96(s0)
+    2648:	40f707b3          	sub	a5,a4,a5
+    264c:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    2650:	f3842783          	lw	a5,-200(s0)
+	scores[1] = P56(in1, in2, in3, in4);
+    2654:	f4f42e23          	sw	a5,-164(s0)
+    2658:	f2842783          	lw	a5,-216(s0)
+    265c:	fcf42a23          	sw	a5,-44(s0)
+    2660:	f2042783          	lw	a5,-224(s0)
+    2664:	fcf42823          	sw	a5,-48(s0)
+    2668:	f2c42783          	lw	a5,-212(s0)
+    266c:	fcf42623          	sw	a5,-52(s0)
+    2670:	f2442783          	lw	a5,-220(s0)
+    2674:	fcf42423          	sw	a5,-56(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P57(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    2678:	f2042c23          	sw	zero,-200(s0)
+    267c:	f2042e23          	sw	zero,-196(s0)
+    2680:	f4042023          	sw	zero,-192(s0)
+    2684:	f4042223          	sw	zero,-188(s0)
+    2688:	f4042423          	sw	zero,-184(s0)
+    268c:	f4042623          	sw	zero,-180(s0)
+    2690:	f4042823          	sw	zero,-176(s0)
+    2694:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in2[1];
+    2698:	fd442783          	lw	a5,-44(s0)
+    269c:	0791                	addi	a5,a5,4
+    269e:	439c                	lw	a5,0(a5)
+    26a0:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in4[1];
+    26a4:	fd042783          	lw	a5,-48(s0)
+    26a8:	0791                	addi	a5,a5,4
+    26aa:	439c                	lw	a5,0(a5)
+    26ac:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 + op1;
+    26b0:	fc442703          	lw	a4,-60(s0)
+    26b4:	fc042783          	lw	a5,-64(s0)
+    26b8:	97ba                	add	a5,a5,a4
+    26ba:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    26be:	f3842783          	lw	a5,-200(s0)
+	scores[2] = P57(in1, in2, in3, in4);
+    26c2:	f6f42023          	sw	a5,-160(s0)
+    26c6:	f2442783          	lw	a5,-220(s0)
+    26ca:	fef42623          	sw	a5,-20(s0)
+    26ce:	f2042783          	lw	a5,-224(s0)
+    26d2:	fef42423          	sw	a5,-24(s0)
+    26d6:	f2c42783          	lw	a5,-212(s0)
+    26da:	fef42223          	sw	a5,-28(s0)
+    26de:	f2842783          	lw	a5,-216(s0)
+    26e2:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P58(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    26e6:	f2042c23          	sw	zero,-200(s0)
+    26ea:	f2042e23          	sw	zero,-196(s0)
+    26ee:	f4042023          	sw	zero,-192(s0)
+    26f2:	f4042223          	sw	zero,-188(s0)
+    26f6:	f4042423          	sw	zero,-184(s0)
+    26fa:	f4042623          	sw	zero,-180(s0)
+    26fe:	f4042823          	sw	zero,-176(s0)
+    2702:	f4042a23          	sw	zero,-172(s0)
+	{
+		fixedpt op0 = in4[1];
+    2706:	fe842783          	lw	a5,-24(s0)
+    270a:	0791                	addi	a5,a5,4
+    270c:	439c                	lw	a5,0(a5)
+    270e:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[0];
+    2712:	fec42783          	lw	a5,-20(s0)
+    2716:	439c                	lw	a5,0(a5)
+    2718:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 + op1;
+    271c:	fdc42703          	lw	a4,-36(s0)
+    2720:	fd842783          	lw	a5,-40(s0)
+    2724:	97ba                	add	a5,a5,a4
+    2726:	f2f42c23          	sw	a5,-200(s0)
+	}
+	return reg[0];
+    272a:	f3842783          	lw	a5,-200(s0)
+	scores[3] = P58(in1, in2, in3, in4);
+    272e:	f6f42223          	sw	a5,-156(s0)
+	return next[bestProgram(scores, 4)];
+    2732:	f5840793          	addi	a5,s0,-168
+    2736:	4591                	li	a1,4
+    2738:	853e                	mv	a0,a5
+    273a:	b2dfd0ef          	jal	266 <bestProgram>
+    273e:	872a                	mv	a4,a0
+    2740:	f6840793          	addi	a5,s0,-152
+    2744:	070a                	slli	a4,a4,0x2
+    2746:	97ba                	add	a5,a5,a4
+    2748:	439c                	lw	a5,0(a5)
+}
+    274a:	853e                	mv	a0,a5
+    274c:	40fe                	lw	ra,220(sp)
+    274e:	446e                	lw	s0,216(sp)
+    2750:	612d                	addi	sp,sp,224
+    2752:	8082                	ret
+
+00002754 <T24_func>:
+
+enum vertices T24_func(const fixedpt * restrict in1,
+                       const fixedpt * restrict in2,
+                       const fixedpt * restrict in3,
+                       const fixedpt * restrict in4)
+{
+    2754:	7155                	addi	sp,sp,-208
+    2756:	c786                	sw	ra,204(sp)
+    2758:	c5a2                	sw	s0,200(sp)
+    275a:	0980                	addi	s0,sp,208
+    275c:	f2a42e23          	sw	a0,-196(s0)
+    2760:	f2b42c23          	sw	a1,-200(s0)
+    2764:	f2c42a23          	sw	a2,-204(s0)
+    2768:	f2d42823          	sw	a3,-208(s0)
+	const enum vertices next[4] = { A31, T23, T19, T17 };
+    276c:	67a9                	lui	a5,0xa
+    276e:	57878793          	addi	a5,a5,1400 # a578 <TPG.c.205146a8+0xd3a>
+    2772:	4390                	lw	a2,0(a5)
+    2774:	43d4                	lw	a3,4(a5)
+    2776:	4798                	lw	a4,8(a5)
+    2778:	f6c42c23          	sw	a2,-136(s0)
+    277c:	f6d42e23          	sw	a3,-132(s0)
+    2780:	f8e42023          	sw	a4,-128(s0)
+    2784:	47dc                	lw	a5,12(a5)
+    2786:	f8f42223          	sw	a5,-124(s0)
+    278a:	f3c42783          	lw	a5,-196(s0)
+    278e:	faf42223          	sw	a5,-92(s0)
+    2792:	f3442783          	lw	a5,-204(s0)
+    2796:	faf42023          	sw	a5,-96(s0)
+    279a:	f3042783          	lw	a5,-208(s0)
+    279e:	f8f42e23          	sw	a5,-100(s0)
+    27a2:	f3842783          	lw	a5,-200(s0)
+    27a6:	f8f42c23          	sw	a5,-104(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    27aa:	f4042423          	sw	zero,-184(s0)
+    27ae:	f4042623          	sw	zero,-180(s0)
+    27b2:	f4042823          	sw	zero,-176(s0)
+    27b6:	f4042a23          	sw	zero,-172(s0)
+    27ba:	f4042c23          	sw	zero,-168(s0)
+    27be:	f4042e23          	sw	zero,-164(s0)
+    27c2:	f6042023          	sw	zero,-160(s0)
+    27c6:	f6042223          	sw	zero,-156(s0)
+		fixedpt op0 = in4[2];
+    27ca:	f9c42783          	lw	a5,-100(s0)
+    27ce:	07a1                	addi	a5,a5,8
+    27d0:	439c                	lw	a5,0(a5)
+    27d2:	f8f42a23          	sw	a5,-108(s0)
+		fixedpt op1 = in3[2];
+    27d6:	fa042783          	lw	a5,-96(s0)
+    27da:	07a1                	addi	a5,a5,8
+    27dc:	439c                	lw	a5,0(a5)
+    27de:	f8f42823          	sw	a5,-112(s0)
+		reg[6] = op0 - op1;
+    27e2:	f9442703          	lw	a4,-108(s0)
+    27e6:	f9042783          	lw	a5,-112(s0)
+    27ea:	40f707b3          	sub	a5,a4,a5
+    27ee:	f6f42023          	sw	a5,-160(s0)
+		fixedpt op0 = reg[6];
+    27f2:	f6042783          	lw	a5,-160(s0)
+    27f6:	f8f42623          	sw	a5,-116(s0)
+		fixedpt op1 = in1[0];
+    27fa:	fa442783          	lw	a5,-92(s0)
+    27fe:	439c                	lw	a5,0(a5)
+    2800:	f8f42423          	sw	a5,-120(s0)
+		reg[0] = op0 - op1;
+    2804:	f8c42703          	lw	a4,-116(s0)
+    2808:	f8842783          	lw	a5,-120(s0)
+    280c:	40f707b3          	sub	a5,a4,a5
+    2810:	f4f42423          	sw	a5,-184(s0)
+	return reg[0];
+    2814:	f4842783          	lw	a5,-184(s0)
+	fixedpt scores[4];
+	scores[0] = P43(in1, in2, in3, in4);
+    2818:	f6f42423          	sw	a5,-152(s0)
+    281c:	f3442783          	lw	a5,-204(s0)
+    2820:	faf42e23          	sw	a5,-68(s0)
+    2824:	f3042783          	lw	a5,-208(s0)
+    2828:	faf42c23          	sw	a5,-72(s0)
+    282c:	f3c42783          	lw	a5,-196(s0)
+    2830:	faf42a23          	sw	a5,-76(s0)
+    2834:	f3842783          	lw	a5,-200(s0)
+    2838:	faf42823          	sw	a5,-80(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P59(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    283c:	f4042423          	sw	zero,-184(s0)
+    2840:	f4042623          	sw	zero,-180(s0)
+    2844:	f4042823          	sw	zero,-176(s0)
+    2848:	f4042a23          	sw	zero,-172(s0)
+    284c:	f4042c23          	sw	zero,-168(s0)
+    2850:	f4042e23          	sw	zero,-164(s0)
+    2854:	f6042023          	sw	zero,-160(s0)
+    2858:	f6042223          	sw	zero,-156(s0)
+	{
+		fixedpt op0 = in3[1];
+    285c:	fbc42783          	lw	a5,-68(s0)
+    2860:	0791                	addi	a5,a5,4
+    2862:	439c                	lw	a5,0(a5)
+    2864:	faf42623          	sw	a5,-84(s0)
+		fixedpt op1 = in4[3];
+    2868:	fb842783          	lw	a5,-72(s0)
+    286c:	07b1                	addi	a5,a5,12
+    286e:	439c                	lw	a5,0(a5)
+    2870:	faf42423          	sw	a5,-88(s0)
+		reg[0] = op0 + op1;
+    2874:	fac42703          	lw	a4,-84(s0)
+    2878:	fa842783          	lw	a5,-88(s0)
+    287c:	97ba                	add	a5,a5,a4
+    287e:	f4f42423          	sw	a5,-184(s0)
+	}
+	return reg[0];
+    2882:	f4842783          	lw	a5,-184(s0)
+	scores[1] = P59(in1, in2, in3, in4);
+    2886:	f6f42623          	sw	a5,-148(s0)
+    288a:	f3842783          	lw	a5,-200(s0)
+    288e:	fcf42a23          	sw	a5,-44(s0)
+    2892:	f3042783          	lw	a5,-208(s0)
+    2896:	fcf42823          	sw	a5,-48(s0)
+    289a:	f3c42783          	lw	a5,-196(s0)
+    289e:	fcf42623          	sw	a5,-52(s0)
+    28a2:	f3442783          	lw	a5,-204(s0)
+    28a6:	fcf42423          	sw	a5,-56(s0)
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    28aa:	f4042423          	sw	zero,-184(s0)
+    28ae:	f4042623          	sw	zero,-180(s0)
+    28b2:	f4042823          	sw	zero,-176(s0)
+    28b6:	f4042a23          	sw	zero,-172(s0)
+    28ba:	f4042c23          	sw	zero,-168(s0)
+    28be:	f4042e23          	sw	zero,-164(s0)
+    28c2:	f6042023          	sw	zero,-160(s0)
+    28c6:	f6042223          	sw	zero,-156(s0)
+		fixedpt op0 = in2[1];
+    28ca:	fd442783          	lw	a5,-44(s0)
+    28ce:	0791                	addi	a5,a5,4
+    28d0:	439c                	lw	a5,0(a5)
+    28d2:	fcf42223          	sw	a5,-60(s0)
+		fixedpt op1 = in4[1];
+    28d6:	fd042783          	lw	a5,-48(s0)
+    28da:	0791                	addi	a5,a5,4
+    28dc:	439c                	lw	a5,0(a5)
+    28de:	fcf42023          	sw	a5,-64(s0)
+		reg[0] = op0 + op1;
+    28e2:	fc442703          	lw	a4,-60(s0)
+    28e6:	fc042783          	lw	a5,-64(s0)
+    28ea:	97ba                	add	a5,a5,a4
+    28ec:	f4f42423          	sw	a5,-184(s0)
+	return reg[0];
+    28f0:	f4842783          	lw	a5,-184(s0)
+	scores[2] = P57(in1, in2, in3, in4);
+    28f4:	f6f42823          	sw	a5,-144(s0)
+    28f8:	f3442783          	lw	a5,-204(s0)
+    28fc:	fef42623          	sw	a5,-20(s0)
+    2900:	f3042783          	lw	a5,-208(s0)
+    2904:	fef42423          	sw	a5,-24(s0)
+    2908:	f3c42783          	lw	a5,-196(s0)
+    290c:	fef42223          	sw	a5,-28(s0)
+    2910:	f3842783          	lw	a5,-200(s0)
+    2914:	fef42023          	sw	a5,-32(s0)
+}
+
+  inline __attribute__((always_inline)) fixedpt P60(const fixedpt * restrict in1, const fixedpt * restrict in2, const fixedpt * restrict in3, const fixedpt * restrict in4) {
+	fixedpt reg[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    2918:	f4042423          	sw	zero,-184(s0)
+    291c:	f4042623          	sw	zero,-180(s0)
+    2920:	f4042823          	sw	zero,-176(s0)
+    2924:	f4042a23          	sw	zero,-172(s0)
+    2928:	f4042c23          	sw	zero,-168(s0)
+    292c:	f4042e23          	sw	zero,-164(s0)
+    2930:	f6042023          	sw	zero,-160(s0)
+    2934:	f6042223          	sw	zero,-156(s0)
+	{
+		fixedpt op0 = in4[2];
+    2938:	fe842783          	lw	a5,-24(s0)
+    293c:	07a1                	addi	a5,a5,8
+    293e:	439c                	lw	a5,0(a5)
+    2940:	fcf42e23          	sw	a5,-36(s0)
+		fixedpt op1 = in3[2];
+    2944:	fec42783          	lw	a5,-20(s0)
+    2948:	07a1                	addi	a5,a5,8
+    294a:	439c                	lw	a5,0(a5)
+    294c:	fcf42c23          	sw	a5,-40(s0)
+		reg[0] = op0 - op1;
+    2950:	fdc42703          	lw	a4,-36(s0)
+    2954:	fd842783          	lw	a5,-40(s0)
+    2958:	40f707b3          	sub	a5,a4,a5
+    295c:	f4f42423          	sw	a5,-184(s0)
+	}
+	return reg[0];
+    2960:	f4842783          	lw	a5,-184(s0)
+	scores[3] = P60(in1, in2, in3, in4);
+    2964:	f6f42a23          	sw	a5,-140(s0)
+	return next[bestProgram(scores, 4)];
+    2968:	f6840793          	addi	a5,s0,-152
+    296c:	4591                	li	a1,4
+    296e:	853e                	mv	a0,a5
+    2970:	8f7fd0ef          	jal	266 <bestProgram>
+    2974:	872a                	mv	a4,a0
+    2976:	f7840793          	addi	a5,s0,-136
+    297a:	070a                	slli	a4,a4,0x2
+    297c:	97ba                	add	a5,a5,a4
+    297e:	439c                	lw	a5,0(a5)
+}
+    2980:	853e                	mv	a0,a5
+    2982:	40be                	lw	ra,204(sp)
+    2984:	442e                	lw	s0,200(sp)
+    2986:	6169                	addi	sp,sp,208
+    2988:	8082                	ret
+
+0000298a <inferenceTPG>:
+void inferenceTPG(fixedpt* actions,
+                  const fixedpt * restrict in1,
+                  const fixedpt * restrict in2,
+                  const fixedpt * restrict in3,
+                  const fixedpt * restrict in4)
+{
+    298a:	7139                	addi	sp,sp,-64
+    298c:	de06                	sw	ra,60(sp)
+    298e:	dc22                	sw	s0,56(sp)
+    2990:	0080                	addi	s0,sp,64
+    2992:	fca42e23          	sw	a0,-36(s0)
+    2996:	fcb42c23          	sw	a1,-40(s0)
+    299a:	fcc42a23          	sw	a2,-44(s0)
+    299e:	fcd42823          	sw	a3,-48(s0)
+    29a2:	fce42623          	sw	a4,-52(s0)
+	enum vertices currentVertex = T24;
+    29a6:	47e1                	li	a5,24
+    29a8:	fef42623          	sw	a5,-20(s0)
+
+	while (1) {
+		switch (currentVertex) {
+    29ac:	fec42703          	lw	a4,-20(s0)
+    29b0:	47fd                	li	a5,31
+    29b2:	52f70463          	beq	a4,a5,2eda <inferenceTPG+0x550>
+    29b6:	fec42703          	lw	a4,-20(s0)
+    29ba:	47fd                	li	a5,31
+    29bc:	fee7e8e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    29c0:	fec42703          	lw	a4,-20(s0)
+    29c4:	47f9                	li	a5,30
+    29c6:	50f70563          	beq	a4,a5,2ed0 <inferenceTPG+0x546>
+    29ca:	fec42703          	lw	a4,-20(s0)
+    29ce:	47f9                	li	a5,30
+    29d0:	fce7eee3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    29d4:	fec42703          	lw	a4,-20(s0)
+    29d8:	47f5                	li	a5,29
+    29da:	4ef70663          	beq	a4,a5,2ec6 <inferenceTPG+0x53c>
+    29de:	fec42703          	lw	a4,-20(s0)
+    29e2:	47f5                	li	a5,29
+    29e4:	fce7e4e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    29e8:	fec42703          	lw	a4,-20(s0)
+    29ec:	47f1                	li	a5,28
+    29ee:	4cf70763          	beq	a4,a5,2ebc <inferenceTPG+0x532>
+    29f2:	fec42703          	lw	a4,-20(s0)
+    29f6:	47f1                	li	a5,28
+    29f8:	fae7eae3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    29fc:	fec42703          	lw	a4,-20(s0)
+    2a00:	47ed                	li	a5,27
+    2a02:	4af70863          	beq	a4,a5,2eb2 <inferenceTPG+0x528>
+    2a06:	fec42703          	lw	a4,-20(s0)
+    2a0a:	47ed                	li	a5,27
+    2a0c:	fae7e0e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a10:	fec42703          	lw	a4,-20(s0)
+    2a14:	47e9                	li	a5,26
+    2a16:	48f70963          	beq	a4,a5,2ea8 <inferenceTPG+0x51e>
+    2a1a:	fec42703          	lw	a4,-20(s0)
+    2a1e:	47e9                	li	a5,26
+    2a20:	f8e7e6e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a24:	fec42703          	lw	a4,-20(s0)
+    2a28:	47e5                	li	a5,25
+    2a2a:	46f70a63          	beq	a4,a5,2e9e <inferenceTPG+0x514>
+    2a2e:	fec42703          	lw	a4,-20(s0)
+    2a32:	47e5                	li	a5,25
+    2a34:	f6e7ece3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a38:	fec42703          	lw	a4,-20(s0)
+    2a3c:	47e1                	li	a5,24
+    2a3e:	44f70463          	beq	a4,a5,2e86 <inferenceTPG+0x4fc>
+    2a42:	fec42703          	lw	a4,-20(s0)
+    2a46:	47e1                	li	a5,24
+    2a48:	f6e7e2e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a4c:	fec42703          	lw	a4,-20(s0)
+    2a50:	47dd                	li	a5,23
+    2a52:	40f70d63          	beq	a4,a5,2e6c <inferenceTPG+0x4e2>
+    2a56:	fec42703          	lw	a4,-20(s0)
+    2a5a:	47dd                	li	a5,23
+    2a5c:	f4e7e8e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a60:	fec42703          	lw	a4,-20(s0)
+    2a64:	47d9                	li	a5,22
+    2a66:	3ef70663          	beq	a4,a5,2e52 <inferenceTPG+0x4c8>
+    2a6a:	fec42703          	lw	a4,-20(s0)
+    2a6e:	47d9                	li	a5,22
+    2a70:	f2e7eee3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a74:	fec42703          	lw	a4,-20(s0)
+    2a78:	47d5                	li	a5,21
+    2a7a:	3af70f63          	beq	a4,a5,2e38 <inferenceTPG+0x4ae>
+    2a7e:	fec42703          	lw	a4,-20(s0)
+    2a82:	47d5                	li	a5,21
+    2a84:	f2e7e4e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a88:	fec42703          	lw	a4,-20(s0)
+    2a8c:	47d1                	li	a5,20
+    2a8e:	38f70863          	beq	a4,a5,2e1e <inferenceTPG+0x494>
+    2a92:	fec42703          	lw	a4,-20(s0)
+    2a96:	47d1                	li	a5,20
+    2a98:	f0e7eae3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2a9c:	fec42703          	lw	a4,-20(s0)
+    2aa0:	47cd                	li	a5,19
+    2aa2:	36f70163          	beq	a4,a5,2e04 <inferenceTPG+0x47a>
+    2aa6:	fec42703          	lw	a4,-20(s0)
+    2aaa:	47cd                	li	a5,19
+    2aac:	f0e7e0e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2ab0:	fec42703          	lw	a4,-20(s0)
+    2ab4:	47c9                	li	a5,18
+    2ab6:	32f70a63          	beq	a4,a5,2dea <inferenceTPG+0x460>
+    2aba:	fec42703          	lw	a4,-20(s0)
+    2abe:	47c9                	li	a5,18
+    2ac0:	eee7e6e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2ac4:	fec42703          	lw	a4,-20(s0)
+    2ac8:	47c5                	li	a5,17
+    2aca:	30f70363          	beq	a4,a5,2dd0 <inferenceTPG+0x446>
+    2ace:	fec42703          	lw	a4,-20(s0)
+    2ad2:	47c5                	li	a5,17
+    2ad4:	ece7ece3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2ad8:	fec42703          	lw	a4,-20(s0)
+    2adc:	47c1                	li	a5,16
+    2ade:	2cf70c63          	beq	a4,a5,2db6 <inferenceTPG+0x42c>
+    2ae2:	fec42703          	lw	a4,-20(s0)
+    2ae6:	47c1                	li	a5,16
+    2ae8:	ece7e2e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2aec:	fec42703          	lw	a4,-20(s0)
+    2af0:	47bd                	li	a5,15
+    2af2:	2af70563          	beq	a4,a5,2d9c <inferenceTPG+0x412>
+    2af6:	fec42703          	lw	a4,-20(s0)
+    2afa:	47bd                	li	a5,15
+    2afc:	eae7e8e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b00:	fec42703          	lw	a4,-20(s0)
+    2b04:	47b9                	li	a5,14
+    2b06:	26f70e63          	beq	a4,a5,2d82 <inferenceTPG+0x3f8>
+    2b0a:	fec42703          	lw	a4,-20(s0)
+    2b0e:	47b9                	li	a5,14
+    2b10:	e8e7eee3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b14:	fec42703          	lw	a4,-20(s0)
+    2b18:	47b5                	li	a5,13
+    2b1a:	24f70763          	beq	a4,a5,2d68 <inferenceTPG+0x3de>
+    2b1e:	fec42703          	lw	a4,-20(s0)
+    2b22:	47b5                	li	a5,13
+    2b24:	e8e7e4e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b28:	fec42703          	lw	a4,-20(s0)
+    2b2c:	47b1                	li	a5,12
+    2b2e:	22f70063          	beq	a4,a5,2d4e <inferenceTPG+0x3c4>
+    2b32:	fec42703          	lw	a4,-20(s0)
+    2b36:	47b1                	li	a5,12
+    2b38:	e6e7eae3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b3c:	fec42703          	lw	a4,-20(s0)
+    2b40:	47ad                	li	a5,11
+    2b42:	1ef70963          	beq	a4,a5,2d34 <inferenceTPG+0x3aa>
+    2b46:	fec42703          	lw	a4,-20(s0)
+    2b4a:	47ad                	li	a5,11
+    2b4c:	e6e7e0e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b50:	fec42703          	lw	a4,-20(s0)
+    2b54:	47a9                	li	a5,10
+    2b56:	1cf70263          	beq	a4,a5,2d1a <inferenceTPG+0x390>
+    2b5a:	fec42703          	lw	a4,-20(s0)
+    2b5e:	47a9                	li	a5,10
+    2b60:	e4e7e6e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b64:	fec42703          	lw	a4,-20(s0)
+    2b68:	47a5                	li	a5,9
+    2b6a:	18f70b63          	beq	a4,a5,2d00 <inferenceTPG+0x376>
+    2b6e:	fec42703          	lw	a4,-20(s0)
+    2b72:	47a5                	li	a5,9
+    2b74:	e2e7ece3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b78:	fec42703          	lw	a4,-20(s0)
+    2b7c:	47a1                	li	a5,8
+    2b7e:	16f70463          	beq	a4,a5,2ce6 <inferenceTPG+0x35c>
+    2b82:	fec42703          	lw	a4,-20(s0)
+    2b86:	47a1                	li	a5,8
+    2b88:	e2e7e2e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2b8c:	fec42703          	lw	a4,-20(s0)
+    2b90:	479d                	li	a5,7
+    2b92:	12f70d63          	beq	a4,a5,2ccc <inferenceTPG+0x342>
+    2b96:	fec42703          	lw	a4,-20(s0)
+    2b9a:	479d                	li	a5,7
+    2b9c:	e0e7e8e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2ba0:	fec42703          	lw	a4,-20(s0)
+    2ba4:	4799                	li	a5,6
+    2ba6:	10f70663          	beq	a4,a5,2cb2 <inferenceTPG+0x328>
+    2baa:	fec42703          	lw	a4,-20(s0)
+    2bae:	4799                	li	a5,6
+    2bb0:	dee7eee3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2bb4:	fec42703          	lw	a4,-20(s0)
+    2bb8:	4795                	li	a5,5
+    2bba:	0cf70f63          	beq	a4,a5,2c98 <inferenceTPG+0x30e>
+    2bbe:	fec42703          	lw	a4,-20(s0)
+    2bc2:	4795                	li	a5,5
+    2bc4:	dee7e4e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2bc8:	fec42703          	lw	a4,-20(s0)
+    2bcc:	4791                	li	a5,4
+    2bce:	0af70863          	beq	a4,a5,2c7e <inferenceTPG+0x2f4>
+    2bd2:	fec42703          	lw	a4,-20(s0)
+    2bd6:	4791                	li	a5,4
+    2bd8:	dce7eae3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2bdc:	fec42703          	lw	a4,-20(s0)
+    2be0:	478d                	li	a5,3
+    2be2:	08f70163          	beq	a4,a5,2c64 <inferenceTPG+0x2da>
+    2be6:	fec42703          	lw	a4,-20(s0)
+    2bea:	478d                	li	a5,3
+    2bec:	dce7e0e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2bf0:	fec42703          	lw	a4,-20(s0)
+    2bf4:	4789                	li	a5,2
+    2bf6:	04f70a63          	beq	a4,a5,2c4a <inferenceTPG+0x2c0>
+    2bfa:	fec42703          	lw	a4,-20(s0)
+    2bfe:	4789                	li	a5,2
+    2c00:	dae7e6e3          	bltu	a5,a4,29ac <inferenceTPG+0x22>
+    2c04:	fec42783          	lw	a5,-20(s0)
+    2c08:	c799                	beqz	a5,2c16 <inferenceTPG+0x28c>
+    2c0a:	fec42703          	lw	a4,-20(s0)
+    2c0e:	4785                	li	a5,1
+    2c10:	02f70063          	beq	a4,a5,2c30 <inferenceTPG+0x2a6>
+    2c14:	bb61                	j	29ac <inferenceTPG+0x22>
+			case T0:  currentVertex = T0_func(in1, in2, in3, in4); break;
+    2c16:	fcc42683          	lw	a3,-52(s0)
+    2c1a:	fd042603          	lw	a2,-48(s0)
+    2c1e:	fd442583          	lw	a1,-44(s0)
+    2c22:	fd842503          	lw	a0,-40(s0)
+    2c26:	eb8fd0ef          	jal	2de <T0_func>
+    2c2a:	fea42623          	sw	a0,-20(s0)
+    2c2e:	ac5d                	j	2ee4 <inferenceTPG+0x55a>
+			case T1:  currentVertex = T1_func(in1, in2, in3, in4); break;
+    2c30:	fcc42683          	lw	a3,-52(s0)
+    2c34:	fd042603          	lw	a2,-48(s0)
+    2c38:	fd442583          	lw	a1,-44(s0)
+    2c3c:	fd842503          	lw	a0,-40(s0)
+    2c40:	fbafd0ef          	jal	3fa <T1_func>
+    2c44:	fea42623          	sw	a0,-20(s0)
+    2c48:	ac71                	j	2ee4 <inferenceTPG+0x55a>
+			case T2:  currentVertex = T2_func(in1, in2, in3, in4); break;
+    2c4a:	fcc42683          	lw	a3,-52(s0)
+    2c4e:	fd042603          	lw	a2,-48(s0)
+    2c52:	fd442583          	lw	a1,-44(s0)
+    2c56:	fd842503          	lw	a0,-40(s0)
+    2c5a:	89dfd0ef          	jal	4f6 <T2_func>
+    2c5e:	fea42623          	sw	a0,-20(s0)
+    2c62:	a449                	j	2ee4 <inferenceTPG+0x55a>
+			case T3:  currentVertex = T3_func(in1, in2, in3, in4); break;
+    2c64:	fcc42683          	lw	a3,-52(s0)
+    2c68:	fd042603          	lw	a2,-48(s0)
+    2c6c:	fd442583          	lw	a1,-44(s0)
+    2c70:	fd842503          	lw	a0,-40(s0)
+    2c74:	989fd0ef          	jal	5fc <T3_func>
+    2c78:	fea42623          	sw	a0,-20(s0)
+    2c7c:	a4a5                	j	2ee4 <inferenceTPG+0x55a>
+			case T4:  currentVertex = T4_func(in1, in2, in3, in4); break;
+    2c7e:	fcc42683          	lw	a3,-52(s0)
+    2c82:	fd042603          	lw	a2,-48(s0)
+    2c86:	fd442583          	lw	a1,-44(s0)
+    2c8a:	fd842503          	lw	a0,-40(s0)
+    2c8e:	b0ffd0ef          	jal	79c <T4_func>
+    2c92:	fea42623          	sw	a0,-20(s0)
+    2c96:	a4b9                	j	2ee4 <inferenceTPG+0x55a>
+			case T5:  currentVertex = T5_func(in1, in2, in3, in4); break;
+    2c98:	fcc42683          	lw	a3,-52(s0)
+    2c9c:	fd042603          	lw	a2,-48(s0)
+    2ca0:	fd442583          	lw	a1,-44(s0)
+    2ca4:	fd842503          	lw	a0,-40(s0)
+    2ca8:	c93fd0ef          	jal	93a <T5_func>
+    2cac:	fea42623          	sw	a0,-20(s0)
+    2cb0:	ac15                	j	2ee4 <inferenceTPG+0x55a>
+			case T6:  currentVertex = T6_func(in1, in2, in3, in4); break;
+    2cb2:	fcc42683          	lw	a3,-52(s0)
+    2cb6:	fd042603          	lw	a2,-48(s0)
+    2cba:	fd442583          	lw	a1,-44(s0)
+    2cbe:	fd842503          	lw	a0,-40(s0)
+    2cc2:	d49fd0ef          	jal	a0a <T6_func>
+    2cc6:	fea42623          	sw	a0,-20(s0)
+    2cca:	ac29                	j	2ee4 <inferenceTPG+0x55a>
+			case T7:  currentVertex = T7_func(in1, in2, in3, in4); break;
+    2ccc:	fcc42683          	lw	a3,-52(s0)
+    2cd0:	fd042603          	lw	a2,-48(s0)
+    2cd4:	fd442583          	lw	a1,-44(s0)
+    2cd8:	fd842503          	lw	a0,-40(s0)
+    2cdc:	fa5fd0ef          	jal	c80 <T7_func>
+    2ce0:	fea42623          	sw	a0,-20(s0)
+    2ce4:	a401                	j	2ee4 <inferenceTPG+0x55a>
+			case T8:  currentVertex = T8_func(in1, in2, in3, in4); break;
+    2ce6:	fcc42683          	lw	a3,-52(s0)
+    2cea:	fd042603          	lw	a2,-48(s0)
+    2cee:	fd442583          	lw	a1,-44(s0)
+    2cf2:	fd842503          	lw	a0,-40(s0)
+    2cf6:	844fe0ef          	jal	d3a <T8_func>
+    2cfa:	fea42623          	sw	a0,-20(s0)
+    2cfe:	a2dd                	j	2ee4 <inferenceTPG+0x55a>
+			case T9:  currentVertex = T9_func(in1, in2, in3, in4); break;
+    2d00:	fcc42683          	lw	a3,-52(s0)
+    2d04:	fd042603          	lw	a2,-48(s0)
+    2d08:	fd442583          	lw	a1,-44(s0)
+    2d0c:	fd842503          	lw	a0,-40(s0)
+    2d10:	8d6fe0ef          	jal	de6 <T9_func>
+    2d14:	fea42623          	sw	a0,-20(s0)
+    2d18:	a2f1                	j	2ee4 <inferenceTPG+0x55a>
+			case T10: currentVertex = T10_func(in1, in2, in3, in4); break;
+    2d1a:	fcc42683          	lw	a3,-52(s0)
+    2d1e:	fd042603          	lw	a2,-48(s0)
+    2d22:	fd442583          	lw	a1,-44(s0)
+    2d26:	fd842503          	lw	a0,-40(s0)
+    2d2a:	a5efe0ef          	jal	f88 <T10_func>
+    2d2e:	fea42623          	sw	a0,-20(s0)
+    2d32:	aa4d                	j	2ee4 <inferenceTPG+0x55a>
+			case T11: currentVertex = T11_func(in1, in2, in3, in4); break;
+    2d34:	fcc42683          	lw	a3,-52(s0)
+    2d38:	fd042603          	lw	a2,-48(s0)
+    2d3c:	fd442583          	lw	a1,-44(s0)
+    2d40:	fd842503          	lw	a0,-40(s0)
+    2d44:	b64fe0ef          	jal	10a8 <T11_func>
+    2d48:	fea42623          	sw	a0,-20(s0)
+    2d4c:	aa61                	j	2ee4 <inferenceTPG+0x55a>
+			case T12: currentVertex = T12_func(in1, in2, in3, in4); break;
+    2d4e:	fcc42683          	lw	a3,-52(s0)
+    2d52:	fd042603          	lw	a2,-48(s0)
+    2d56:	fd442583          	lw	a1,-44(s0)
+    2d5a:	fd842503          	lw	a0,-40(s0)
+    2d5e:	c6cfe0ef          	jal	11ca <T12_func>
+    2d62:	fea42623          	sw	a0,-20(s0)
+    2d66:	aabd                	j	2ee4 <inferenceTPG+0x55a>
+			case T13: currentVertex = T13_func(in1, in2, in3, in4); break;
+    2d68:	fcc42683          	lw	a3,-52(s0)
+    2d6c:	fd042603          	lw	a2,-48(s0)
+    2d70:	fd442583          	lw	a1,-44(s0)
+    2d74:	fd842503          	lw	a0,-40(s0)
+    2d78:	ed8fe0ef          	jal	1450 <T13_func>
+    2d7c:	fea42623          	sw	a0,-20(s0)
+    2d80:	a295                	j	2ee4 <inferenceTPG+0x55a>
+			case T14: currentVertex = T14_func(in1, in2, in3, in4); break;
+    2d82:	fcc42683          	lw	a3,-52(s0)
+    2d86:	fd042603          	lw	a2,-48(s0)
+    2d8a:	fd442583          	lw	a1,-44(s0)
+    2d8e:	fd842503          	lw	a0,-40(s0)
+    2d92:	fdefe0ef          	jal	1570 <T14_func>
+    2d96:	fea42623          	sw	a0,-20(s0)
+    2d9a:	a2a9                	j	2ee4 <inferenceTPG+0x55a>
+			case T15: currentVertex = T15_func(in1, in2, in3, in4); break;
+    2d9c:	fcc42683          	lw	a3,-52(s0)
+    2da0:	fd042603          	lw	a2,-48(s0)
+    2da4:	fd442583          	lw	a1,-44(s0)
+    2da8:	fd842503          	lw	a0,-40(s0)
+    2dac:	873fe0ef          	jal	161e <T15_func>
+    2db0:	fea42623          	sw	a0,-20(s0)
+    2db4:	aa05                	j	2ee4 <inferenceTPG+0x55a>
+			case T16: currentVertex = T16_func(in1, in2, in3, in4); break;
+    2db6:	fcc42683          	lw	a3,-52(s0)
+    2dba:	fd042603          	lw	a2,-48(s0)
+    2dbe:	fd442583          	lw	a1,-44(s0)
+    2dc2:	fd842503          	lw	a0,-40(s0)
+    2dc6:	903fe0ef          	jal	16c8 <T16_func>
+    2dca:	fea42623          	sw	a0,-20(s0)
+    2dce:	aa19                	j	2ee4 <inferenceTPG+0x55a>
+			case T17: currentVertex = T17_func(in1, in2, in3, in4); break;
+    2dd0:	fcc42683          	lw	a3,-52(s0)
+    2dd4:	fd042603          	lw	a2,-48(s0)
+    2dd8:	fd442583          	lw	a1,-44(s0)
+    2ddc:	fd842503          	lw	a0,-40(s0)
+    2de0:	a07fe0ef          	jal	17e6 <T17_func>
+    2de4:	fea42623          	sw	a0,-20(s0)
+    2de8:	a8f5                	j	2ee4 <inferenceTPG+0x55a>
+			case T18: currentVertex = T18_func(in1, in2, in3, in4); break;
+    2dea:	fcc42683          	lw	a3,-52(s0)
+    2dee:	fd042603          	lw	a2,-48(s0)
+    2df2:	fd442583          	lw	a1,-44(s0)
+    2df6:	fd842503          	lw	a0,-40(s0)
+    2dfa:	b0bfe0ef          	jal	1904 <T18_func>
+    2dfe:	fea42623          	sw	a0,-20(s0)
+    2e02:	a0cd                	j	2ee4 <inferenceTPG+0x55a>
+			case T19: currentVertex = T19_func(in1, in2, in3, in4); break;
+    2e04:	fcc42683          	lw	a3,-52(s0)
+    2e08:	fd042603          	lw	a2,-48(s0)
+    2e0c:	fd442583          	lw	a1,-44(s0)
+    2e10:	fd842503          	lw	a0,-40(s0)
+    2e14:	e3ffe0ef          	jal	1c52 <T19_func>
+    2e18:	fea42623          	sw	a0,-20(s0)
+    2e1c:	a0e1                	j	2ee4 <inferenceTPG+0x55a>
+			case T20: currentVertex = T20_func(in1, in2, in3, in4); break;
+    2e1e:	fcc42683          	lw	a3,-52(s0)
+    2e22:	fd042603          	lw	a2,-48(s0)
+    2e26:	fd442583          	lw	a1,-44(s0)
+    2e2a:	fd842503          	lw	a0,-40(s0)
+    2e2e:	a0eff0ef          	jal	203c <T20_func>
+    2e32:	fea42623          	sw	a0,-20(s0)
+    2e36:	a07d                	j	2ee4 <inferenceTPG+0x55a>
+			case T21: currentVertex = T21_func(in1, in2, in3, in4); break;
+    2e38:	fcc42683          	lw	a3,-52(s0)
+    2e3c:	fd042603          	lw	a2,-48(s0)
+    2e40:	fd442583          	lw	a1,-44(s0)
+    2e44:	fd842503          	lw	a0,-40(s0)
+    2e48:	b14ff0ef          	jal	215c <T21_func>
+    2e4c:	fea42623          	sw	a0,-20(s0)
+    2e50:	a851                	j	2ee4 <inferenceTPG+0x55a>
+			case T22: currentVertex = T22_func(in1, in2, in3, in4); break;
+    2e52:	fcc42683          	lw	a3,-52(s0)
+    2e56:	fd042603          	lw	a2,-48(s0)
+    2e5a:	fd442583          	lw	a1,-44(s0)
+    2e5e:	fd842503          	lw	a0,-40(s0)
+    2e62:	c1aff0ef          	jal	227c <T22_func>
+    2e66:	fea42623          	sw	a0,-20(s0)
+    2e6a:	a8ad                	j	2ee4 <inferenceTPG+0x55a>
+			case T23: currentVertex = T23_func(in1, in2, in3, in4); break;
+    2e6c:	fcc42683          	lw	a3,-52(s0)
+    2e70:	fd042603          	lw	a2,-48(s0)
+    2e74:	fd442583          	lw	a1,-44(s0)
+    2e78:	fd842503          	lw	a0,-40(s0)
+    2e7c:	e56ff0ef          	jal	24d2 <T23_func>
+    2e80:	fea42623          	sw	a0,-20(s0)
+    2e84:	a085                	j	2ee4 <inferenceTPG+0x55a>
+			case T24: currentVertex = T24_func(in1, in2, in3, in4); break;
+    2e86:	fcc42683          	lw	a3,-52(s0)
+    2e8a:	fd042603          	lw	a2,-48(s0)
+    2e8e:	fd442583          	lw	a1,-44(s0)
+    2e92:	fd842503          	lw	a0,-40(s0)
+    2e96:	387d                	jal	2754 <T24_func>
+    2e98:	fea42623          	sw	a0,-20(s0)
+    2e9c:	a0a1                	j	2ee4 <inferenceTPG+0x55a>
+			case A25: actions[0] = 3; return;
+    2e9e:	fdc42783          	lw	a5,-36(s0)
+    2ea2:	470d                	li	a4,3
+    2ea4:	c398                	sw	a4,0(a5)
+    2ea6:	a081                	j	2ee6 <inferenceTPG+0x55c>
+			case A26: actions[0] = 4; return;
+    2ea8:	fdc42783          	lw	a5,-36(s0)
+    2eac:	4711                	li	a4,4
+    2eae:	c398                	sw	a4,0(a5)
+    2eb0:	a81d                	j	2ee6 <inferenceTPG+0x55c>
+			case A27: actions[0] = 5; return;	
+    2eb2:	fdc42783          	lw	a5,-36(s0)
+    2eb6:	4715                	li	a4,5
+    2eb8:	c398                	sw	a4,0(a5)
+    2eba:	a035                	j	2ee6 <inferenceTPG+0x55c>
+			case A28: actions[0] = 6; return;
+    2ebc:	fdc42783          	lw	a5,-36(s0)
+    2ec0:	4719                	li	a4,6
+    2ec2:	c398                	sw	a4,0(a5)
+    2ec4:	a00d                	j	2ee6 <inferenceTPG+0x55c>
+			case A29: actions[0] = 8; return;
+    2ec6:	fdc42783          	lw	a5,-36(s0)
+    2eca:	4721                	li	a4,8
+    2ecc:	c398                	sw	a4,0(a5)
+    2ece:	a821                	j	2ee6 <inferenceTPG+0x55c>
+			case A30: actions[0] = 0; return;
+    2ed0:	fdc42783          	lw	a5,-36(s0)
+    2ed4:	0007a023          	sw	zero,0(a5)
+    2ed8:	a039                	j	2ee6 <inferenceTPG+0x55c>
+			case A31: actions[0] = 1; return;
+    2eda:	fdc42783          	lw	a5,-36(s0)
+    2ede:	4705                	li	a4,1
+    2ee0:	c398                	sw	a4,0(a5)
+    2ee2:	a011                	j	2ee6 <inferenceTPG+0x55c>
+		switch (currentVertex) {
+    2ee4:	b4e1                	j	29ac <inferenceTPG+0x22>
+		}
+	}
+    2ee6:	50f2                	lw	ra,60(sp)
+    2ee8:	5462                	lw	s0,56(sp)
+    2eea:	6121                	addi	sp,sp,64
+    2eec:	8082                	ret
+
+00002eee <fic_irq_dma_window>:
+/*                           EXPORTED FUNCTIONS                             */
+/**                                                                        **/
+/****************************************************************************/
+
+void fic_irq_dma_window(void)
+{
+    2eee:	1101                	addi	sp,sp,-32
+    2ef0:	ce06                	sw	ra,28(sp)
+    2ef2:	cc22                	sw	s0,24(sp)
+    2ef4:	1000                	addi	s0,sp,32
+     * Find out which channel raised the interrupt and call
+     * either the weak implementation provided in this module,
+     * or the non-weak implementation.
+     */
+
+    for (int i = 0; i < DMA_CH_NUM; i++)
+    2ef6:	fe042623          	sw	zero,-20(s0)
+    2efa:	a815                	j	2f2e <fic_irq_dma_window+0x40>
+    {
+        if (dma_subsys_per[i].peri->WINDOW_IFR == 1)
+    2efc:	97018693          	addi	a3,gp,-1680 # b6f4 <dma_subsys_per>
+    2f00:	fec42703          	lw	a4,-20(s0)
+    2f04:	87ba                	mv	a5,a4
+    2f06:	0786                	slli	a5,a5,0x1
+    2f08:	97ba                	add	a5,a5,a4
+    2f0a:	078a                	slli	a5,a5,0x2
+    2f0c:	97b6                	add	a5,a5,a3
+    2f0e:	479c                	lw	a5,8(a5)
+    2f10:	57b8                	lw	a4,104(a5)
+    2f12:	4785                	li	a5,1
+    2f14:	00f71863          	bne	a4,a5,2f24 <fic_irq_dma_window+0x36>
+        {
+            dma_intr_handler_window_done(i);
+    2f18:	fec42783          	lw	a5,-20(s0)
+    2f1c:	0ff7f793          	zext.b	a5,a5
+    2f20:	853e                	mv	a0,a5
+    2f22:	2055                	jal	2fc6 <dma_intr_handler_window_done>
+    for (int i = 0; i < DMA_CH_NUM; i++)
+    2f24:	fec42783          	lw	a5,-20(s0)
+    2f28:	0785                	addi	a5,a5,1
+    2f2a:	fef42623          	sw	a5,-20(s0)
+    2f2e:	fec42703          	lw	a4,-20(s0)
+    2f32:	478d                	li	a5,3
+    2f34:	fce7d4e3          	bge	a5,a4,2efc <fic_irq_dma_window+0xe>
+            #endif
+
+            #endif
+        }
+    }
+    return;
+    2f38:	0001                	nop
+}
+    2f3a:	40f2                	lw	ra,28(sp)
+    2f3c:	4462                	lw	s0,24(sp)
+    2f3e:	6105                	addi	sp,sp,32
+    2f40:	8082                	ret
+
+00002f42 <fic_irq_dma_done>:
+
+void fic_irq_dma_done(void)
+{
+    2f42:	1101                	addi	sp,sp,-32
+    2f44:	ce06                	sw	ra,28(sp)
+    2f46:	cc22                	sw	s0,24(sp)
+    2f48:	1000                	addi	s0,sp,32
+     * Find out which channel raised the interrupt and call
+     * either the weak implementation provided in this module,
+     * or the non-weak implementation.
+     */
+    
+    for (int i = 0; i < DMA_CH_NUM; i++)
+    2f4a:	fe042623          	sw	zero,-20(s0)
+    2f4e:	a0b1                	j	2f9a <fic_irq_dma_done+0x58>
+    {
+        if (dma_subsys_per[i].peri->TRANSACTION_IFR == 1)
+    2f50:	97018693          	addi	a3,gp,-1680 # b6f4 <dma_subsys_per>
+    2f54:	fec42703          	lw	a4,-20(s0)
+    2f58:	87ba                	mv	a5,a4
+    2f5a:	0786                	slli	a5,a5,0x1
+    2f5c:	97ba                	add	a5,a5,a4
+    2f5e:	078a                	slli	a5,a5,0x2
+    2f60:	97b6                	add	a5,a5,a3
+    2f62:	479c                	lw	a5,8(a5)
+    2f64:	53f8                	lw	a4,100(a5)
+    2f66:	4785                	li	a5,1
+    2f68:	02f71463          	bne	a4,a5,2f90 <fic_irq_dma_done+0x4e>
+        {
+            dma_subsys_per[i].intrFlag = 1;
+    2f6c:	97018693          	addi	a3,gp,-1680 # b6f4 <dma_subsys_per>
+    2f70:	fec42703          	lw	a4,-20(s0)
+    2f74:	87ba                	mv	a5,a4
+    2f76:	0786                	slli	a5,a5,0x1
+    2f78:	97ba                	add	a5,a5,a4
+    2f7a:	078a                	slli	a5,a5,0x2
+    2f7c:	97b6                	add	a5,a5,a3
+    2f7e:	4705                	li	a4,1
+    2f80:	00e78223          	sb	a4,4(a5)
+            dma_intr_handler_trans_done(i);
+    2f84:	fec42783          	lw	a5,-20(s0)
+    2f88:	0ff7f793          	zext.b	a5,a5
+    2f8c:	853e                	mv	a0,a5
+    2f8e:	2005                	jal	2fae <dma_intr_handler_trans_done>
+    for (int i = 0; i < DMA_CH_NUM; i++)
+    2f90:	fec42783          	lw	a5,-20(s0)
+    2f94:	0785                	addi	a5,a5,1
+    2f96:	fef42623          	sw	a5,-20(s0)
+    2f9a:	fec42703          	lw	a4,-20(s0)
+    2f9e:	478d                	li	a5,3
+    2fa0:	fae7d8e3          	bge	a5,a4,2f50 <fic_irq_dma_done+0xe>
+            #endif
+
+            #endif
+        }
+    }
+    return;
+    2fa4:	0001                	nop
+}
+    2fa6:	40f2                	lw	ra,28(sp)
+    2fa8:	4462                	lw	s0,24(sp)
+    2faa:	6105                	addi	sp,sp,32
+    2fac:	8082                	ret
+
+00002fae <dma_intr_handler_trans_done>:
+    dma_subsys_per[channel].peri->MODE = DMA_TRANS_MODE_SINGLE;
+}
+
+
+__attribute__((weak, optimize("O0"))) void dma_intr_handler_trans_done(uint8_t channel)
+{
+    2fae:	1101                	addi	sp,sp,-32
+    2fb0:	ce06                	sw	ra,28(sp)
+    2fb2:	cc22                	sw	s0,24(sp)
+    2fb4:	1000                	addi	s0,sp,32
+    2fb6:	87aa                	mv	a5,a0
+    2fb8:	fef407a3          	sb	a5,-17(s0)
+     * This is a weak implementation.
+     * Create your own function called
+     * void dma_intr_handler_trans_done()
+     * to override this one.
+     */
+}
+    2fbc:	0001                	nop
+    2fbe:	40f2                	lw	ra,28(sp)
+    2fc0:	4462                	lw	s0,24(sp)
+    2fc2:	6105                	addi	sp,sp,32
+    2fc4:	8082                	ret
+
+00002fc6 <dma_intr_handler_window_done>:
+
+__attribute__((weak, optimize("O0"))) void dma_intr_handler_window_done(uint8_t channel)
+{
+    2fc6:	1101                	addi	sp,sp,-32
+    2fc8:	ce06                	sw	ra,28(sp)
+    2fca:	cc22                	sw	s0,24(sp)
+    2fcc:	1000                	addi	s0,sp,32
+    2fce:	87aa                	mv	a5,a0
+    2fd0:	fef407a3          	sb	a5,-17(s0)
+     * This is a weak implementation.
+     * Create your own function called
+     * void dma_intr_handler_window_done()
+     * to override this one.
+     */
+}
+    2fd4:	0001                	nop
+    2fd6:	40f2                	lw	ra,28(sp)
+    2fd8:	4462                	lw	s0,24(sp)
+    2fda:	6105                	addi	sp,sp,32
+    2fdc:	8082                	ret
+
+00002fde <bitfield_field32_write.lto_priv.0>:
+ * @return `bitfield` with `field` set to `value`.
+ */
+BITFIELD_WARN_UNUSED_RESULT
+static inline uint32_t bitfield_field32_write(uint32_t bitfield,
+                                       bitfield_field32_t field,
+                                       uint32_t value) {
+    2fde:	1101                	addi	sp,sp,-32
+    2fe0:	ce06                	sw	ra,28(sp)
+    2fe2:	cc22                	sw	s0,24(sp)
+    2fe4:	1000                	addi	s0,sp,32
+    2fe6:	fea42623          	sw	a0,-20(s0)
+    2fea:	feb42223          	sw	a1,-28(s0)
+    2fee:	fec42423          	sw	a2,-24(s0)
+    2ff2:	fed42023          	sw	a3,-32(s0)
+  bitfield &= ~(field.mask << field.index);
+    2ff6:	fe442703          	lw	a4,-28(s0)
+    2ffa:	fe842783          	lw	a5,-24(s0)
+    2ffe:	00f717b3          	sll	a5,a4,a5
+    3002:	fff7c793          	not	a5,a5
+    3006:	fec42703          	lw	a4,-20(s0)
+    300a:	8ff9                	and	a5,a5,a4
+    300c:	fef42623          	sw	a5,-20(s0)
+  bitfield |= (value & field.mask) << field.index;
+    3010:	fe442703          	lw	a4,-28(s0)
+    3014:	fe042783          	lw	a5,-32(s0)
+    3018:	8f7d                	and	a4,a4,a5
+    301a:	fe842783          	lw	a5,-24(s0)
+    301e:	00f717b3          	sll	a5,a4,a5
+    3022:	fec42703          	lw	a4,-20(s0)
+    3026:	8fd9                	or	a5,a5,a4
+    3028:	fef42623          	sw	a5,-20(s0)
+  return bitfield;
+    302c:	fec42783          	lw	a5,-20(s0)
+}
+    3030:	853e                	mv	a0,a5
+    3032:	40f2                	lw	ra,28(sp)
+    3034:	4462                	lw	s0,24(sp)
+    3036:	6105                	addi	sp,sp,32
+    3038:	8082                	ret
+
+0000303a <bitfield_bit32_to_field32.lto_priv.0>:
+ * @param bit_index The corresponding single bit to turn into a field.
+ * @return A 1-bit field that corresponds to `bit_index`.
+ */
+BITFIELD_WARN_UNUSED_RESULT
+static inline bitfield_field32_t bitfield_bit32_to_field32(
+    bitfield_bit32_index_t bit_index) {
+    303a:	7179                	addi	sp,sp,-48
+    303c:	d606                	sw	ra,44(sp)
+    303e:	d422                	sw	s0,40(sp)
+    3040:	1800                	addi	s0,sp,48
+    3042:	fca42e23          	sw	a0,-36(s0)
+  return (bitfield_field32_t){
+    3046:	4785                	li	a5,1
+    3048:	fef42423          	sw	a5,-24(s0)
+    304c:	fdc42783          	lw	a5,-36(s0)
+    3050:	fef42623          	sw	a5,-20(s0)
+    3054:	fe842703          	lw	a4,-24(s0)
+    3058:	fec42783          	lw	a5,-20(s0)
+    305c:	863a                	mv	a2,a4
+    305e:	86be                	mv	a3,a5
+    3060:	8732                	mv	a4,a2
+    3062:	87b6                	mv	a5,a3
+      .mask = 0x1, .index = bit_index,
+  };
+}
+    3064:	853a                	mv	a0,a4
+    3066:	85be                	mv	a1,a5
+    3068:	50b2                	lw	ra,44(sp)
+    306a:	5422                	lw	s0,40(sp)
+    306c:	6145                	addi	sp,sp,48
+    306e:	8082                	ret
+
+00003070 <bitfield_bit32_write.lto_priv.0>:
+ * @return `bitfield` with the `bit_index`th bit set to `value`.
+ */
+BITFIELD_WARN_UNUSED_RESULT
+static inline uint32_t bitfield_bit32_write(uint32_t bitfield,
+                                     bitfield_bit32_index_t bit_index,
+                                     bool value) {
+    3070:	7179                	addi	sp,sp,-48
+    3072:	d606                	sw	ra,44(sp)
+    3074:	d422                	sw	s0,40(sp)
+    3076:	1800                	addi	s0,sp,48
+    3078:	fca42e23          	sw	a0,-36(s0)
+    307c:	fcb42c23          	sw	a1,-40(s0)
+    3080:	87b2                	mv	a5,a2
+    3082:	fcf40ba3          	sb	a5,-41(s0)
+  return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
+    3086:	fd842503          	lw	a0,-40(s0)
+    308a:	3f45                	jal	303a <bitfield_bit32_to_field32.lto_priv.0>
+    308c:	872a                	mv	a4,a0
+    308e:	87ae                	mv	a5,a1
+    3090:	fee42423          	sw	a4,-24(s0)
+    3094:	fef42623          	sw	a5,-20(s0)
+    3098:	fd744783          	lbu	a5,-41(s0)
+    309c:	c399                	beqz	a5,30a2 <bitfield_bit32_write.lto_priv.0+0x32>
+    309e:	4785                	li	a5,1
+    30a0:	a011                	j	30a4 <bitfield_bit32_write.lto_priv.0+0x34>
+    30a2:	4781                	li	a5,0
+    30a4:	86be                	mv	a3,a5
+    30a6:	fe842583          	lw	a1,-24(s0)
+    30aa:	fec42603          	lw	a2,-20(s0)
+    30ae:	fdc42503          	lw	a0,-36(s0)
+    30b2:	3735                	jal	2fde <bitfield_field32_write.lto_priv.0>
+    30b4:	87aa                	mv	a5,a0
+                                value ? 0x1u : 0x0u);
+}
+    30b6:	853e                	mv	a0,a5
+    30b8:	50b2                	lw	ra,44(sp)
+    30ba:	5422                	lw	s0,40(sp)
+    30bc:	6145                	addi	sp,sp,48
+    30be:	8082                	ret
+
+000030c0 <clear_fast_interrupt>:
+}
+
+
+fast_intr_ctrl_result_t clear_fast_interrupt(fast_intr_ctrl_fast_interrupt_t\
+ fast_interrupt)
+{
+    30c0:	7179                	addi	sp,sp,-48
+    30c2:	d606                	sw	ra,44(sp)
+    30c4:	d422                	sw	s0,40(sp)
+    30c6:	1800                	addi	s0,sp,48
+    30c8:	fca42e23          	sw	a0,-36(s0)
+    /* masking a 32b go write in reg*/
+    uint32_t reg = 0;
+    30cc:	fe042623          	sw	zero,-20(s0)
+    reg = bitfield_bit32_write(reg, fast_interrupt, true);
+    30d0:	4605                	li	a2,1
+    30d2:	fdc42583          	lw	a1,-36(s0)
+    30d6:	fec42503          	lw	a0,-20(s0)
+    30da:	3f59                	jal	3070 <bitfield_bit32_write.lto_priv.0>
+    30dc:	fea42623          	sw	a0,-20(s0)
+    /* write in reg through structure */
+    fast_intr_ctrl_peri->FAST_INTR_CLEAR = reg;
+    30e0:	200607b7          	lui	a5,0x20060
+    30e4:	fec42703          	lw	a4,-20(s0)
+    30e8:	c3d8                	sw	a4,4(a5)
+    return kFastIntrCtrlOk_e;
+    30ea:	4781                	li	a5,0
+}
+    30ec:	853e                	mv	a0,a5
+    30ee:	50b2                	lw	ra,44(sp)
+    30f0:	5422                	lw	s0,40(sp)
+    30f2:	6145                	addi	sp,sp,48
+    30f4:	8082                	ret
+
+000030f6 <fic_irq_timer_1>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_timer_1(void)
+{
+    30f6:	1141                	addi	sp,sp,-16
+    30f8:	c606                	sw	ra,12(sp)
+    30fa:	c422                	sw	s0,8(sp)
+    30fc:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    30fe:	0001                	nop
+    3100:	40b2                	lw	ra,12(sp)
+    3102:	4422                	lw	s0,8(sp)
+    3104:	0141                	addi	sp,sp,16
+    3106:	8082                	ret
+
+00003108 <fic_irq_timer_2>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_timer_2(void)
+{
+    3108:	1141                	addi	sp,sp,-16
+    310a:	c606                	sw	ra,12(sp)
+    310c:	c422                	sw	s0,8(sp)
+    310e:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    3110:	0001                	nop
+    3112:	40b2                	lw	ra,12(sp)
+    3114:	4422                	lw	s0,8(sp)
+    3116:	0141                	addi	sp,sp,16
+    3118:	8082                	ret
+
+0000311a <fic_irq_timer_3>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_timer_3(void)
+{
+    311a:	1141                	addi	sp,sp,-16
+    311c:	c606                	sw	ra,12(sp)
+    311e:	c422                	sw	s0,8(sp)
+    3120:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    3122:	0001                	nop
+    3124:	40b2                	lw	ra,12(sp)
+    3126:	4422                	lw	s0,8(sp)
+    3128:	0141                	addi	sp,sp,16
+    312a:	8082                	ret
+
+0000312c <fic_irq_ext_peripheral>:
+{
+    /* Users should implement their non-weak version */
+}
+
+__attribute__((weak, optimize("O0"))) void fic_irq_ext_peripheral(void)
+{
+    312c:	1141                	addi	sp,sp,-16
+    312e:	c606                	sw	ra,12(sp)
+    3130:	c422                	sw	s0,8(sp)
+    3132:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    3134:	0001                	nop
+    3136:	40b2                	lw	ra,12(sp)
+    3138:	4422                	lw	s0,8(sp)
+    313a:	0141                	addi	sp,sp,16
+    313c:	8082                	ret
+
+0000313e <fic_irq_gpio_0>:
+{
+    /* Users should implement their non-weak version */
+}
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_0(void)
+{
+    313e:	1141                	addi	sp,sp,-16
+    3140:	c606                	sw	ra,12(sp)
+    3142:	c422                	sw	s0,8(sp)
+    3144:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    3146:	0001                	nop
+    3148:	40b2                	lw	ra,12(sp)
+    314a:	4422                	lw	s0,8(sp)
+    314c:	0141                	addi	sp,sp,16
+    314e:	8082                	ret
+
+00003150 <fic_irq_gpio_1>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_1(void)
+{
+    3150:	1141                	addi	sp,sp,-16
+    3152:	c606                	sw	ra,12(sp)
+    3154:	c422                	sw	s0,8(sp)
+    3156:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    3158:	0001                	nop
+    315a:	40b2                	lw	ra,12(sp)
+    315c:	4422                	lw	s0,8(sp)
+    315e:	0141                	addi	sp,sp,16
+    3160:	8082                	ret
+
+00003162 <fic_irq_gpio_2>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_2(void)
+{
+    3162:	1141                	addi	sp,sp,-16
+    3164:	c606                	sw	ra,12(sp)
+    3166:	c422                	sw	s0,8(sp)
+    3168:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    316a:	0001                	nop
+    316c:	40b2                	lw	ra,12(sp)
+    316e:	4422                	lw	s0,8(sp)
+    3170:	0141                	addi	sp,sp,16
+    3172:	8082                	ret
+
+00003174 <fic_irq_gpio_3>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_3(void)
+{
+    3174:	1141                	addi	sp,sp,-16
+    3176:	c606                	sw	ra,12(sp)
+    3178:	c422                	sw	s0,8(sp)
+    317a:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    317c:	0001                	nop
+    317e:	40b2                	lw	ra,12(sp)
+    3180:	4422                	lw	s0,8(sp)
+    3182:	0141                	addi	sp,sp,16
+    3184:	8082                	ret
+
+00003186 <fic_irq_gpio_4>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_4(void)
+{
+    3186:	1141                	addi	sp,sp,-16
+    3188:	c606                	sw	ra,12(sp)
+    318a:	c422                	sw	s0,8(sp)
+    318c:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    318e:	0001                	nop
+    3190:	40b2                	lw	ra,12(sp)
+    3192:	4422                	lw	s0,8(sp)
+    3194:	0141                	addi	sp,sp,16
+    3196:	8082                	ret
+
+00003198 <fic_irq_gpio_5>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_5(void)
+{
+    3198:	1141                	addi	sp,sp,-16
+    319a:	c606                	sw	ra,12(sp)
+    319c:	c422                	sw	s0,8(sp)
+    319e:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    31a0:	0001                	nop
+    31a2:	40b2                	lw	ra,12(sp)
+    31a4:	4422                	lw	s0,8(sp)
+    31a6:	0141                	addi	sp,sp,16
+    31a8:	8082                	ret
+
+000031aa <fic_irq_gpio_6>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_6(void)
+{
+    31aa:	1141                	addi	sp,sp,-16
+    31ac:	c606                	sw	ra,12(sp)
+    31ae:	c422                	sw	s0,8(sp)
+    31b0:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    31b2:	0001                	nop
+    31b4:	40b2                	lw	ra,12(sp)
+    31b6:	4422                	lw	s0,8(sp)
+    31b8:	0141                	addi	sp,sp,16
+    31ba:	8082                	ret
+
+000031bc <fic_irq_gpio_7>:
+
+__attribute__((weak, optimize("O0"))) void fic_irq_gpio_7(void)
+{
+    31bc:	1141                	addi	sp,sp,-16
+    31be:	c606                	sw	ra,12(sp)
+    31c0:	c422                	sw	s0,8(sp)
+    31c2:	0800                	addi	s0,sp,16
+    /* Users should implement their non-weak version */
+}
+    31c4:	0001                	nop
+    31c6:	40b2                	lw	ra,12(sp)
+    31c8:	4422                	lw	s0,8(sp)
+    31ca:	0141                	addi	sp,sp,16
+    31cc:	8082                	ret
+	...
+
+000031d0 <handler_irq_fast_timer_1>:
+/*                            LOCAL FUNCTIONS                               */
+/**                                                                        **/
+/****************************************************************************/
+
+void handler_irq_fast_timer_1(void)
+{
+    31d0:	715d                	addi	sp,sp,-80
+    31d2:	c686                	sw	ra,76(sp)
+    31d4:	c496                	sw	t0,72(sp)
+    31d6:	c29a                	sw	t1,68(sp)
+    31d8:	c09e                	sw	t2,64(sp)
+    31da:	de22                	sw	s0,60(sp)
+    31dc:	dc2a                	sw	a0,56(sp)
+    31de:	da2e                	sw	a1,52(sp)
+    31e0:	d832                	sw	a2,48(sp)
+    31e2:	d636                	sw	a3,44(sp)
+    31e4:	d43a                	sw	a4,40(sp)
+    31e6:	d23e                	sw	a5,36(sp)
+    31e8:	d042                	sw	a6,32(sp)
+    31ea:	ce46                	sw	a7,28(sp)
+    31ec:	cc72                	sw	t3,24(sp)
+    31ee:	ca76                	sw	t4,20(sp)
+    31f0:	c87a                	sw	t5,16(sp)
+    31f2:	c67e                	sw	t6,12(sp)
+    31f4:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kTimer_1_fic_e);
+    31f6:	4501                	li	a0,0
+    31f8:	35e1                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_timer_1();
+    31fa:	3df5                	jal	30f6 <fic_irq_timer_1>
+}
+    31fc:	0001                	nop
+    31fe:	40b6                	lw	ra,76(sp)
+    3200:	42a6                	lw	t0,72(sp)
+    3202:	4316                	lw	t1,68(sp)
+    3204:	4386                	lw	t2,64(sp)
+    3206:	5472                	lw	s0,60(sp)
+    3208:	5562                	lw	a0,56(sp)
+    320a:	55d2                	lw	a1,52(sp)
+    320c:	5642                	lw	a2,48(sp)
+    320e:	56b2                	lw	a3,44(sp)
+    3210:	5722                	lw	a4,40(sp)
+    3212:	5792                	lw	a5,36(sp)
+    3214:	5802                	lw	a6,32(sp)
+    3216:	48f2                	lw	a7,28(sp)
+    3218:	4e62                	lw	t3,24(sp)
+    321a:	4ed2                	lw	t4,20(sp)
+    321c:	4f42                	lw	t5,16(sp)
+    321e:	4fb2                	lw	t6,12(sp)
+    3220:	6161                	addi	sp,sp,80
+    3222:	30200073          	mret
+	...
+
+00003228 <handler_irq_fast_timer_2>:
+
+void handler_irq_fast_timer_2(void)
+{
+    3228:	715d                	addi	sp,sp,-80
+    322a:	c686                	sw	ra,76(sp)
+    322c:	c496                	sw	t0,72(sp)
+    322e:	c29a                	sw	t1,68(sp)
+    3230:	c09e                	sw	t2,64(sp)
+    3232:	de22                	sw	s0,60(sp)
+    3234:	dc2a                	sw	a0,56(sp)
+    3236:	da2e                	sw	a1,52(sp)
+    3238:	d832                	sw	a2,48(sp)
+    323a:	d636                	sw	a3,44(sp)
+    323c:	d43a                	sw	a4,40(sp)
+    323e:	d23e                	sw	a5,36(sp)
+    3240:	d042                	sw	a6,32(sp)
+    3242:	ce46                	sw	a7,28(sp)
+    3244:	cc72                	sw	t3,24(sp)
+    3246:	ca76                	sw	t4,20(sp)
+    3248:	c87a                	sw	t5,16(sp)
+    324a:	c67e                	sw	t6,12(sp)
+    324c:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kTimer_2_fic_e);
+    324e:	4505                	li	a0,1
+    3250:	3d85                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_timer_2();
+    3252:	3d5d                	jal	3108 <fic_irq_timer_2>
+}
+    3254:	0001                	nop
+    3256:	40b6                	lw	ra,76(sp)
+    3258:	42a6                	lw	t0,72(sp)
+    325a:	4316                	lw	t1,68(sp)
+    325c:	4386                	lw	t2,64(sp)
+    325e:	5472                	lw	s0,60(sp)
+    3260:	5562                	lw	a0,56(sp)
+    3262:	55d2                	lw	a1,52(sp)
+    3264:	5642                	lw	a2,48(sp)
+    3266:	56b2                	lw	a3,44(sp)
+    3268:	5722                	lw	a4,40(sp)
+    326a:	5792                	lw	a5,36(sp)
+    326c:	5802                	lw	a6,32(sp)
+    326e:	48f2                	lw	a7,28(sp)
+    3270:	4e62                	lw	t3,24(sp)
+    3272:	4ed2                	lw	t4,20(sp)
+    3274:	4f42                	lw	t5,16(sp)
+    3276:	4fb2                	lw	t6,12(sp)
+    3278:	6161                	addi	sp,sp,80
+    327a:	30200073          	mret
+	...
+
+00003280 <handler_irq_fast_timer_3>:
+
+void handler_irq_fast_timer_3(void)
+{
+    3280:	715d                	addi	sp,sp,-80
+    3282:	c686                	sw	ra,76(sp)
+    3284:	c496                	sw	t0,72(sp)
+    3286:	c29a                	sw	t1,68(sp)
+    3288:	c09e                	sw	t2,64(sp)
+    328a:	de22                	sw	s0,60(sp)
+    328c:	dc2a                	sw	a0,56(sp)
+    328e:	da2e                	sw	a1,52(sp)
+    3290:	d832                	sw	a2,48(sp)
+    3292:	d636                	sw	a3,44(sp)
+    3294:	d43a                	sw	a4,40(sp)
+    3296:	d23e                	sw	a5,36(sp)
+    3298:	d042                	sw	a6,32(sp)
+    329a:	ce46                	sw	a7,28(sp)
+    329c:	cc72                	sw	t3,24(sp)
+    329e:	ca76                	sw	t4,20(sp)
+    32a0:	c87a                	sw	t5,16(sp)
+    32a2:	c67e                	sw	t6,12(sp)
+    32a4:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kTimer_3_fic_e);
+    32a6:	4509                	li	a0,2
+    32a8:	3d21                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_timer_3();
+    32aa:	3d85                	jal	311a <fic_irq_timer_3>
+}
+    32ac:	0001                	nop
+    32ae:	40b6                	lw	ra,76(sp)
+    32b0:	42a6                	lw	t0,72(sp)
+    32b2:	4316                	lw	t1,68(sp)
+    32b4:	4386                	lw	t2,64(sp)
+    32b6:	5472                	lw	s0,60(sp)
+    32b8:	5562                	lw	a0,56(sp)
+    32ba:	55d2                	lw	a1,52(sp)
+    32bc:	5642                	lw	a2,48(sp)
+    32be:	56b2                	lw	a3,44(sp)
+    32c0:	5722                	lw	a4,40(sp)
+    32c2:	5792                	lw	a5,36(sp)
+    32c4:	5802                	lw	a6,32(sp)
+    32c6:	48f2                	lw	a7,28(sp)
+    32c8:	4e62                	lw	t3,24(sp)
+    32ca:	4ed2                	lw	t4,20(sp)
+    32cc:	4f42                	lw	t5,16(sp)
+    32ce:	4fb2                	lw	t6,12(sp)
+    32d0:	6161                	addi	sp,sp,80
+    32d2:	30200073          	mret
+	...
+
+000032d8 <handler_irq_fast_dma_done>:
+
+void handler_irq_fast_dma_done(void)
+{
+    32d8:	715d                	addi	sp,sp,-80
+    32da:	c686                	sw	ra,76(sp)
+    32dc:	c496                	sw	t0,72(sp)
+    32de:	c29a                	sw	t1,68(sp)
+    32e0:	c09e                	sw	t2,64(sp)
+    32e2:	de22                	sw	s0,60(sp)
+    32e4:	dc2a                	sw	a0,56(sp)
+    32e6:	da2e                	sw	a1,52(sp)
+    32e8:	d832                	sw	a2,48(sp)
+    32ea:	d636                	sw	a3,44(sp)
+    32ec:	d43a                	sw	a4,40(sp)
+    32ee:	d23e                	sw	a5,36(sp)
+    32f0:	d042                	sw	a6,32(sp)
+    32f2:	ce46                	sw	a7,28(sp)
+    32f4:	cc72                	sw	t3,24(sp)
+    32f6:	ca76                	sw	t4,20(sp)
+    32f8:	c87a                	sw	t5,16(sp)
+    32fa:	c67e                	sw	t6,12(sp)
+    32fc:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kDma_done_fic_e);
+    32fe:	450d                	li	a0,3
+    3300:	33c1                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_dma_done();
+    3302:	3181                	jal	2f42 <fic_irq_dma_done>
+}
+    3304:	0001                	nop
+    3306:	40b6                	lw	ra,76(sp)
+    3308:	42a6                	lw	t0,72(sp)
+    330a:	4316                	lw	t1,68(sp)
+    330c:	4386                	lw	t2,64(sp)
+    330e:	5472                	lw	s0,60(sp)
+    3310:	5562                	lw	a0,56(sp)
+    3312:	55d2                	lw	a1,52(sp)
+    3314:	5642                	lw	a2,48(sp)
+    3316:	56b2                	lw	a3,44(sp)
+    3318:	5722                	lw	a4,40(sp)
+    331a:	5792                	lw	a5,36(sp)
+    331c:	5802                	lw	a6,32(sp)
+    331e:	48f2                	lw	a7,28(sp)
+    3320:	4e62                	lw	t3,24(sp)
+    3322:	4ed2                	lw	t4,20(sp)
+    3324:	4f42                	lw	t5,16(sp)
+    3326:	4fb2                	lw	t6,12(sp)
+    3328:	6161                	addi	sp,sp,80
+    332a:	30200073          	mret
+	...
+
+00003330 <handler_irq_fast_dma_window>:
+
+void handler_irq_fast_dma_window(void)
+{
+    3330:	715d                	addi	sp,sp,-80
+    3332:	c686                	sw	ra,76(sp)
+    3334:	c496                	sw	t0,72(sp)
+    3336:	c29a                	sw	t1,68(sp)
+    3338:	c09e                	sw	t2,64(sp)
+    333a:	de22                	sw	s0,60(sp)
+    333c:	dc2a                	sw	a0,56(sp)
+    333e:	da2e                	sw	a1,52(sp)
+    3340:	d832                	sw	a2,48(sp)
+    3342:	d636                	sw	a3,44(sp)
+    3344:	d43a                	sw	a4,40(sp)
+    3346:	d23e                	sw	a5,36(sp)
+    3348:	d042                	sw	a6,32(sp)
+    334a:	ce46                	sw	a7,28(sp)
+    334c:	cc72                	sw	t3,24(sp)
+    334e:	ca76                	sw	t4,20(sp)
+    3350:	c87a                	sw	t5,16(sp)
+    3352:	c67e                	sw	t6,12(sp)
+    3354:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kDma_window_fic_e);
+    3356:	4539                	li	a0,14
+    3358:	33a5                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_dma_window();
+    335a:	3e51                	jal	2eee <fic_irq_dma_window>
+}
+    335c:	0001                	nop
+    335e:	40b6                	lw	ra,76(sp)
+    3360:	42a6                	lw	t0,72(sp)
+    3362:	4316                	lw	t1,68(sp)
+    3364:	4386                	lw	t2,64(sp)
+    3366:	5472                	lw	s0,60(sp)
+    3368:	5562                	lw	a0,56(sp)
+    336a:	55d2                	lw	a1,52(sp)
+    336c:	5642                	lw	a2,48(sp)
+    336e:	56b2                	lw	a3,44(sp)
+    3370:	5722                	lw	a4,40(sp)
+    3372:	5792                	lw	a5,36(sp)
+    3374:	5802                	lw	a6,32(sp)
+    3376:	48f2                	lw	a7,28(sp)
+    3378:	4e62                	lw	t3,24(sp)
+    337a:	4ed2                	lw	t4,20(sp)
+    337c:	4f42                	lw	t5,16(sp)
+    337e:	4fb2                	lw	t6,12(sp)
+    3380:	6161                	addi	sp,sp,80
+    3382:	30200073          	mret
+	...
+
+00003388 <handler_irq_fast_external_peripheral>:
+
+void handler_irq_fast_external_peripheral(void)
+{
+    3388:	715d                	addi	sp,sp,-80
+    338a:	c686                	sw	ra,76(sp)
+    338c:	c496                	sw	t0,72(sp)
+    338e:	c29a                	sw	t1,68(sp)
+    3390:	c09e                	sw	t2,64(sp)
+    3392:	de22                	sw	s0,60(sp)
+    3394:	dc2a                	sw	a0,56(sp)
+    3396:	da2e                	sw	a1,52(sp)
+    3398:	d832                	sw	a2,48(sp)
+    339a:	d636                	sw	a3,44(sp)
+    339c:	d43a                	sw	a4,40(sp)
+    339e:	d23e                	sw	a5,36(sp)
+    33a0:	d042                	sw	a6,32(sp)
+    33a2:	ce46                	sw	a7,28(sp)
+    33a4:	cc72                	sw	t3,24(sp)
+    33a6:	ca76                	sw	t4,20(sp)
+    33a8:	c87a                	sw	t5,16(sp)
+    33aa:	c67e                	sw	t6,12(sp)
+    33ac:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kExt_peri_fic_e);
+    33ae:	453d                	li	a0,15
+    33b0:	3b01                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_ext_peripheral();
+    33b2:	3bad                	jal	312c <fic_irq_ext_peripheral>
+}
+    33b4:	0001                	nop
+    33b6:	40b6                	lw	ra,76(sp)
+    33b8:	42a6                	lw	t0,72(sp)
+    33ba:	4316                	lw	t1,68(sp)
+    33bc:	4386                	lw	t2,64(sp)
+    33be:	5472                	lw	s0,60(sp)
+    33c0:	5562                	lw	a0,56(sp)
+    33c2:	55d2                	lw	a1,52(sp)
+    33c4:	5642                	lw	a2,48(sp)
+    33c6:	56b2                	lw	a3,44(sp)
+    33c8:	5722                	lw	a4,40(sp)
+    33ca:	5792                	lw	a5,36(sp)
+    33cc:	5802                	lw	a6,32(sp)
+    33ce:	48f2                	lw	a7,28(sp)
+    33d0:	4e62                	lw	t3,24(sp)
+    33d2:	4ed2                	lw	t4,20(sp)
+    33d4:	4f42                	lw	t5,16(sp)
+    33d6:	4fb2                	lw	t6,12(sp)
+    33d8:	6161                	addi	sp,sp,80
+    33da:	30200073          	mret
+	...
+
+000033e0 <handler_irq_fast_spi>:
+
+void handler_irq_fast_spi(void)
+{
+    33e0:	715d                	addi	sp,sp,-80
+    33e2:	c686                	sw	ra,76(sp)
+    33e4:	c496                	sw	t0,72(sp)
+    33e6:	c29a                	sw	t1,68(sp)
+    33e8:	c09e                	sw	t2,64(sp)
+    33ea:	de22                	sw	s0,60(sp)
+    33ec:	dc2a                	sw	a0,56(sp)
+    33ee:	da2e                	sw	a1,52(sp)
+    33f0:	d832                	sw	a2,48(sp)
+    33f2:	d636                	sw	a3,44(sp)
+    33f4:	d43a                	sw	a4,40(sp)
+    33f6:	d23e                	sw	a5,36(sp)
+    33f8:	d042                	sw	a6,32(sp)
+    33fa:	ce46                	sw	a7,28(sp)
+    33fc:	cc72                	sw	t3,24(sp)
+    33fe:	ca76                	sw	t4,20(sp)
+    3400:	c87a                	sw	t5,16(sp)
+    3402:	c67e                	sw	t6,12(sp)
+    3404:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kSpi_fic_e);
+    3406:	4511                	li	a0,4
+    3408:	3965                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_spi();
+    340a:	311000ef          	jal	3f1a <fic_irq_spi>
+}
+    340e:	0001                	nop
+    3410:	40b6                	lw	ra,76(sp)
+    3412:	42a6                	lw	t0,72(sp)
+    3414:	4316                	lw	t1,68(sp)
+    3416:	4386                	lw	t2,64(sp)
+    3418:	5472                	lw	s0,60(sp)
+    341a:	5562                	lw	a0,56(sp)
+    341c:	55d2                	lw	a1,52(sp)
+    341e:	5642                	lw	a2,48(sp)
+    3420:	56b2                	lw	a3,44(sp)
+    3422:	5722                	lw	a4,40(sp)
+    3424:	5792                	lw	a5,36(sp)
+    3426:	5802                	lw	a6,32(sp)
+    3428:	48f2                	lw	a7,28(sp)
+    342a:	4e62                	lw	t3,24(sp)
+    342c:	4ed2                	lw	t4,20(sp)
+    342e:	4f42                	lw	t5,16(sp)
+    3430:	4fb2                	lw	t6,12(sp)
+    3432:	6161                	addi	sp,sp,80
+    3434:	30200073          	mret
+
+00003438 <handler_irq_fast_spi_flash>:
+
+void handler_irq_fast_spi_flash(void)
+{
+    3438:	715d                	addi	sp,sp,-80
+    343a:	c686                	sw	ra,76(sp)
+    343c:	c496                	sw	t0,72(sp)
+    343e:	c29a                	sw	t1,68(sp)
+    3440:	c09e                	sw	t2,64(sp)
+    3442:	de22                	sw	s0,60(sp)
+    3444:	dc2a                	sw	a0,56(sp)
+    3446:	da2e                	sw	a1,52(sp)
+    3448:	d832                	sw	a2,48(sp)
+    344a:	d636                	sw	a3,44(sp)
+    344c:	d43a                	sw	a4,40(sp)
+    344e:	d23e                	sw	a5,36(sp)
+    3450:	d042                	sw	a6,32(sp)
+    3452:	ce46                	sw	a7,28(sp)
+    3454:	cc72                	sw	t3,24(sp)
+    3456:	ca76                	sw	t4,20(sp)
+    3458:	c87a                	sw	t5,16(sp)
+    345a:	c67e                	sw	t6,12(sp)
+    345c:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kSpiFlash_fic_e);
+    345e:	4515                	li	a0,5
+    3460:	3185                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_spi_flash();
+    3462:	305000ef          	jal	3f66 <fic_irq_spi_flash>
+}
+    3466:	0001                	nop
+    3468:	40b6                	lw	ra,76(sp)
+    346a:	42a6                	lw	t0,72(sp)
+    346c:	4316                	lw	t1,68(sp)
+    346e:	4386                	lw	t2,64(sp)
+    3470:	5472                	lw	s0,60(sp)
+    3472:	5562                	lw	a0,56(sp)
+    3474:	55d2                	lw	a1,52(sp)
+    3476:	5642                	lw	a2,48(sp)
+    3478:	56b2                	lw	a3,44(sp)
+    347a:	5722                	lw	a4,40(sp)
+    347c:	5792                	lw	a5,36(sp)
+    347e:	5802                	lw	a6,32(sp)
+    3480:	48f2                	lw	a7,28(sp)
+    3482:	4e62                	lw	t3,24(sp)
+    3484:	4ed2                	lw	t4,20(sp)
+    3486:	4f42                	lw	t5,16(sp)
+    3488:	4fb2                	lw	t6,12(sp)
+    348a:	6161                	addi	sp,sp,80
+    348c:	30200073          	mret
+
+00003490 <handler_irq_fast_gpio_0>:
+
+void handler_irq_fast_gpio_0(void)
+{
+    3490:	715d                	addi	sp,sp,-80
+    3492:	c686                	sw	ra,76(sp)
+    3494:	c496                	sw	t0,72(sp)
+    3496:	c29a                	sw	t1,68(sp)
+    3498:	c09e                	sw	t2,64(sp)
+    349a:	de22                	sw	s0,60(sp)
+    349c:	dc2a                	sw	a0,56(sp)
+    349e:	da2e                	sw	a1,52(sp)
+    34a0:	d832                	sw	a2,48(sp)
+    34a2:	d636                	sw	a3,44(sp)
+    34a4:	d43a                	sw	a4,40(sp)
+    34a6:	d23e                	sw	a5,36(sp)
+    34a8:	d042                	sw	a6,32(sp)
+    34aa:	ce46                	sw	a7,28(sp)
+    34ac:	cc72                	sw	t3,24(sp)
+    34ae:	ca76                	sw	t4,20(sp)
+    34b0:	c87a                	sw	t5,16(sp)
+    34b2:	c67e                	sw	t6,12(sp)
+    34b4:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_0_fic_e);
+    34b6:	4519                	li	a0,6
+    34b8:	3121                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_0();
+    34ba:	3151                	jal	313e <fic_irq_gpio_0>
+}
+    34bc:	0001                	nop
+    34be:	40b6                	lw	ra,76(sp)
+    34c0:	42a6                	lw	t0,72(sp)
+    34c2:	4316                	lw	t1,68(sp)
+    34c4:	4386                	lw	t2,64(sp)
+    34c6:	5472                	lw	s0,60(sp)
+    34c8:	5562                	lw	a0,56(sp)
+    34ca:	55d2                	lw	a1,52(sp)
+    34cc:	5642                	lw	a2,48(sp)
+    34ce:	56b2                	lw	a3,44(sp)
+    34d0:	5722                	lw	a4,40(sp)
+    34d2:	5792                	lw	a5,36(sp)
+    34d4:	5802                	lw	a6,32(sp)
+    34d6:	48f2                	lw	a7,28(sp)
+    34d8:	4e62                	lw	t3,24(sp)
+    34da:	4ed2                	lw	t4,20(sp)
+    34dc:	4f42                	lw	t5,16(sp)
+    34de:	4fb2                	lw	t6,12(sp)
+    34e0:	6161                	addi	sp,sp,80
+    34e2:	30200073          	mret
+	...
+
+000034e8 <handler_irq_fast_gpio_1>:
+
+void handler_irq_fast_gpio_1(void)
+{
+    34e8:	715d                	addi	sp,sp,-80
+    34ea:	c686                	sw	ra,76(sp)
+    34ec:	c496                	sw	t0,72(sp)
+    34ee:	c29a                	sw	t1,68(sp)
+    34f0:	c09e                	sw	t2,64(sp)
+    34f2:	de22                	sw	s0,60(sp)
+    34f4:	dc2a                	sw	a0,56(sp)
+    34f6:	da2e                	sw	a1,52(sp)
+    34f8:	d832                	sw	a2,48(sp)
+    34fa:	d636                	sw	a3,44(sp)
+    34fc:	d43a                	sw	a4,40(sp)
+    34fe:	d23e                	sw	a5,36(sp)
+    3500:	d042                	sw	a6,32(sp)
+    3502:	ce46                	sw	a7,28(sp)
+    3504:	cc72                	sw	t3,24(sp)
+    3506:	ca76                	sw	t4,20(sp)
+    3508:	c87a                	sw	t5,16(sp)
+    350a:	c67e                	sw	t6,12(sp)
+    350c:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_1_fic_e);
+    350e:	451d                	li	a0,7
+    3510:	3e45                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_1();
+    3512:	393d                	jal	3150 <fic_irq_gpio_1>
+}
+    3514:	0001                	nop
+    3516:	40b6                	lw	ra,76(sp)
+    3518:	42a6                	lw	t0,72(sp)
+    351a:	4316                	lw	t1,68(sp)
+    351c:	4386                	lw	t2,64(sp)
+    351e:	5472                	lw	s0,60(sp)
+    3520:	5562                	lw	a0,56(sp)
+    3522:	55d2                	lw	a1,52(sp)
+    3524:	5642                	lw	a2,48(sp)
+    3526:	56b2                	lw	a3,44(sp)
+    3528:	5722                	lw	a4,40(sp)
+    352a:	5792                	lw	a5,36(sp)
+    352c:	5802                	lw	a6,32(sp)
+    352e:	48f2                	lw	a7,28(sp)
+    3530:	4e62                	lw	t3,24(sp)
+    3532:	4ed2                	lw	t4,20(sp)
+    3534:	4f42                	lw	t5,16(sp)
+    3536:	4fb2                	lw	t6,12(sp)
+    3538:	6161                	addi	sp,sp,80
+    353a:	30200073          	mret
+	...
+
+00003540 <handler_irq_fast_gpio_2>:
+
+void handler_irq_fast_gpio_2(void)
+{
+    3540:	715d                	addi	sp,sp,-80
+    3542:	c686                	sw	ra,76(sp)
+    3544:	c496                	sw	t0,72(sp)
+    3546:	c29a                	sw	t1,68(sp)
+    3548:	c09e                	sw	t2,64(sp)
+    354a:	de22                	sw	s0,60(sp)
+    354c:	dc2a                	sw	a0,56(sp)
+    354e:	da2e                	sw	a1,52(sp)
+    3550:	d832                	sw	a2,48(sp)
+    3552:	d636                	sw	a3,44(sp)
+    3554:	d43a                	sw	a4,40(sp)
+    3556:	d23e                	sw	a5,36(sp)
+    3558:	d042                	sw	a6,32(sp)
+    355a:	ce46                	sw	a7,28(sp)
+    355c:	cc72                	sw	t3,24(sp)
+    355e:	ca76                	sw	t4,20(sp)
+    3560:	c87a                	sw	t5,16(sp)
+    3562:	c67e                	sw	t6,12(sp)
+    3564:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_2_fic_e);
+    3566:	4521                	li	a0,8
+    3568:	3ea1                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_2();
+    356a:	3ee5                	jal	3162 <fic_irq_gpio_2>
+}
+    356c:	0001                	nop
+    356e:	40b6                	lw	ra,76(sp)
+    3570:	42a6                	lw	t0,72(sp)
+    3572:	4316                	lw	t1,68(sp)
+    3574:	4386                	lw	t2,64(sp)
+    3576:	5472                	lw	s0,60(sp)
+    3578:	5562                	lw	a0,56(sp)
+    357a:	55d2                	lw	a1,52(sp)
+    357c:	5642                	lw	a2,48(sp)
+    357e:	56b2                	lw	a3,44(sp)
+    3580:	5722                	lw	a4,40(sp)
+    3582:	5792                	lw	a5,36(sp)
+    3584:	5802                	lw	a6,32(sp)
+    3586:	48f2                	lw	a7,28(sp)
+    3588:	4e62                	lw	t3,24(sp)
+    358a:	4ed2                	lw	t4,20(sp)
+    358c:	4f42                	lw	t5,16(sp)
+    358e:	4fb2                	lw	t6,12(sp)
+    3590:	6161                	addi	sp,sp,80
+    3592:	30200073          	mret
+	...
+
+00003598 <handler_irq_fast_gpio_3>:
+
+void handler_irq_fast_gpio_3(void)
+{
+    3598:	715d                	addi	sp,sp,-80
+    359a:	c686                	sw	ra,76(sp)
+    359c:	c496                	sw	t0,72(sp)
+    359e:	c29a                	sw	t1,68(sp)
+    35a0:	c09e                	sw	t2,64(sp)
+    35a2:	de22                	sw	s0,60(sp)
+    35a4:	dc2a                	sw	a0,56(sp)
+    35a6:	da2e                	sw	a1,52(sp)
+    35a8:	d832                	sw	a2,48(sp)
+    35aa:	d636                	sw	a3,44(sp)
+    35ac:	d43a                	sw	a4,40(sp)
+    35ae:	d23e                	sw	a5,36(sp)
+    35b0:	d042                	sw	a6,32(sp)
+    35b2:	ce46                	sw	a7,28(sp)
+    35b4:	cc72                	sw	t3,24(sp)
+    35b6:	ca76                	sw	t4,20(sp)
+    35b8:	c87a                	sw	t5,16(sp)
+    35ba:	c67e                	sw	t6,12(sp)
+    35bc:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_3_fic_e);
+    35be:	4525                	li	a0,9
+    35c0:	3601                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_3();
+    35c2:	3e4d                	jal	3174 <fic_irq_gpio_3>
+}
+    35c4:	0001                	nop
+    35c6:	40b6                	lw	ra,76(sp)
+    35c8:	42a6                	lw	t0,72(sp)
+    35ca:	4316                	lw	t1,68(sp)
+    35cc:	4386                	lw	t2,64(sp)
+    35ce:	5472                	lw	s0,60(sp)
+    35d0:	5562                	lw	a0,56(sp)
+    35d2:	55d2                	lw	a1,52(sp)
+    35d4:	5642                	lw	a2,48(sp)
+    35d6:	56b2                	lw	a3,44(sp)
+    35d8:	5722                	lw	a4,40(sp)
+    35da:	5792                	lw	a5,36(sp)
+    35dc:	5802                	lw	a6,32(sp)
+    35de:	48f2                	lw	a7,28(sp)
+    35e0:	4e62                	lw	t3,24(sp)
+    35e2:	4ed2                	lw	t4,20(sp)
+    35e4:	4f42                	lw	t5,16(sp)
+    35e6:	4fb2                	lw	t6,12(sp)
+    35e8:	6161                	addi	sp,sp,80
+    35ea:	30200073          	mret
+	...
+
+000035f0 <handler_irq_fast_gpio_4>:
+
+void handler_irq_fast_gpio_4(void)
+{
+    35f0:	715d                	addi	sp,sp,-80
+    35f2:	c686                	sw	ra,76(sp)
+    35f4:	c496                	sw	t0,72(sp)
+    35f6:	c29a                	sw	t1,68(sp)
+    35f8:	c09e                	sw	t2,64(sp)
+    35fa:	de22                	sw	s0,60(sp)
+    35fc:	dc2a                	sw	a0,56(sp)
+    35fe:	da2e                	sw	a1,52(sp)
+    3600:	d832                	sw	a2,48(sp)
+    3602:	d636                	sw	a3,44(sp)
+    3604:	d43a                	sw	a4,40(sp)
+    3606:	d23e                	sw	a5,36(sp)
+    3608:	d042                	sw	a6,32(sp)
+    360a:	ce46                	sw	a7,28(sp)
+    360c:	cc72                	sw	t3,24(sp)
+    360e:	ca76                	sw	t4,20(sp)
+    3610:	c87a                	sw	t5,16(sp)
+    3612:	c67e                	sw	t6,12(sp)
+    3614:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_4_fic_e);
+    3616:	4529                	li	a0,10
+    3618:	3465                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_4();
+    361a:	36b5                	jal	3186 <fic_irq_gpio_4>
+}
+    361c:	0001                	nop
+    361e:	40b6                	lw	ra,76(sp)
+    3620:	42a6                	lw	t0,72(sp)
+    3622:	4316                	lw	t1,68(sp)
+    3624:	4386                	lw	t2,64(sp)
+    3626:	5472                	lw	s0,60(sp)
+    3628:	5562                	lw	a0,56(sp)
+    362a:	55d2                	lw	a1,52(sp)
+    362c:	5642                	lw	a2,48(sp)
+    362e:	56b2                	lw	a3,44(sp)
+    3630:	5722                	lw	a4,40(sp)
+    3632:	5792                	lw	a5,36(sp)
+    3634:	5802                	lw	a6,32(sp)
+    3636:	48f2                	lw	a7,28(sp)
+    3638:	4e62                	lw	t3,24(sp)
+    363a:	4ed2                	lw	t4,20(sp)
+    363c:	4f42                	lw	t5,16(sp)
+    363e:	4fb2                	lw	t6,12(sp)
+    3640:	6161                	addi	sp,sp,80
+    3642:	30200073          	mret
+	...
+
+00003648 <handler_irq_fast_gpio_5>:
+
+void handler_irq_fast_gpio_5(void)
+{
+    3648:	715d                	addi	sp,sp,-80
+    364a:	c686                	sw	ra,76(sp)
+    364c:	c496                	sw	t0,72(sp)
+    364e:	c29a                	sw	t1,68(sp)
+    3650:	c09e                	sw	t2,64(sp)
+    3652:	de22                	sw	s0,60(sp)
+    3654:	dc2a                	sw	a0,56(sp)
+    3656:	da2e                	sw	a1,52(sp)
+    3658:	d832                	sw	a2,48(sp)
+    365a:	d636                	sw	a3,44(sp)
+    365c:	d43a                	sw	a4,40(sp)
+    365e:	d23e                	sw	a5,36(sp)
+    3660:	d042                	sw	a6,32(sp)
+    3662:	ce46                	sw	a7,28(sp)
+    3664:	cc72                	sw	t3,24(sp)
+    3666:	ca76                	sw	t4,20(sp)
+    3668:	c87a                	sw	t5,16(sp)
+    366a:	c67e                	sw	t6,12(sp)
+    366c:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_5_fic_e);
+    366e:	452d                	li	a0,11
+    3670:	3c81                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_5();
+    3672:	361d                	jal	3198 <fic_irq_gpio_5>
+}
+    3674:	0001                	nop
+    3676:	40b6                	lw	ra,76(sp)
+    3678:	42a6                	lw	t0,72(sp)
+    367a:	4316                	lw	t1,68(sp)
+    367c:	4386                	lw	t2,64(sp)
+    367e:	5472                	lw	s0,60(sp)
+    3680:	5562                	lw	a0,56(sp)
+    3682:	55d2                	lw	a1,52(sp)
+    3684:	5642                	lw	a2,48(sp)
+    3686:	56b2                	lw	a3,44(sp)
+    3688:	5722                	lw	a4,40(sp)
+    368a:	5792                	lw	a5,36(sp)
+    368c:	5802                	lw	a6,32(sp)
+    368e:	48f2                	lw	a7,28(sp)
+    3690:	4e62                	lw	t3,24(sp)
+    3692:	4ed2                	lw	t4,20(sp)
+    3694:	4f42                	lw	t5,16(sp)
+    3696:	4fb2                	lw	t6,12(sp)
+    3698:	6161                	addi	sp,sp,80
+    369a:	30200073          	mret
+	...
+
+000036a0 <handler_irq_fast_gpio_6>:
+
+void handler_irq_fast_gpio_6(void)
+{
+    36a0:	715d                	addi	sp,sp,-80
+    36a2:	c686                	sw	ra,76(sp)
+    36a4:	c496                	sw	t0,72(sp)
+    36a6:	c29a                	sw	t1,68(sp)
+    36a8:	c09e                	sw	t2,64(sp)
+    36aa:	de22                	sw	s0,60(sp)
+    36ac:	dc2a                	sw	a0,56(sp)
+    36ae:	da2e                	sw	a1,52(sp)
+    36b0:	d832                	sw	a2,48(sp)
+    36b2:	d636                	sw	a3,44(sp)
+    36b4:	d43a                	sw	a4,40(sp)
+    36b6:	d23e                	sw	a5,36(sp)
+    36b8:	d042                	sw	a6,32(sp)
+    36ba:	ce46                	sw	a7,28(sp)
+    36bc:	cc72                	sw	t3,24(sp)
+    36be:	ca76                	sw	t4,20(sp)
+    36c0:	c87a                	sw	t5,16(sp)
+    36c2:	c67e                	sw	t6,12(sp)
+    36c4:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_6_fic_e);
+    36c6:	4531                	li	a0,12
+    36c8:	3ae5                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_6();
+    36ca:	34c5                	jal	31aa <fic_irq_gpio_6>
+}
+    36cc:	0001                	nop
+    36ce:	40b6                	lw	ra,76(sp)
+    36d0:	42a6                	lw	t0,72(sp)
+    36d2:	4316                	lw	t1,68(sp)
+    36d4:	4386                	lw	t2,64(sp)
+    36d6:	5472                	lw	s0,60(sp)
+    36d8:	5562                	lw	a0,56(sp)
+    36da:	55d2                	lw	a1,52(sp)
+    36dc:	5642                	lw	a2,48(sp)
+    36de:	56b2                	lw	a3,44(sp)
+    36e0:	5722                	lw	a4,40(sp)
+    36e2:	5792                	lw	a5,36(sp)
+    36e4:	5802                	lw	a6,32(sp)
+    36e6:	48f2                	lw	a7,28(sp)
+    36e8:	4e62                	lw	t3,24(sp)
+    36ea:	4ed2                	lw	t4,20(sp)
+    36ec:	4f42                	lw	t5,16(sp)
+    36ee:	4fb2                	lw	t6,12(sp)
+    36f0:	6161                	addi	sp,sp,80
+    36f2:	30200073          	mret
+	...
+
+000036f8 <handler_irq_fast_gpio_7>:
+
+void handler_irq_fast_gpio_7(void)
+{
+    36f8:	715d                	addi	sp,sp,-80
+    36fa:	c686                	sw	ra,76(sp)
+    36fc:	c496                	sw	t0,72(sp)
+    36fe:	c29a                	sw	t1,68(sp)
+    3700:	c09e                	sw	t2,64(sp)
+    3702:	de22                	sw	s0,60(sp)
+    3704:	dc2a                	sw	a0,56(sp)
+    3706:	da2e                	sw	a1,52(sp)
+    3708:	d832                	sw	a2,48(sp)
+    370a:	d636                	sw	a3,44(sp)
+    370c:	d43a                	sw	a4,40(sp)
+    370e:	d23e                	sw	a5,36(sp)
+    3710:	d042                	sw	a6,32(sp)
+    3712:	ce46                	sw	a7,28(sp)
+    3714:	cc72                	sw	t3,24(sp)
+    3716:	ca76                	sw	t4,20(sp)
+    3718:	c87a                	sw	t5,16(sp)
+    371a:	c67e                	sw	t6,12(sp)
+    371c:	0880                	addi	s0,sp,80
+    // The interrupt is cleared.
+    clear_fast_interrupt(kGpio_7_fic_e);
+    371e:	4535                	li	a0,13
+    3720:	3245                	jal	30c0 <clear_fast_interrupt>
+    // call the weak fic handler
+    fic_irq_gpio_7();
+    3722:	3c69                	jal	31bc <fic_irq_gpio_7>
+}
+    3724:	0001                	nop
+    3726:	40b6                	lw	ra,76(sp)
+    3728:	42a6                	lw	t0,72(sp)
+    372a:	4316                	lw	t1,68(sp)
+    372c:	4386                	lw	t2,64(sp)
+    372e:	5472                	lw	s0,60(sp)
+    3730:	5562                	lw	a0,56(sp)
+    3732:	55d2                	lw	a1,52(sp)
+    3734:	5642                	lw	a2,48(sp)
+    3736:	56b2                	lw	a3,44(sp)
+    3738:	5722                	lw	a4,40(sp)
+    373a:	5792                	lw	a5,36(sp)
+    373c:	5802                	lw	a6,32(sp)
+    373e:	48f2                	lw	a7,28(sp)
+    3740:	4e62                	lw	t3,24(sp)
+    3742:	4ed2                	lw	t4,20(sp)
+    3744:	4f42                	lw	t5,16(sp)
+    3746:	4fb2                	lw	t6,12(sp)
+    3748:	6161                	addi	sp,sp,80
+    374a:	30200073          	mret
+	...
+
+00003750 <handler_irq_external>:
+/*                           EXPORTED FUNCTIONS                             */
+/**                                                                        **/
+/****************************************************************************/
+
+void handler_irq_external(void)
+{
+    3750:	711d                	addi	sp,sp,-96
+    3752:	ce86                	sw	ra,92(sp)
+    3754:	cc96                	sw	t0,88(sp)
+    3756:	ca9a                	sw	t1,84(sp)
+    3758:	c89e                	sw	t2,80(sp)
+    375a:	c6a2                	sw	s0,76(sp)
+    375c:	c4aa                	sw	a0,72(sp)
+    375e:	c2ae                	sw	a1,68(sp)
+    3760:	c0b2                	sw	a2,64(sp)
+    3762:	de36                	sw	a3,60(sp)
+    3764:	dc3a                	sw	a4,56(sp)
+    3766:	da3e                	sw	a5,52(sp)
+    3768:	d842                	sw	a6,48(sp)
+    376a:	d646                	sw	a7,44(sp)
+    376c:	d472                	sw	t3,40(sp)
+    376e:	d276                	sw	t4,36(sp)
+    3770:	d07a                	sw	t5,32(sp)
+    3772:	ce7e                	sw	t6,28(sp)
+    3774:	1080                	addi	s0,sp,96
+  uint32_t int_id = NULL_INTR;
+    3776:	fa042423          	sw	zero,-88(s0)
+  plic_result_t res = plic_irq_claim(&int_id);
+    377a:	fa840793          	addi	a5,s0,-88
+    377e:	853e                	mv	a0,a5
+    3780:	20b9                	jal	37ce <plic_irq_claim>
+    3782:	faa42623          	sw	a0,-84(s0)
+
+    // Calls the proper handler
+    handlers[int_id](int_id);
+    3786:	fa842783          	lw	a5,-88(s0)
+    378a:	9a018713          	addi	a4,gp,-1632 # b724 <handlers>
+    378e:	078a                	slli	a5,a5,0x2
+    3790:	97ba                	add	a5,a5,a4
+    3792:	439c                	lw	a5,0(a5)
+    3794:	fa842703          	lw	a4,-88(s0)
+    3798:	853a                	mv	a0,a4
+    379a:	9782                	jalr	a5
+    plic_irq_complete(&int_id);
+    379c:	fa840793          	addi	a5,s0,-88
+    37a0:	853e                	mv	a0,a5
+    37a2:	28b1                	jal	37fe <plic_irq_complete>
+}
+    37a4:	0001                	nop
+    37a6:	40f6                	lw	ra,92(sp)
+    37a8:	42e6                	lw	t0,88(sp)
+    37aa:	4356                	lw	t1,84(sp)
+    37ac:	43c6                	lw	t2,80(sp)
+    37ae:	4436                	lw	s0,76(sp)
+    37b0:	4526                	lw	a0,72(sp)
+    37b2:	4596                	lw	a1,68(sp)
+    37b4:	4606                	lw	a2,64(sp)
+    37b6:	56f2                	lw	a3,60(sp)
+    37b8:	5762                	lw	a4,56(sp)
+    37ba:	57d2                	lw	a5,52(sp)
+    37bc:	5842                	lw	a6,48(sp)
+    37be:	58b2                	lw	a7,44(sp)
+    37c0:	5e22                	lw	t3,40(sp)
+    37c2:	5e92                	lw	t4,36(sp)
+    37c4:	5f02                	lw	t5,32(sp)
+    37c6:	4ff2                	lw	t6,28(sp)
+    37c8:	6125                	addi	sp,sp,96
+    37ca:	30200073          	mret
+
+000037ce <plic_irq_claim>:
+  return kPlicOk;
+}
+
+
+plic_result_t plic_irq_claim( uint32_t *claim_data)
+{
+    37ce:	1101                	addi	sp,sp,-32
+    37d0:	ce06                	sw	ra,28(sp)
+    37d2:	cc22                	sw	s0,24(sp)
+    37d4:	1000                	addi	s0,sp,32
+    37d6:	fea42623          	sw	a0,-20(s0)
+  if (claim_data == NULL)
+    37da:	fec42783          	lw	a5,-20(s0)
+    37de:	e399                	bnez	a5,37e4 <plic_irq_claim+0x16>
+  {
+    return kPlicBadArg;
+    37e0:	4789                	li	a5,2
+    37e2:	a809                	j	37f4 <plic_irq_claim+0x26>
+  }
+
+  *claim_data = rv_plic_peri->CC0;
+    37e4:	300007b7          	lui	a5,0x30000
+    37e8:	20c7a703          	lw	a4,524(a5) # 3000020c <syscalls_cpp.cpp.cfa7c3ef+0x2ffe862a>
+    37ec:	fec42783          	lw	a5,-20(s0)
+    37f0:	c398                	sw	a4,0(a5)
+
+  return kPlicOk;
+    37f2:	4781                	li	a5,0
+}
+    37f4:	853e                	mv	a0,a5
+    37f6:	40f2                	lw	ra,28(sp)
+    37f8:	4462                	lw	s0,24(sp)
+    37fa:	6105                	addi	sp,sp,32
+    37fc:	8082                	ret
+
+000037fe <plic_irq_complete>:
+
+
+plic_result_t plic_irq_complete(const uint32_t *complete_data)
+{
+    37fe:	1101                	addi	sp,sp,-32
+    3800:	ce06                	sw	ra,28(sp)
+    3802:	cc22                	sw	s0,24(sp)
+    3804:	1000                	addi	s0,sp,32
+    3806:	fea42623          	sw	a0,-20(s0)
+  if (complete_data == NULL)
+    380a:	fec42783          	lw	a5,-20(s0)
+    380e:	e399                	bnez	a5,3814 <plic_irq_complete+0x16>
+  {
+    return kPlicBadArg;
+    3810:	4789                	li	a5,2
+    3812:	a809                	j	3824 <plic_irq_complete+0x26>
+  }
+
+  // Write back the claimed IRQ ID to the target specific CC register,
+  // to notify the PLIC of the IRQ completion.
+  rv_plic_peri->CC0 = *complete_data;
+    3814:	300007b7          	lui	a5,0x30000
+    3818:	fec42703          	lw	a4,-20(s0)
+    381c:	4318                	lw	a4,0(a4)
+    381e:	20e7a623          	sw	a4,524(a5) # 3000020c <syscalls_cpp.cpp.cfa7c3ef+0x2ffe862a>
+
+  return kPlicOk;
+    3822:	4781                	li	a5,0
+}
+    3824:	853e                	mv	a0,a5
+    3826:	40f2                	lw	ra,28(sp)
+    3828:	4462                	lw	s0,24(sp)
+    382a:	6105                	addi	sp,sp,32
+    382c:	8082                	ret
+
+0000382e <mmio_region_read32.lto_priv.5>:
+ * @param base the region to read from.
+ * @param offset the offset to read at, in bytes.
+ * @return the read value.
+ */
+MMIO_WARN_UNUSED_RESULT
+static inline uint32_t mmio_region_read32(mmio_region_t base, ptrdiff_t offset) {
+    382e:	1101                	addi	sp,sp,-32
+    3830:	ce06                	sw	ra,28(sp)
+    3832:	cc22                	sw	s0,24(sp)
+    3834:	1000                	addi	s0,sp,32
+    3836:	fea42623          	sw	a0,-20(s0)
+    383a:	feb42423          	sw	a1,-24(s0)
+  return ((volatile uint32_t *)base.base)[offset / sizeof(uint32_t)];
+    383e:	fec42703          	lw	a4,-20(s0)
+    3842:	fe842783          	lw	a5,-24(s0)
+    3846:	9bf1                	andi	a5,a5,-4
+    3848:	97ba                	add	a5,a5,a4
+    384a:	439c                	lw	a5,0(a5)
+}
+    384c:	853e                	mv	a0,a5
+    384e:	40f2                	lw	ra,28(sp)
+    3850:	4462                	lw	s0,24(sp)
+    3852:	6105                	addi	sp,sp,32
+    3854:	8082                	ret
+
+00003856 <mmio_region_write8>:
+ * @param base the region to write to.
+ * @param offset the offset to write at, in bytes.
+ * @param value the value to write.
+ */
+static inline void mmio_region_write8(mmio_region_t base, ptrdiff_t offset,
+                               uint8_t value) {
+    3856:	1101                	addi	sp,sp,-32
+    3858:	ce06                	sw	ra,28(sp)
+    385a:	cc22                	sw	s0,24(sp)
+    385c:	1000                	addi	s0,sp,32
+    385e:	fea42623          	sw	a0,-20(s0)
+    3862:	feb42423          	sw	a1,-24(s0)
+    3866:	87b2                	mv	a5,a2
+    3868:	fef403a3          	sb	a5,-25(s0)
+  ((volatile uint8_t *)base.base)[offset / sizeof(uint8_t)] = value;
+    386c:	fec42703          	lw	a4,-20(s0)
+    3870:	fe842783          	lw	a5,-24(s0)
+    3874:	97ba                	add	a5,a5,a4
+    3876:	fe744703          	lbu	a4,-25(s0)
+    387a:	00e78023          	sb	a4,0(a5)
+}
+    387e:	0001                	nop
+    3880:	40f2                	lw	ra,28(sp)
+    3882:	4462                	lw	s0,24(sp)
+    3884:	6105                	addi	sp,sp,32
+    3886:	8082                	ret
+
+00003888 <mmio_region_write32.lto_priv.5>:
+ * @param base the region to write to.
+ * @param offset the offset to write at, in bytes.
+ * @param value the value to write.
+ */
+static inline void mmio_region_write32(mmio_region_t base, ptrdiff_t offset,
+                                uint32_t value) {
+    3888:	1101                	addi	sp,sp,-32
+    388a:	ce06                	sw	ra,28(sp)
+    388c:	cc22                	sw	s0,24(sp)
+    388e:	1000                	addi	s0,sp,32
+    3890:	fea42623          	sw	a0,-20(s0)
+    3894:	feb42423          	sw	a1,-24(s0)
+    3898:	fec42223          	sw	a2,-28(s0)
+  ((volatile uint32_t *)base.base)[offset / sizeof(uint32_t)] = value;
+    389c:	fec42703          	lw	a4,-20(s0)
+    38a0:	fe842783          	lw	a5,-24(s0)
+    38a4:	9bf1                	andi	a5,a5,-4
+    38a6:	97ba                	add	a5,a5,a4
+    38a8:	fe442703          	lw	a4,-28(s0)
+    38ac:	c398                	sw	a4,0(a5)
+}
+    38ae:	0001                	nop
+    38b0:	40f2                	lw	ra,28(sp)
+    38b2:	4462                	lw	s0,24(sp)
+    38b4:	6105                	addi	sp,sp,32
+    38b6:	8082                	ret
+
+000038b8 <soc_ctrl_set_valid>:
+#include "mmio.h"
+
+#include "soc_ctrl.h"
+#include "soc_ctrl_regs.h"  // Generated.
+
+void soc_ctrl_set_valid(const soc_ctrl_t *soc_ctrl, uint8_t valid) {
+    38b8:	1101                	addi	sp,sp,-32
+    38ba:	ce06                	sw	ra,28(sp)
+    38bc:	cc22                	sw	s0,24(sp)
+    38be:	1000                	addi	s0,sp,32
+    38c0:	fea42623          	sw	a0,-20(s0)
+    38c4:	87ae                	mv	a5,a1
+    38c6:	fef405a3          	sb	a5,-21(s0)
+  mmio_region_write8(soc_ctrl->base_addr, (ptrdiff_t)(SOC_CTRL_EXIT_VALID_REG_OFFSET), valid);
+    38ca:	feb44703          	lbu	a4,-21(s0)
+    38ce:	fec42783          	lw	a5,-20(s0)
+    38d2:	863a                	mv	a2,a4
+    38d4:	4581                	li	a1,0
+    38d6:	4388                	lw	a0,0(a5)
+    38d8:	3fbd                	jal	3856 <mmio_region_write8>
+}
+    38da:	0001                	nop
+    38dc:	40f2                	lw	ra,28(sp)
+    38de:	4462                	lw	s0,24(sp)
+    38e0:	6105                	addi	sp,sp,32
+    38e2:	8082                	ret
+
+000038e4 <soc_ctrl_set_exit_value>:
+
+void soc_ctrl_set_exit_value(const soc_ctrl_t *soc_ctrl, uint32_t exit_value) {
+    38e4:	1101                	addi	sp,sp,-32
+    38e6:	ce06                	sw	ra,28(sp)
+    38e8:	cc22                	sw	s0,24(sp)
+    38ea:	1000                	addi	s0,sp,32
+    38ec:	fea42623          	sw	a0,-20(s0)
+    38f0:	feb42423          	sw	a1,-24(s0)
+  mmio_region_write32(soc_ctrl->base_addr, (ptrdiff_t)(SOC_CTRL_EXIT_VALUE_REG_OFFSET), exit_value);
+    38f4:	fec42783          	lw	a5,-20(s0)
+    38f8:	fe842603          	lw	a2,-24(s0)
+    38fc:	4591                	li	a1,4
+    38fe:	4388                	lw	a0,0(a5)
+    3900:	3761                	jal	3888 <mmio_region_write32.lto_priv.5>
+}
+    3902:	0001                	nop
+    3904:	40f2                	lw	ra,28(sp)
+    3906:	4462                	lw	s0,24(sp)
+    3908:	6105                	addi	sp,sp,32
+    390a:	8082                	ret
+
+0000390c <soc_ctrl_get_frequency>:
+
+uint32_t soc_ctrl_get_frequency(const soc_ctrl_t *soc_ctrl) {
+    390c:	1101                	addi	sp,sp,-32
+    390e:	ce06                	sw	ra,28(sp)
+    3910:	cc22                	sw	s0,24(sp)
+    3912:	1000                	addi	s0,sp,32
+    3914:	fea42623          	sw	a0,-20(s0)
+  return mmio_region_read32(soc_ctrl->base_addr, (ptrdiff_t)(SOC_CTRL_SYSTEM_FREQUENCY_HZ_REG_OFFSET));
+    3918:	fec42783          	lw	a5,-20(s0)
+    391c:	45f1                	li	a1,28
+    391e:	4388                	lw	a0,0(a5)
+    3920:	3739                	jal	382e <mmio_region_read32.lto_priv.5>
+    3922:	87aa                	mv	a5,a0
+}
+    3924:	853e                	mv	a0,a5
+    3926:	40f2                	lw	ra,28(sp)
+    3928:	4462                	lw	s0,24(sp)
+    392a:	6105                	addi	sp,sp,32
+    392c:	8082                	ret
+
+0000392e <bitfield_read.lto_priv.2>:
+ */
+BITFIELD_WARN_UNUSED_RESULT
+static inline uint32_t bitfield_read(uint32_t bitfield, 
+                              uint32_t mask, 
+                              uint32_t index) 
+{
+    392e:	1101                	addi	sp,sp,-32
+    3930:	ce06                	sw	ra,28(sp)
+    3932:	cc22                	sw	s0,24(sp)
+    3934:	1000                	addi	s0,sp,32
+    3936:	fea42623          	sw	a0,-20(s0)
+    393a:	feb42423          	sw	a1,-24(s0)
+    393e:	fec42223          	sw	a2,-28(s0)
+  return (bitfield >> index) & mask;
+    3942:	fe442783          	lw	a5,-28(s0)
+    3946:	fec42703          	lw	a4,-20(s0)
+    394a:	00f75733          	srl	a4,a4,a5
+    394e:	fe842783          	lw	a5,-24(s0)
+    3952:	8ff9                	and	a5,a5,a4
+}
+    3954:	853e                	mv	a0,a5
+    3956:	40f2                	lw	ra,28(sp)
+    3958:	4462                	lw	s0,24(sp)
+    395a:	6105                	addi	sp,sp,32
+    395c:	8082                	ret
+
+0000395e <bitfield_write.lto_priv.3>:
+BITFIELD_WARN_UNUSED_RESULT
+static inline uint32_t bitfield_write(uint32_t bitfield,
+                                       uint32_t mask, 
+                                       uint32_t index,
+                                       uint32_t value) 
+{
+    395e:	1101                	addi	sp,sp,-32
+    3960:	ce06                	sw	ra,28(sp)
+    3962:	cc22                	sw	s0,24(sp)
+    3964:	1000                	addi	s0,sp,32
+    3966:	fea42623          	sw	a0,-20(s0)
+    396a:	feb42423          	sw	a1,-24(s0)
+    396e:	fec42223          	sw	a2,-28(s0)
+    3972:	fed42023          	sw	a3,-32(s0)
+  bitfield &= ~(mask << index);
+    3976:	fe442783          	lw	a5,-28(s0)
+    397a:	fe842703          	lw	a4,-24(s0)
+    397e:	00f717b3          	sll	a5,a4,a5
+    3982:	fff7c793          	not	a5,a5
+    3986:	fec42703          	lw	a4,-20(s0)
+    398a:	8ff9                	and	a5,a5,a4
+    398c:	fef42623          	sw	a5,-20(s0)
+  bitfield |= (value & mask) << index;
+    3990:	fe042703          	lw	a4,-32(s0)
+    3994:	fe842783          	lw	a5,-24(s0)
+    3998:	8f7d                	and	a4,a4,a5
+    399a:	fe442783          	lw	a5,-28(s0)
+    399e:	00f717b3          	sll	a5,a4,a5
+    39a2:	fec42703          	lw	a4,-20(s0)
+    39a6:	8fd9                	or	a5,a5,a4
+    39a8:	fef42623          	sw	a5,-20(s0)
+  return bitfield;
+    39ac:	fec42783          	lw	a5,-20(s0)
+}
+    39b0:	853e                	mv	a0,a5
+    39b2:	40f2                	lw	ra,28(sp)
+    39b4:	4462                	lw	s0,24(sp)
+    39b6:	6105                	addi	sp,sp,32
+    39b8:	8082                	ret
+
+000039ba <spi_set_events_enabled>:
+    *events = bitfield_read(SPI_HW(spi)->EVENT_ENABLE, SPI_EVENT_ALL, SPI_EVENTS_INDEX);
+    return SPI_FLAG_OK;
+}
+
+spi_return_flags_e spi_set_events_enabled(spi_host_t* spi, spi_event_e events, bool enable) 
+{
+    39ba:	1101                	addi	sp,sp,-32
+    39bc:	ce06                	sw	ra,28(sp)
+    39be:	cc22                	sw	s0,24(sp)
+    39c0:	1000                	addi	s0,sp,32
+    39c2:	fea42623          	sw	a0,-20(s0)
+    39c6:	feb42423          	sw	a1,-24(s0)
+    39ca:	87b2                	mv	a5,a2
+    39cc:	fef403a3          	sb	a5,-25(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    39d0:	fec42783          	lw	a5,-20(s0)
+    39d4:	e399                	bnez	a5,39da <spi_set_events_enabled+0x20>
+    39d6:	4785                	li	a5,1
+    39d8:	a099                	j	3a1e <spi_set_events_enabled+0x64>
+    if (events > SPI_EVENT_ALL) return SPI_FLAG_EVENT_INVALID;
+    39da:	fe842703          	lw	a4,-24(s0)
+    39de:	03f00793          	li	a5,63
+    39e2:	00e7f563          	bgeu	a5,a4,39ec <spi_set_events_enabled+0x32>
+    39e6:	10000793          	li	a5,256
+    39ea:	a815                	j	3a1e <spi_set_events_enabled+0x64>
+    // Since spi_event_e is mapped to EVENT_ENABLE: | = set, & ~ = clear
+    if (enable) SPI_HW(spi)->EVENT_ENABLE |= events;
+    39ec:	fe744783          	lbu	a5,-25(s0)
+    39f0:	cb99                	beqz	a5,3a06 <spi_set_events_enabled+0x4c>
+    39f2:	fec42783          	lw	a5,-20(s0)
+    39f6:	5f98                	lw	a4,56(a5)
+    39f8:	fe842783          	lw	a5,-24(s0)
+    39fc:	8f5d                	or	a4,a4,a5
+    39fe:	fec42783          	lw	a5,-20(s0)
+    3a02:	df98                	sw	a4,56(a5)
+    3a04:	a821                	j	3a1c <spi_set_events_enabled+0x62>
+    else        SPI_HW(spi)->EVENT_ENABLE &= ~events;
+    3a06:	fec42783          	lw	a5,-20(s0)
+    3a0a:	5f98                	lw	a4,56(a5)
+    3a0c:	fe842783          	lw	a5,-24(s0)
+    3a10:	fff7c793          	not	a5,a5
+    3a14:	8f7d                	and	a4,a4,a5
+    3a16:	fec42783          	lw	a5,-20(s0)
+    3a1a:	df98                	sw	a4,56(a5)
+
+    return SPI_FLAG_OK;
+    3a1c:	4781                	li	a5,0
+}
+    3a1e:	853e                	mv	a0,a5
+    3a20:	40f2                	lw	ra,28(sp)
+    3a22:	4462                	lw	s0,24(sp)
+    3a24:	6105                	addi	sp,sp,32
+    3a26:	8082                	ret
+
+00003a28 <spi_set_errors_enabled>:
+    *errors = bitfield_read(SPI_HW(spi)->ERROR_ENABLE, SPI_ERROR_IRQALL, SPI_ERRORS_INDEX);
+    return SPI_FLAG_OK;
+}
+
+spi_return_flags_e spi_set_errors_enabled(spi_host_t* spi, spi_error_e errors, bool enable)
+{
+    3a28:	1101                	addi	sp,sp,-32
+    3a2a:	ce06                	sw	ra,28(sp)
+    3a2c:	cc22                	sw	s0,24(sp)
+    3a2e:	1000                	addi	s0,sp,32
+    3a30:	fea42623          	sw	a0,-20(s0)
+    3a34:	feb42423          	sw	a1,-24(s0)
+    3a38:	87b2                	mv	a5,a2
+    3a3a:	fef403a3          	sb	a5,-25(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3a3e:	fec42783          	lw	a5,-20(s0)
+    3a42:	e399                	bnez	a5,3a48 <spi_set_errors_enabled+0x20>
+    3a44:	4785                	li	a5,1
+    3a46:	a091                	j	3a8a <spi_set_errors_enabled+0x62>
+    if (errors > SPI_ERROR_IRQALL) return SPI_FLAG_ERROR_INVALID;
+    3a48:	fe842703          	lw	a4,-24(s0)
+    3a4c:	47fd                	li	a5,31
+    3a4e:	00e7f563          	bgeu	a5,a4,3a58 <spi_set_errors_enabled+0x30>
+    3a52:	20000793          	li	a5,512
+    3a56:	a815                	j	3a8a <spi_set_errors_enabled+0x62>
+    // Since spi_error_e is mapped to ERROR_ENABLE: | = set, & ~ = clear
+    if (enable) SPI_HW(spi)->ERROR_ENABLE |= errors;
+    3a58:	fe744783          	lbu	a5,-25(s0)
+    3a5c:	cb99                	beqz	a5,3a72 <spi_set_errors_enabled+0x4a>
+    3a5e:	fec42783          	lw	a5,-20(s0)
+    3a62:	5b98                	lw	a4,48(a5)
+    3a64:	fe842783          	lw	a5,-24(s0)
+    3a68:	8f5d                	or	a4,a4,a5
+    3a6a:	fec42783          	lw	a5,-20(s0)
+    3a6e:	db98                	sw	a4,48(a5)
+    3a70:	a821                	j	3a88 <spi_set_errors_enabled+0x60>
+    else        SPI_HW(spi)->ERROR_ENABLE &= ~errors;
+    3a72:	fec42783          	lw	a5,-20(s0)
+    3a76:	5b98                	lw	a4,48(a5)
+    3a78:	fe842783          	lw	a5,-24(s0)
+    3a7c:	fff7c793          	not	a5,a5
+    3a80:	8f7d                	and	a4,a4,a5
+    3a82:	fec42783          	lw	a5,-20(s0)
+    3a86:	db98                	sw	a4,48(a5)
+
+    return SPI_FLAG_OK;
+    3a88:	4781                	li	a5,0
+}
+    3a8a:	853e                	mv	a0,a5
+    3a8c:	40f2                	lw	ra,28(sp)
+    3a8e:	4462                	lw	s0,24(sp)
+    3a90:	6105                	addi	sp,sp,32
+    3a92:	8082                	ret
+
+00003a94 <spi_get_errors>:
+
+spi_return_flags_e spi_get_errors(spi_host_t* spi, spi_error_e* errors)
+{
+    3a94:	1101                	addi	sp,sp,-32
+    3a96:	ce06                	sw	ra,28(sp)
+    3a98:	cc22                	sw	s0,24(sp)
+    3a9a:	1000                	addi	s0,sp,32
+    3a9c:	fea42623          	sw	a0,-20(s0)
+    3aa0:	feb42423          	sw	a1,-24(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3aa4:	fec42783          	lw	a5,-20(s0)
+    3aa8:	e399                	bnez	a5,3aae <spi_get_errors+0x1a>
+    3aaa:	4785                	li	a5,1
+    3aac:	a831                	j	3ac8 <spi_get_errors+0x34>
+    *errors = bitfield_read(SPI_HW(spi)->ERROR_STATUS, SPI_ERROR_ALL, SPI_ERRORS_INDEX);
+    3aae:	fec42783          	lw	a5,-20(s0)
+    3ab2:	5bdc                	lw	a5,52(a5)
+    3ab4:	4601                	li	a2,0
+    3ab6:	03f00593          	li	a1,63
+    3aba:	853e                	mv	a0,a5
+    3abc:	3d8d                	jal	392e <bitfield_read.lto_priv.2>
+    3abe:	872a                	mv	a4,a0
+    3ac0:	fe842783          	lw	a5,-24(s0)
+    3ac4:	c398                	sw	a4,0(a5)
+    return SPI_FLAG_OK;
+    3ac6:	4781                	li	a5,0
+}
+    3ac8:	853e                	mv	a0,a5
+    3aca:	40f2                	lw	ra,28(sp)
+    3acc:	4462                	lw	s0,24(sp)
+    3ace:	6105                	addi	sp,sp,32
+    3ad0:	8082                	ret
+
+00003ad2 <spi_get_tx_queue_depth>:
+                                             SPI_HOST_ALERT_TEST_FATAL_FAULT_BIT, true);
+    return SPI_FLAG_OK;
+}
+
+volatile uint8_t spi_get_tx_queue_depth(spi_host_t* spi)
+{
+    3ad2:	7179                	addi	sp,sp,-48
+    3ad4:	d606                	sw	ra,44(sp)
+    3ad6:	d422                	sw	s0,40(sp)
+    3ad8:	1800                	addi	s0,sp,48
+    3ada:	fca42e23          	sw	a0,-36(s0)
+    // Returning an impossible value (tx fifo is 76 words long...)
+    SPI_NULL_CHECK(spi, UINT8_MAX)
+    3ade:	fdc42783          	lw	a5,-36(s0)
+    3ae2:	e781                	bnez	a5,3aea <spi_get_tx_queue_depth+0x18>
+    3ae4:	0ff00793          	li	a5,255
+    3ae8:	a831                	j	3b04 <spi_get_tx_queue_depth+0x32>
+    3aea:	fdc42783          	lw	a5,-36(s0)
+    3aee:	fef42623          	sw	a5,-20(s0)
+ */
+static inline __attribute__((always_inline)) 
+const volatile spi_status_t spi_get_status(spi_host_t* spi)
+{
+    spi_status_t status;
+    status.value = SPI_HW(spi)->STATUS; // Assuming SPI_HW(spi)->STATUS returns a uint32_t value representing the status
+    3af2:	fec42783          	lw	a5,-20(s0)
+    3af6:	4bdc                	lw	a5,20(a5)
+    3af8:	fef42423          	sw	a5,-24(s0)
+    return status;
+    3afc:	fe842783          	lw	a5,-24(s0)
+    return spi_get_status(spi).txqd;
+    3b00:	0ff7f793          	zext.b	a5,a5
+}
+    3b04:	853e                	mv	a0,a5
+    3b06:	50b2                	lw	ra,44(sp)
+    3b08:	5422                	lw	s0,40(sp)
+    3b0a:	6145                	addi	sp,sp,48
+    3b0c:	8082                	ret
+
+00003b0e <spi_get_rx_queue_depth>:
+
+volatile uint8_t spi_get_rx_queue_depth(spi_host_t* spi)
+{
+    3b0e:	7179                	addi	sp,sp,-48
+    3b10:	d606                	sw	ra,44(sp)
+    3b12:	d422                	sw	s0,40(sp)
+    3b14:	1800                	addi	s0,sp,48
+    3b16:	fca42e23          	sw	a0,-36(s0)
+    // Returning an impossible value (rx fifo is 64 words long...)
+    SPI_NULL_CHECK(spi, UINT8_MAX)
+    3b1a:	fdc42783          	lw	a5,-36(s0)
+    3b1e:	e781                	bnez	a5,3b26 <spi_get_rx_queue_depth+0x18>
+    3b20:	0ff00793          	li	a5,255
+    3b24:	a005                	j	3b44 <spi_get_rx_queue_depth+0x36>
+    3b26:	fdc42783          	lw	a5,-36(s0)
+    3b2a:	fef42623          	sw	a5,-20(s0)
+    status.value = SPI_HW(spi)->STATUS; // Assuming SPI_HW(spi)->STATUS returns a uint32_t value representing the status
+    3b2e:	fec42783          	lw	a5,-20(s0)
+    3b32:	4bdc                	lw	a5,20(a5)
+    3b34:	fef42423          	sw	a5,-24(s0)
+    return status;
+    3b38:	fe842783          	lw	a5,-24(s0)
+    return spi_get_status(spi).rxqd;
+    3b3c:	83a1                	srli	a5,a5,0x8
+    3b3e:	9bfd                	andi	a5,a5,-1
+    3b40:	0ff7f793          	zext.b	a5,a5
+}
+    3b44:	853e                	mv	a0,a5
+    3b46:	50b2                	lw	ra,44(sp)
+    3b48:	5422                	lw	s0,40(sp)
+    3b4a:	6145                	addi	sp,sp,48
+    3b4c:	8082                	ret
+
+00003b4e <spi_sw_reset>:
+    SPI_NULL_CHECK(spi, UINT32_MAX)
+    return SPI_HW(spi)->CSID;
+}
+
+spi_return_flags_e spi_sw_reset(spi_host_t* spi)
+{
+    3b4e:	7179                	addi	sp,sp,-48
+    3b50:	d606                	sw	ra,44(sp)
+    3b52:	d422                	sw	s0,40(sp)
+    3b54:	1800                	addi	s0,sp,48
+    3b56:	fca42e23          	sw	a0,-36(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3b5a:	fdc42783          	lw	a5,-36(s0)
+    3b5e:	e399                	bnez	a5,3b64 <spi_sw_reset+0x16>
+    3b60:	4785                	li	a5,1
+    3b62:	a88d                	j	3bd4 <spi_sw_reset+0x86>
+    // Assert spi reset bit
+    SPI_HW(spi)->CONTROL = bitfield_write(SPI_HW(spi)->CONTROL, BIT_MASK_1, 
+    3b64:	fdc42783          	lw	a5,-36(s0)
+    3b68:	4b9c                	lw	a5,16(a5)
+    3b6a:	4685                	li	a3,1
+    3b6c:	4679                	li	a2,30
+    3b6e:	4585                	li	a1,1
+    3b70:	853e                	mv	a0,a5
+    3b72:	33f5                	jal	395e <bitfield_write.lto_priv.3>
+    3b74:	872a                	mv	a4,a0
+    3b76:	fdc42783          	lw	a5,-36(s0)
+    3b7a:	cb98                	sw	a4,16(a5)
+    3b7c:	fdc42783          	lw	a5,-36(s0)
+    3b80:	fef42623          	sw	a5,-20(s0)
+    status.value = SPI_HW(spi)->STATUS; // Assuming SPI_HW(spi)->STATUS returns a uint32_t value representing the status
+    3b84:	fec42783          	lw	a5,-20(s0)
+    3b88:	4bdc                	lw	a5,20(a5)
+    3b8a:	fef42223          	sw	a5,-28(s0)
+    return status;
+    3b8e:	fe442783          	lw	a5,-28(s0)
+    3b92:	fef42423          	sw	a5,-24(s0)
+                                          SPI_HOST_CONTROL_SW_RST_BIT, true);
+
+    volatile spi_status_t status = spi_get_status(spi);
+    // Wait for spi active and txqd & rxqd both go to 0
+    while (status.active || status.txqd || status.rxqd);
+    3b96:	0001                	nop
+    3b98:	fe842783          	lw	a5,-24(s0)
+    3b9c:	83f9                	srli	a5,a5,0x1e
+    3b9e:	8b85                	andi	a5,a5,1
+    3ba0:	0ff7f793          	zext.b	a5,a5
+    3ba4:	fbf5                	bnez	a5,3b98 <spi_sw_reset+0x4a>
+    3ba6:	fe844783          	lbu	a5,-24(s0)
+    3baa:	0ff7f793          	zext.b	a5,a5
+    3bae:	f7ed                	bnez	a5,3b98 <spi_sw_reset+0x4a>
+    3bb0:	fe944783          	lbu	a5,-23(s0)
+    3bb4:	0ff7f793          	zext.b	a5,a5
+    3bb8:	f3e5                	bnez	a5,3b98 <spi_sw_reset+0x4a>
+    // Deassert spi reset bit
+    SPI_HW(spi)->CONTROL = bitfield_write(SPI_HW(spi)->CONTROL, BIT_MASK_1, 
+    3bba:	fdc42783          	lw	a5,-36(s0)
+    3bbe:	4b9c                	lw	a5,16(a5)
+    3bc0:	4681                	li	a3,0
+    3bc2:	4679                	li	a2,30
+    3bc4:	4585                	li	a1,1
+    3bc6:	853e                	mv	a0,a5
+    3bc8:	3b59                	jal	395e <bitfield_write.lto_priv.3>
+    3bca:	872a                	mv	a4,a0
+    3bcc:	fdc42783          	lw	a5,-36(s0)
+    3bd0:	cb98                	sw	a4,16(a5)
+                                          SPI_HOST_CONTROL_SW_RST_BIT, false);
+    return SPI_FLAG_OK;
+    3bd2:	4781                	li	a5,0
+}
+    3bd4:	853e                	mv	a0,a5
+    3bd6:	50b2                	lw	ra,44(sp)
+    3bd8:	5422                	lw	s0,40(sp)
+    3bda:	6145                	addi	sp,sp,48
+    3bdc:	8082                	ret
+
+00003bde <spi_set_enable>:
+
+spi_return_flags_e spi_set_enable(spi_host_t* spi, bool enable)
+{
+    3bde:	1101                	addi	sp,sp,-32
+    3be0:	ce06                	sw	ra,28(sp)
+    3be2:	cc22                	sw	s0,24(sp)
+    3be4:	1000                	addi	s0,sp,32
+    3be6:	fea42623          	sw	a0,-20(s0)
+    3bea:	87ae                	mv	a5,a1
+    3bec:	fef405a3          	sb	a5,-21(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3bf0:	fec42783          	lw	a5,-20(s0)
+    3bf4:	e399                	bnez	a5,3bfa <spi_set_enable+0x1c>
+    3bf6:	4785                	li	a5,1
+    3bf8:	a005                	j	3c18 <spi_set_enable+0x3a>
+    SPI_HW(spi)->CONTROL = bitfield_write(SPI_HW(spi)->CONTROL, BIT_MASK_1, 
+    3bfa:	fec42783          	lw	a5,-20(s0)
+    3bfe:	4b9c                	lw	a5,16(a5)
+    3c00:	feb44703          	lbu	a4,-21(s0)
+    3c04:	86ba                	mv	a3,a4
+    3c06:	467d                	li	a2,31
+    3c08:	4585                	li	a1,1
+    3c0a:	853e                	mv	a0,a5
+    3c0c:	3b89                	jal	395e <bitfield_write.lto_priv.3>
+    3c0e:	872a                	mv	a4,a0
+    3c10:	fec42783          	lw	a5,-20(s0)
+    3c14:	cb98                	sw	a4,16(a5)
+                                          SPI_HOST_CONTROL_SPIEN_BIT, enable);
+    return SPI_FLAG_OK;
+    3c16:	4781                	li	a5,0
+}
+    3c18:	853e                	mv	a0,a5
+    3c1a:	40f2                	lw	ra,28(sp)
+    3c1c:	4462                	lw	s0,24(sp)
+    3c1e:	6105                	addi	sp,sp,32
+    3c20:	8082                	ret
+
+00003c22 <spi_set_tx_watermark>:
+
+spi_return_flags_e spi_set_tx_watermark(spi_host_t* spi, uint8_t watermark)
+{
+    3c22:	1101                	addi	sp,sp,-32
+    3c24:	ce06                	sw	ra,28(sp)
+    3c26:	cc22                	sw	s0,24(sp)
+    3c28:	1000                	addi	s0,sp,32
+    3c2a:	fea42623          	sw	a0,-20(s0)
+    3c2e:	87ae                	mv	a5,a1
+    3c30:	fef405a3          	sb	a5,-21(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3c34:	fec42783          	lw	a5,-20(s0)
+    3c38:	e399                	bnez	a5,3c3e <spi_set_tx_watermark+0x1c>
+    3c3a:	4785                	li	a5,1
+    3c3c:	a80d                	j	3c6e <spi_set_tx_watermark+0x4c>
+    // Check that watermark is not bigger than the fifo size (makes no sense otherwise)
+    if (watermark > SPI_HOST_PARAM_TX_DEPTH) return SPI_FLAG_WATERMARK_EXCEEDS;
+    3c3e:	feb44703          	lbu	a4,-21(s0)
+    3c42:	04800793          	li	a5,72
+    3c46:	00e7f463          	bgeu	a5,a4,3c4e <spi_set_tx_watermark+0x2c>
+    3c4a:	4789                	li	a5,2
+    3c4c:	a00d                	j	3c6e <spi_set_tx_watermark+0x4c>
+
+    SPI_HW(spi)->CONTROL = bitfield_write(SPI_HW(spi)->CONTROL, 
+    3c4e:	fec42783          	lw	a5,-20(s0)
+    3c52:	4b9c                	lw	a5,16(a5)
+    3c54:	feb44703          	lbu	a4,-21(s0)
+    3c58:	86ba                	mv	a3,a4
+    3c5a:	4621                	li	a2,8
+    3c5c:	0ff00593          	li	a1,255
+    3c60:	853e                	mv	a0,a5
+    3c62:	39f5                	jal	395e <bitfield_write.lto_priv.3>
+    3c64:	872a                	mv	a4,a0
+    3c66:	fec42783          	lw	a5,-20(s0)
+    3c6a:	cb98                	sw	a4,16(a5)
+                                          SPI_HOST_CONTROL_TX_WATERMARK_MASK, 
+                                          SPI_HOST_CONTROL_TX_WATERMARK_OFFSET, 
+                                          watermark);
+    return SPI_FLAG_OK;
+    3c6c:	4781                	li	a5,0
+}
+    3c6e:	853e                	mv	a0,a5
+    3c70:	40f2                	lw	ra,28(sp)
+    3c72:	4462                	lw	s0,24(sp)
+    3c74:	6105                	addi	sp,sp,32
+    3c76:	8082                	ret
+
+00003c78 <spi_set_rx_watermark>:
+
+spi_return_flags_e spi_set_rx_watermark(spi_host_t* spi, uint8_t watermark)
+{
+    3c78:	1101                	addi	sp,sp,-32
+    3c7a:	ce06                	sw	ra,28(sp)
+    3c7c:	cc22                	sw	s0,24(sp)
+    3c7e:	1000                	addi	s0,sp,32
+    3c80:	fea42623          	sw	a0,-20(s0)
+    3c84:	87ae                	mv	a5,a1
+    3c86:	fef405a3          	sb	a5,-21(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3c8a:	fec42783          	lw	a5,-20(s0)
+    3c8e:	e399                	bnez	a5,3c94 <spi_set_rx_watermark+0x1c>
+    3c90:	4785                	li	a5,1
+    3c92:	a80d                	j	3cc4 <spi_set_rx_watermark+0x4c>
+    // Check that watermark is not bigger than the fifo size (makes no sense otherwise)
+    if (watermark > SPI_HOST_PARAM_RX_DEPTH) return SPI_FLAG_WATERMARK_EXCEEDS;
+    3c94:	feb44703          	lbu	a4,-21(s0)
+    3c98:	04000793          	li	a5,64
+    3c9c:	00e7f463          	bgeu	a5,a4,3ca4 <spi_set_rx_watermark+0x2c>
+    3ca0:	4789                	li	a5,2
+    3ca2:	a00d                	j	3cc4 <spi_set_rx_watermark+0x4c>
+
+    SPI_HW(spi)->CONTROL = bitfield_write(SPI_HW(spi)->CONTROL, 
+    3ca4:	fec42783          	lw	a5,-20(s0)
+    3ca8:	4b9c                	lw	a5,16(a5)
+    3caa:	feb44703          	lbu	a4,-21(s0)
+    3cae:	86ba                	mv	a3,a4
+    3cb0:	4601                	li	a2,0
+    3cb2:	0ff00593          	li	a1,255
+    3cb6:	853e                	mv	a0,a5
+    3cb8:	315d                	jal	395e <bitfield_write.lto_priv.3>
+    3cba:	872a                	mv	a4,a0
+    3cbc:	fec42783          	lw	a5,-20(s0)
+    3cc0:	cb98                	sw	a4,16(a5)
+                                          SPI_HOST_CONTROL_RX_WATERMARK_MASK, 
+                                          SPI_HOST_CONTROL_RX_WATERMARK_OFFSET, 
+                                          watermark);
+    return SPI_FLAG_OK;
+    3cc2:	4781                	li	a5,0
+}
+    3cc4:	853e                	mv	a0,a5
+    3cc6:	40f2                	lw	ra,28(sp)
+    3cc8:	4462                	lw	s0,24(sp)
+    3cca:	6105                	addi	sp,sp,32
+    3ccc:	8082                	ret
+
+00003cce <spi_set_command>:
+    SPI_HW(spi)->CSID = csid;
+    return SPI_FLAG_OK;
+}
+
+spi_return_flags_e spi_set_command(spi_host_t* spi, const uint32_t cmd_reg)
+{
+    3cce:	7139                	addi	sp,sp,-64
+    3cd0:	de06                	sw	ra,60(sp)
+    3cd2:	dc22                	sw	s0,56(sp)
+    3cd4:	0080                	addi	s0,sp,64
+    3cd6:	fca42623          	sw	a0,-52(s0)
+    3cda:	fcb42423          	sw	a1,-56(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3cde:	fcc42783          	lw	a5,-52(s0)
+    3ce2:	e399                	bnez	a5,3ce8 <spi_set_command+0x1a>
+    3ce4:	4785                	li	a5,1
+    3ce6:	a8d1                	j	3dba <spi_set_command+0xec>
+
+    spi_return_flags_e flags = SPI_FLAG_OK;
+    3ce8:	fe042623          	sw	zero,-20(s0)
+    spi_speed_e speed   = bitfield_read(cmd_reg, SPI_HOST_COMMAND_SPEED_MASK, 
+    3cec:	4665                	li	a2,25
+    3cee:	458d                	li	a1,3
+    3cf0:	fc842503          	lw	a0,-56(s0)
+    3cf4:	392d                	jal	392e <bitfield_read.lto_priv.2>
+    3cf6:	fea42423          	sw	a0,-24(s0)
+                                        SPI_HOST_COMMAND_SPEED_OFFSET);
+    spi_dir_e direction = bitfield_read(cmd_reg, SPI_HOST_COMMAND_DIRECTION_MASK, 
+    3cfa:	466d                	li	a2,27
+    3cfc:	458d                	li	a1,3
+    3cfe:	fc842503          	lw	a0,-56(s0)
+    3d02:	3135                	jal	392e <bitfield_read.lto_priv.2>
+    3d04:	fea42223          	sw	a0,-28(s0)
+                                        SPI_HOST_COMMAND_DIRECTION_OFFSET);
+
+    // Incompatible speed and direction produces an error
+    if (!spi_validate_cmd(direction, speed))     flags |= SPI_FLAG_SPEED_INVALID;
+    3d08:	fe442783          	lw	a5,-28(s0)
+    3d0c:	0ff7f713          	zext.b	a4,a5
+    3d10:	fe842783          	lw	a5,-24(s0)
+    3d14:	0ff7f793          	zext.b	a5,a5
+    3d18:	fee401a3          	sb	a4,-29(s0)
+    3d1c:	fef40123          	sb	a5,-30(s0)
+    if (speed > SPI_SPEED_QUAD || direction > SPI_DIR_BIDIR || 
+    3d20:	fe244703          	lbu	a4,-30(s0)
+    3d24:	4789                	li	a5,2
+    3d26:	00e7ef63          	bltu	a5,a4,3d44 <spi_set_command+0x76>
+    3d2a:	fe344703          	lbu	a4,-29(s0)
+    3d2e:	478d                	li	a5,3
+    3d30:	00e7ea63          	bltu	a5,a4,3d44 <spi_set_command+0x76>
+    3d34:	fe344703          	lbu	a4,-29(s0)
+    3d38:	478d                	li	a5,3
+    3d3a:	00f71763          	bne	a4,a5,3d48 <spi_set_command+0x7a>
+       (direction == SPI_DIR_BIDIR && speed != SPI_SPEED_STANDARD))
+    3d3e:	fe244783          	lbu	a5,-30(s0)
+    3d42:	c399                	beqz	a5,3d48 <spi_set_command+0x7a>
+        return false;
+    3d44:	4781                	li	a5,0
+    3d46:	a011                	j	3d4a <spi_set_command+0x7c>
+        return true;
+    3d48:	4785                	li	a5,1
+    3d4a:	e799                	bnez	a5,3d58 <spi_set_command+0x8a>
+    3d4c:	fec42783          	lw	a5,-20(s0)
+    3d50:	0107e793          	ori	a5,a5,16
+    3d54:	fef42623          	sw	a5,-20(s0)
+    3d58:	fcc42783          	lw	a5,-52(s0)
+    3d5c:	fcf42e23          	sw	a5,-36(s0)
+ *         or SPI_TRISTATE_FALSE otherwise.
+ */
+static inline __attribute__((always_inline)) 
+spi_tristate_e spi_get_ready(spi_host_t* spi)
+{
+    SPI_NULL_CHECK(spi, SPI_TRISTATE_ERROR)
+    3d60:	fdc42783          	lw	a5,-36(s0)
+    3d64:	e399                	bnez	a5,3d6a <spi_set_command+0x9c>
+    3d66:	4781                	li	a5,0
+    3d68:	a025                	j	3d90 <spi_set_command+0xc2>
+    3d6a:	fdc42783          	lw	a5,-36(s0)
+    3d6e:	fcf42c23          	sw	a5,-40(s0)
+    status.value = SPI_HW(spi)->STATUS; // Assuming SPI_HW(spi)->STATUS returns a uint32_t value representing the status
+    3d72:	fd842783          	lw	a5,-40(s0)
+    3d76:	4bdc                	lw	a5,20(a5)
+    3d78:	fcf42a23          	sw	a5,-44(s0)
+    return status;
+    3d7c:	fd442783          	lw	a5,-44(s0)
+    return spi_get_status(spi).ready ? SPI_TRISTATE_TRUE : SPI_TRISTATE_FALSE;
+    3d80:	873e                	mv	a4,a5
+    3d82:	800007b7          	lui	a5,0x80000
+    3d86:	8ff9                	and	a5,a5,a4
+    3d88:	c399                	beqz	a5,3d8e <spi_set_command+0xc0>
+    3d8a:	4785                	li	a5,1
+    3d8c:	a011                	j	3d90 <spi_set_command+0xc2>
+    3d8e:	4789                	li	a5,2
+    // Writing a command while not ready produces an error
+    if (spi_get_ready(spi) != SPI_TRISTATE_TRUE) flags |= SPI_FLAG_NOT_READY;
+    3d90:	4705                	li	a4,1
+    3d92:	00e78863          	beq	a5,a4,3da2 <spi_set_command+0xd4>
+    3d96:	fec42783          	lw	a5,-20(s0)
+    3d9a:	0807e793          	ori	a5,a5,128
+    3d9e:	fef42623          	sw	a5,-20(s0)
+    if (flags) return flags;
+    3da2:	fec42783          	lw	a5,-20(s0)
+    3da6:	c781                	beqz	a5,3dae <spi_set_command+0xe0>
+    3da8:	fec42783          	lw	a5,-20(s0)
+    3dac:	a039                	j	3dba <spi_set_command+0xec>
+
+    SPI_HW(spi)->COMMAND = cmd_reg;
+    3dae:	fcc42783          	lw	a5,-52(s0)
+    3db2:	fc842703          	lw	a4,-56(s0)
+    3db6:	d3d8                	sw	a4,36(a5)
+    return SPI_FLAG_OK;
+    3db8:	4781                	li	a5,0
+}
+    3dba:	853e                	mv	a0,a5
+    3dbc:	50f2                	lw	ra,60(sp)
+    3dbe:	5462                	lw	s0,56(sp)
+    3dc0:	6121                	addi	sp,sp,64
+    3dc2:	8082                	ret
+
+00003dc4 <spi_write_word>:
+
+spi_return_flags_e spi_write_word(spi_host_t* spi, uint32_t wdata)
+{
+    3dc4:	1101                	addi	sp,sp,-32
+    3dc6:	ce06                	sw	ra,28(sp)
+    3dc8:	cc22                	sw	s0,24(sp)
+    3dca:	1000                	addi	s0,sp,32
+    3dcc:	fea42623          	sw	a0,-20(s0)
+    3dd0:	feb42423          	sw	a1,-24(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3dd4:	fec42783          	lw	a5,-20(s0)
+    3dd8:	e399                	bnez	a5,3dde <spi_write_word+0x1a>
+    3dda:	4785                	li	a5,1
+    3ddc:	a01d                	j	3e02 <spi_write_word+0x3e>
+    // Check we're not overflowing
+    if (spi_get_tx_queue_depth(spi) >= SPI_HOST_PARAM_TX_DEPTH) 
+    3dde:	fec42503          	lw	a0,-20(s0)
+    3de2:	39c5                	jal	3ad2 <spi_get_tx_queue_depth>
+    3de4:	87aa                	mv	a5,a0
+    3de6:	873e                	mv	a4,a5
+    3de8:	04700793          	li	a5,71
+    3dec:	00e7f563          	bgeu	a5,a4,3df6 <spi_write_word+0x32>
+        return SPI_FLAG_TX_QUEUE_FULL;
+    3df0:	02000793          	li	a5,32
+    3df4:	a039                	j	3e02 <spi_write_word+0x3e>
+    SPI_HW(spi)->TXDATA = wdata;
+    3df6:	fec42783          	lw	a5,-20(s0)
+    3dfa:	fe842703          	lw	a4,-24(s0)
+    3dfe:	d7d8                	sw	a4,44(a5)
+    return SPI_FLAG_OK;
+    3e00:	4781                	li	a5,0
+}
+    3e02:	853e                	mv	a0,a5
+    3e04:	40f2                	lw	ra,28(sp)
+    3e06:	4462                	lw	s0,24(sp)
+    3e08:	6105                	addi	sp,sp,32
+    3e0a:	8082                	ret
+
+00003e0c <spi_read_word>:
+    SPI_HW(spi)->TXDATA = bdata;
+    return SPI_FLAG_OK;
+}
+
+spi_return_flags_e spi_read_word(spi_host_t* spi, uint32_t* dst)
+{
+    3e0c:	1101                	addi	sp,sp,-32
+    3e0e:	ce06                	sw	ra,28(sp)
+    3e10:	cc22                	sw	s0,24(sp)
+    3e12:	1000                	addi	s0,sp,32
+    3e14:	fea42623          	sw	a0,-20(s0)
+    3e18:	feb42423          	sw	a1,-24(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3e1c:	fec42783          	lw	a5,-20(s0)
+    3e20:	e399                	bnez	a5,3e26 <spi_read_word+0x1a>
+    3e22:	4785                	li	a5,1
+    3e24:	a005                	j	3e44 <spi_read_word+0x38>
+    // Check we're not underflowing
+    if (spi_get_rx_queue_depth(spi) == 0) return SPI_FLAG_RX_QUEUE_EMPTY;
+    3e26:	fec42503          	lw	a0,-20(s0)
+    3e2a:	31d5                	jal	3b0e <spi_get_rx_queue_depth>
+    3e2c:	87aa                	mv	a5,a0
+    3e2e:	e781                	bnez	a5,3e36 <spi_read_word+0x2a>
+    3e30:	04000793          	li	a5,64
+    3e34:	a801                	j	3e44 <spi_read_word+0x38>
+    *dst = SPI_HW(spi)->RXDATA;
+    3e36:	fec42783          	lw	a5,-20(s0)
+    3e3a:	5798                	lw	a4,40(a5)
+    3e3c:	fe842783          	lw	a5,-24(s0)
+    3e40:	c398                	sw	a4,0(a5)
+    return SPI_FLAG_OK;
+    3e42:	4781                	li	a5,0
+}
+    3e44:	853e                	mv	a0,a5
+    3e46:	40f2                	lw	ra,28(sp)
+    3e48:	4462                	lw	s0,24(sp)
+    3e4a:	6105                	addi	sp,sp,32
+    3e4c:	8082                	ret
+
+00003e4e <spi_enable_evt_intr>:
+
+spi_return_flags_e spi_enable_evt_intr(spi_host_t* spi, bool enable)
+{
+    3e4e:	1101                	addi	sp,sp,-32
+    3e50:	ce06                	sw	ra,28(sp)
+    3e52:	cc22                	sw	s0,24(sp)
+    3e54:	1000                	addi	s0,sp,32
+    3e56:	fea42623          	sw	a0,-20(s0)
+    3e5a:	87ae                	mv	a5,a1
+    3e5c:	fef405a3          	sb	a5,-21(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3e60:	fec42783          	lw	a5,-20(s0)
+    3e64:	e399                	bnez	a5,3e6a <spi_enable_evt_intr+0x1c>
+    3e66:	4785                	li	a5,1
+    3e68:	a005                	j	3e88 <spi_enable_evt_intr+0x3a>
+    SPI_HW(spi)->INTR_ENABLE = bitfield_write(SPI_HW(spi)->INTR_ENABLE, BIT_MASK_1, 
+    3e6a:	fec42783          	lw	a5,-20(s0)
+    3e6e:	43dc                	lw	a5,4(a5)
+    3e70:	feb44703          	lbu	a4,-21(s0)
+    3e74:	86ba                	mv	a3,a4
+    3e76:	4605                	li	a2,1
+    3e78:	4585                	li	a1,1
+    3e7a:	853e                	mv	a0,a5
+    3e7c:	34cd                	jal	395e <bitfield_write.lto_priv.3>
+    3e7e:	872a                	mv	a4,a0
+    3e80:	fec42783          	lw	a5,-20(s0)
+    3e84:	c3d8                	sw	a4,4(a5)
+                                              SPI_HOST_INTR_ENABLE_SPI_EVENT_BIT, 
+                                              enable);
+    return SPI_FLAG_OK;
+    3e86:	4781                	li	a5,0
+}
+    3e88:	853e                	mv	a0,a5
+    3e8a:	40f2                	lw	ra,28(sp)
+    3e8c:	4462                	lw	s0,24(sp)
+    3e8e:	6105                	addi	sp,sp,32
+    3e90:	8082                	ret
+
+00003e92 <spi_enable_error_intr>:
+
+spi_return_flags_e spi_enable_error_intr(spi_host_t* spi, bool enable)
+{
+    3e92:	1101                	addi	sp,sp,-32
+    3e94:	ce06                	sw	ra,28(sp)
+    3e96:	cc22                	sw	s0,24(sp)
+    3e98:	1000                	addi	s0,sp,32
+    3e9a:	fea42623          	sw	a0,-20(s0)
+    3e9e:	87ae                	mv	a5,a1
+    3ea0:	fef405a3          	sb	a5,-21(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3ea4:	fec42783          	lw	a5,-20(s0)
+    3ea8:	e399                	bnez	a5,3eae <spi_enable_error_intr+0x1c>
+    3eaa:	4785                	li	a5,1
+    3eac:	a005                	j	3ecc <spi_enable_error_intr+0x3a>
+    SPI_HW(spi)->INTR_ENABLE = bitfield_write(SPI_HW(spi)->INTR_ENABLE, BIT_MASK_1, 
+    3eae:	fec42783          	lw	a5,-20(s0)
+    3eb2:	43dc                	lw	a5,4(a5)
+    3eb4:	feb44703          	lbu	a4,-21(s0)
+    3eb8:	86ba                	mv	a3,a4
+    3eba:	4601                	li	a2,0
+    3ebc:	4585                	li	a1,1
+    3ebe:	853e                	mv	a0,a5
+    3ec0:	3c79                	jal	395e <bitfield_write.lto_priv.3>
+    3ec2:	872a                	mv	a4,a0
+    3ec4:	fec42783          	lw	a5,-20(s0)
+    3ec8:	c3d8                	sw	a4,4(a5)
+                                              SPI_HOST_INTR_STATE_ERROR_BIT, 
+                                              enable);
+    return SPI_FLAG_OK;
+    3eca:	4781                	li	a5,0
+}
+    3ecc:	853e                	mv	a0,a5
+    3ece:	40f2                	lw	ra,28(sp)
+    3ed0:	4462                	lw	s0,24(sp)
+    3ed2:	6105                	addi	sp,sp,32
+    3ed4:	8082                	ret
+
+00003ed6 <spi_output_enable>:
+
+spi_return_flags_e spi_output_enable(spi_host_t* spi, bool enable)
+{
+    3ed6:	1101                	addi	sp,sp,-32
+    3ed8:	ce06                	sw	ra,28(sp)
+    3eda:	cc22                	sw	s0,24(sp)
+    3edc:	1000                	addi	s0,sp,32
+    3ede:	fea42623          	sw	a0,-20(s0)
+    3ee2:	87ae                	mv	a5,a1
+    3ee4:	fef405a3          	sb	a5,-21(s0)
+    SPI_NULL_CHECK(spi, SPI_FLAG_NULL_PTR)
+    3ee8:	fec42783          	lw	a5,-20(s0)
+    3eec:	e399                	bnez	a5,3ef2 <spi_output_enable+0x1c>
+    3eee:	4785                	li	a5,1
+    3ef0:	a005                	j	3f10 <spi_output_enable+0x3a>
+    SPI_HW(spi)->CONTROL = bitfield_write(SPI_HW(spi)->CONTROL, BIT_MASK_1, 
+    3ef2:	fec42783          	lw	a5,-20(s0)
+    3ef6:	4b9c                	lw	a5,16(a5)
+    3ef8:	feb44703          	lbu	a4,-21(s0)
+    3efc:	86ba                	mv	a3,a4
+    3efe:	4675                	li	a2,29
+    3f00:	4585                	li	a1,1
+    3f02:	853e                	mv	a0,a5
+    3f04:	3ca9                	jal	395e <bitfield_write.lto_priv.3>
+    3f06:	872a                	mv	a4,a0
+    3f08:	fec42783          	lw	a5,-20(s0)
+    3f0c:	cb98                	sw	a4,16(a5)
+                                          SPI_HOST_CONTROL_OUTPUT_EN_BIT, enable);
+    return SPI_FLAG_OK;
+    3f0e:	4781                	li	a5,0
+}
+    3f10:	853e                	mv	a0,a5
+    3f12:	40f2                	lw	ra,28(sp)
+    3f14:	4462                	lw	s0,24(sp)
+    3f16:	6105                	addi	sp,sp,32
+    3f18:	8082                	ret
+
+00003f1a <fic_irq_spi>:
+    }
+}
+
+// FIC SPI Host 1 interrupt handler
+void fic_irq_spi(void)
+{
+    3f1a:	1101                	addi	sp,sp,-32
+    3f1c:	ce06                	sw	ra,28(sp)
+    3f1e:	cc22                	sw	s0,24(sp)
+    3f20:	1000                	addi	s0,sp,32
+    spi_error_e errors;
+    // Get errors and check if error triggered the interrupt
+    spi_get_errors(spi_host1, &errors);
+    3f22:	fec40793          	addi	a5,s0,-20
+    3f26:	85be                	mv	a1,a5
+    3f28:	30010537          	lui	a0,0x30010
+    3f2c:	36a5                	jal	3a94 <spi_get_errors>
+    if (errors) {
+    3f2e:	fec42783          	lw	a5,-20(s0)
+    3f32:	c799                	beqz	a5,3f40 <fic_irq_spi+0x26>
+        // Call either weak error handler in this module, or user implementation
+        spi_intr_handler_error_host(errors);
+    3f34:	fec42783          	lw	a5,-20(s0)
+    3f38:	853e                	mv	a0,a5
+    3f3a:	0e0010ef          	jal	501a <spi_intr_handler_error_host>
+        spi_acknowledge_event(spi_host1);
+        spi_get_events(spi_host1, &events);
+        // Call either weak event handler in this module, or user implementation
+        spi_intr_handler_event_host(events);
+    }
+}
+    3f3e:	a839                	j	3f5c <fic_irq_spi+0x42>
+        spi_acknowledge_event(spi_host1);
+    3f40:	30010537          	lui	a0,0x30010
+    3f44:	2abd                	jal	40c2 <spi_acknowledge_event>
+        spi_get_events(spi_host1, &events);
+    3f46:	fe840793          	addi	a5,s0,-24
+    3f4a:	85be                	mv	a1,a5
+    3f4c:	30010537          	lui	a0,0x30010
+    3f50:	208d                	jal	3fb2 <spi_get_events>
+        spi_intr_handler_event_host(events);
+    3f52:	fe842783          	lw	a5,-24(s0)
+    3f56:	853e                	mv	a0,a5
+    3f58:	090010ef          	jal	4fe8 <spi_intr_handler_event_host>
+}
+    3f5c:	0001                	nop
+    3f5e:	40f2                	lw	ra,28(sp)
+    3f60:	4462                	lw	s0,24(sp)
+    3f62:	6105                	addi	sp,sp,32
+    3f64:	8082                	ret
+
+00003f66 <fic_irq_spi_flash>:
+
+// FIC SPI Flash interrupt handler
+void fic_irq_spi_flash(void)
+{
+    3f66:	1101                	addi	sp,sp,-32
+    3f68:	ce06                	sw	ra,28(sp)
+    3f6a:	cc22                	sw	s0,24(sp)
+    3f6c:	1000                	addi	s0,sp,32
+    spi_error_e errors;
+    // Get errors and check if error triggered the interrupt
+    spi_get_errors(spi_flash, &errors);
+    3f6e:	fec40793          	addi	a5,s0,-20
+    3f72:	85be                	mv	a1,a5
+    3f74:	20020537          	lui	a0,0x20020
+    3f78:	3e31                	jal	3a94 <spi_get_errors>
+    if (errors) {
+    3f7a:	fec42783          	lw	a5,-20(s0)
+    3f7e:	c799                	beqz	a5,3f8c <fic_irq_spi_flash+0x26>
+        // Call either weak error handler in this module, or user implementation
+        spi_intr_handler_error_flash(errors);
+    3f80:	fec42783          	lw	a5,-20(s0)
+    3f84:	853e                	mv	a0,a5
+    3f86:	030010ef          	jal	4fb6 <spi_intr_handler_error_flash>
+        spi_acknowledge_event(spi_flash);
+        spi_get_events(spi_flash, &events);
+        // Call either weak event handler in this module, or user implementation
+        spi_intr_handler_event_flash(events);
+    }
+}
+    3f8a:	a839                	j	3fa8 <fic_irq_spi_flash+0x42>
+        spi_acknowledge_event(spi_flash);
+    3f8c:	20020537          	lui	a0,0x20020
+    3f90:	2a0d                	jal	40c2 <spi_acknowledge_event>
+        spi_get_events(spi_flash, &events);
+    3f92:	fe840793          	addi	a5,s0,-24
+    3f96:	85be                	mv	a1,a5
+    3f98:	20020537          	lui	a0,0x20020
+    3f9c:	2819                	jal	3fb2 <spi_get_events>
+        spi_intr_handler_event_flash(events);
+    3f9e:	fe842783          	lw	a5,-24(s0)
+    3fa2:	853e                	mv	a0,a5
+    3fa4:	7e1000ef          	jal	4f84 <spi_intr_handler_event_flash>
+}
+    3fa8:	0001                	nop
+    3faa:	40f2                	lw	ra,28(sp)
+    3fac:	4462                	lw	s0,24(sp)
+    3fae:	6105                	addi	sp,sp,32
+    3fb0:	8082                	ret
+
+00003fb2 <spi_get_events>:
+/**                                                                        **/
+/*                            LOCAL FUNCTIONS                               */
+/**                                                                        **/
+/****************************************************************************/
+
+spi_return_flags_e spi_get_events(spi_host_t* spi, spi_event_e* events) {
+    3fb2:	7179                	addi	sp,sp,-48
+    3fb4:	d606                	sw	ra,44(sp)
+    3fb6:	d422                	sw	s0,40(sp)
+    3fb8:	1800                	addi	s0,sp,48
+    3fba:	fca42e23          	sw	a0,-36(s0)
+    3fbe:	fcb42c23          	sw	a1,-40(s0)
+    3fc2:	fdc42783          	lw	a5,-36(s0)
+    3fc6:	fef42623          	sw	a5,-20(s0)
+    status.value = SPI_HW(spi)->STATUS; // Assuming SPI_HW(spi)->STATUS returns a uint32_t value representing the status
+    3fca:	fec42783          	lw	a5,-20(s0)
+    3fce:	4bdc                	lw	a5,20(a5)
+    3fd0:	fef42223          	sw	a5,-28(s0)
+    return status;
+    3fd4:	fe442783          	lw	a5,-28(s0)
+    3fd8:	fef42423          	sw	a5,-24(s0)
+    // variable to the event handlers.
+    volatile spi_status_t status = spi_get_status(spi);
+    // Also, we do not need any NULL check since this function is made to be called
+    // __ONLY__ from `handler_irq_spi`, `fic_irq_spi`, `fic_irq_spi_flash`.
+    // Therefore we know that spi argument will not be NULL.
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    3fdc:	fd842783          	lw	a5,-40(s0)
+    3fe0:	4398                	lw	a4,0(a5)
+                             SPI_HOST_EVENT_ENABLE_RXFULL_BIT,  status.rxfull);
+    3fe2:	fe842783          	lw	a5,-24(s0)
+    3fe6:	83e5                	srli	a5,a5,0x19
+    3fe8:	8b85                	andi	a5,a5,1
+    3fea:	0ff7f793          	zext.b	a5,a5
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    3fee:	86be                	mv	a3,a5
+    3ff0:	4601                	li	a2,0
+    3ff2:	4585                	li	a1,1
+    3ff4:	853a                	mv	a0,a4
+    3ff6:	32a5                	jal	395e <bitfield_write.lto_priv.3>
+    3ff8:	872a                	mv	a4,a0
+    3ffa:	fd842783          	lw	a5,-40(s0)
+    3ffe:	c398                	sw	a4,0(a5)
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    4000:	fd842783          	lw	a5,-40(s0)
+    4004:	4398                	lw	a4,0(a5)
+                             SPI_HOST_EVENT_ENABLE_TXEMPTY_BIT, status.txempty);
+    4006:	fe842783          	lw	a5,-24(s0)
+    400a:	83f1                	srli	a5,a5,0x1c
+    400c:	8b85                	andi	a5,a5,1
+    400e:	0ff7f793          	zext.b	a5,a5
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    4012:	86be                	mv	a3,a5
+    4014:	4605                	li	a2,1
+    4016:	4585                	li	a1,1
+    4018:	853a                	mv	a0,a4
+    401a:	3291                	jal	395e <bitfield_write.lto_priv.3>
+    401c:	872a                	mv	a4,a0
+    401e:	fd842783          	lw	a5,-40(s0)
+    4022:	c398                	sw	a4,0(a5)
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    4024:	fd842783          	lw	a5,-40(s0)
+    4028:	4398                	lw	a4,0(a5)
+                             SPI_HOST_EVENT_ENABLE_RXWM_BIT,    status.rxwm);
+    402a:	fe842783          	lw	a5,-24(s0)
+    402e:	83d1                	srli	a5,a5,0x14
+    4030:	8b85                	andi	a5,a5,1
+    4032:	0ff7f793          	zext.b	a5,a5
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    4036:	86be                	mv	a3,a5
+    4038:	4609                	li	a2,2
+    403a:	4585                	li	a1,1
+    403c:	853a                	mv	a0,a4
+    403e:	3205                	jal	395e <bitfield_write.lto_priv.3>
+    4040:	872a                	mv	a4,a0
+    4042:	fd842783          	lw	a5,-40(s0)
+    4046:	c398                	sw	a4,0(a5)
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    4048:	fd842783          	lw	a5,-40(s0)
+    404c:	4398                	lw	a4,0(a5)
+                             SPI_HOST_EVENT_ENABLE_TXWM_BIT,    status.txwm);
+    404e:	fe842783          	lw	a5,-24(s0)
+    4052:	83e9                	srli	a5,a5,0x1a
+    4054:	8b85                	andi	a5,a5,1
+    4056:	0ff7f793          	zext.b	a5,a5
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    405a:	86be                	mv	a3,a5
+    405c:	460d                	li	a2,3
+    405e:	4585                	li	a1,1
+    4060:	853a                	mv	a0,a4
+    4062:	38f5                	jal	395e <bitfield_write.lto_priv.3>
+    4064:	872a                	mv	a4,a0
+    4066:	fd842783          	lw	a5,-40(s0)
+    406a:	c398                	sw	a4,0(a5)
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    406c:	fd842783          	lw	a5,-40(s0)
+    4070:	4398                	lw	a4,0(a5)
+                             SPI_HOST_EVENT_ENABLE_READY_BIT,   status.ready);
+    4072:	fe842783          	lw	a5,-24(s0)
+    4076:	83fd                	srli	a5,a5,0x1f
+    4078:	0ff7f793          	zext.b	a5,a5
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    407c:	86be                	mv	a3,a5
+    407e:	4611                	li	a2,4
+    4080:	4585                	li	a1,1
+    4082:	853a                	mv	a0,a4
+    4084:	38e9                	jal	395e <bitfield_write.lto_priv.3>
+    4086:	872a                	mv	a4,a0
+    4088:	fd842783          	lw	a5,-40(s0)
+    408c:	c398                	sw	a4,0(a5)
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    408e:	fd842783          	lw	a5,-40(s0)
+    4092:	4398                	lw	a4,0(a5)
+                             SPI_HOST_EVENT_ENABLE_IDLE_BIT,   ~status.active);
+    4094:	fe842783          	lw	a5,-24(s0)
+    4098:	83f9                	srli	a5,a5,0x1e
+    409a:	8b85                	andi	a5,a5,1
+    409c:	0ff7f793          	zext.b	a5,a5
+    40a0:	fff7c793          	not	a5,a5
+    *events = bitfield_write(*events, BIT_MASK_1, 
+    40a4:	86be                	mv	a3,a5
+    40a6:	4615                	li	a2,5
+    40a8:	4585                	li	a1,1
+    40aa:	853a                	mv	a0,a4
+    40ac:	384d                	jal	395e <bitfield_write.lto_priv.3>
+    40ae:	872a                	mv	a4,a0
+    40b0:	fd842783          	lw	a5,-40(s0)
+    40b4:	c398                	sw	a4,0(a5)
+    return SPI_FLAG_OK;
+    40b6:	4781                	li	a5,0
+}
+    40b8:	853e                	mv	a0,a5
+    40ba:	50b2                	lw	ra,44(sp)
+    40bc:	5422                	lw	s0,40(sp)
+    40be:	6145                	addi	sp,sp,48
+    40c0:	8082                	ret
+
+000040c2 <spi_acknowledge_event>:
+
+spi_return_flags_e spi_acknowledge_event(spi_host_t* spi) {
+    40c2:	1101                	addi	sp,sp,-32
+    40c4:	ce06                	sw	ra,28(sp)
+    40c6:	cc22                	sw	s0,24(sp)
+    40c8:	1000                	addi	s0,sp,32
+    40ca:	fea42623          	sw	a0,-20(s0)
+    // We do not need any NULL check since this function is made to be called
+    // __ONLY__ from `handler_irq_spi`, `fic_irq_spi`, `fic_irq_spi_flash`.
+    // Therefore we know that spi argument will not be NULL.
+    SPI_HW(spi)->INTR_STATE = bitfield_write(SPI_HW(spi)->INTR_STATE, BIT_MASK_1, 
+    40ce:	fec42783          	lw	a5,-20(s0)
+    40d2:	439c                	lw	a5,0(a5)
+    40d4:	4685                	li	a3,1
+    40d6:	4605                	li	a2,1
+    40d8:	4585                	li	a1,1
+    40da:	853e                	mv	a0,a5
+    40dc:	3049                	jal	395e <bitfield_write.lto_priv.3>
+    40de:	872a                	mv	a4,a0
+    40e0:	fec42783          	lw	a5,-20(s0)
+    40e4:	c398                	sw	a4,0(a5)
+                                             SPI_HOST_INTR_STATE_SPI_EVENT_BIT, true);
+    return SPI_FLAG_OK;
+    40e6:	4781                	li	a5,0
+}
+    40e8:	853e                	mv	a0,a5
+    40ea:	40f2                	lw	ra,28(sp)
+    40ec:	4462                	lw	s0,24(sp)
+    40ee:	6105                	addi	sp,sp,32
+    40f0:	8082                	ret
+
+000040f2 <bitfield_field32_read.lto_priv.3>:
+                                      bitfield_field32_t field) {
+    40f2:	1101                	addi	sp,sp,-32
+    40f4:	ce06                	sw	ra,28(sp)
+    40f6:	cc22                	sw	s0,24(sp)
+    40f8:	1000                	addi	s0,sp,32
+    40fa:	fea42623          	sw	a0,-20(s0)
+    40fe:	feb42223          	sw	a1,-28(s0)
+    4102:	fec42423          	sw	a2,-24(s0)
+  return (bitfield >> field.index) & field.mask;
+    4106:	fe842783          	lw	a5,-24(s0)
+    410a:	fec42703          	lw	a4,-20(s0)
+    410e:	00f75733          	srl	a4,a4,a5
+    4112:	fe442783          	lw	a5,-28(s0)
+    4116:	8ff9                	and	a5,a5,a4
+}
+    4118:	853e                	mv	a0,a5
+    411a:	40f2                	lw	ra,28(sp)
+    411c:	4462                	lw	s0,24(sp)
+    411e:	6105                	addi	sp,sp,32
+    4120:	8082                	ret
+
+00004122 <bitfield_field32_write.lto_priv.5>:
+                                       uint32_t value) {
+    4122:	1101                	addi	sp,sp,-32
+    4124:	ce06                	sw	ra,28(sp)
+    4126:	cc22                	sw	s0,24(sp)
+    4128:	1000                	addi	s0,sp,32
+    412a:	fea42623          	sw	a0,-20(s0)
+    412e:	feb42223          	sw	a1,-28(s0)
+    4132:	fec42423          	sw	a2,-24(s0)
+    4136:	fed42023          	sw	a3,-32(s0)
+  bitfield &= ~(field.mask << field.index);
+    413a:	fe442703          	lw	a4,-28(s0)
+    413e:	fe842783          	lw	a5,-24(s0)
+    4142:	00f717b3          	sll	a5,a4,a5
+    4146:	fff7c793          	not	a5,a5
+    414a:	fec42703          	lw	a4,-20(s0)
+    414e:	8ff9                	and	a5,a5,a4
+    4150:	fef42623          	sw	a5,-20(s0)
+  bitfield |= (value & field.mask) << field.index;
+    4154:	fe442703          	lw	a4,-28(s0)
+    4158:	fe042783          	lw	a5,-32(s0)
+    415c:	8f7d                	and	a4,a4,a5
+    415e:	fe842783          	lw	a5,-24(s0)
+    4162:	00f717b3          	sll	a5,a4,a5
+    4166:	fec42703          	lw	a4,-20(s0)
+    416a:	8fd9                	or	a5,a5,a4
+    416c:	fef42623          	sw	a5,-20(s0)
+  return bitfield;
+    4170:	fec42783          	lw	a5,-20(s0)
+}
+    4174:	853e                	mv	a0,a5
+    4176:	40f2                	lw	ra,28(sp)
+    4178:	4462                	lw	s0,24(sp)
+    417a:	6105                	addi	sp,sp,32
+    417c:	8082                	ret
+
+0000417e <bitfield_bit32_to_field32.lto_priv.5>:
+    bitfield_bit32_index_t bit_index) {
+    417e:	7179                	addi	sp,sp,-48
+    4180:	d606                	sw	ra,44(sp)
+    4182:	d422                	sw	s0,40(sp)
+    4184:	1800                	addi	s0,sp,48
+    4186:	fca42e23          	sw	a0,-36(s0)
+  return (bitfield_field32_t){
+    418a:	4785                	li	a5,1
+    418c:	fef42423          	sw	a5,-24(s0)
+    4190:	fdc42783          	lw	a5,-36(s0)
+    4194:	fef42623          	sw	a5,-20(s0)
+    4198:	fe842703          	lw	a4,-24(s0)
+    419c:	fec42783          	lw	a5,-20(s0)
+    41a0:	863a                	mv	a2,a4
+    41a2:	86be                	mv	a3,a5
+    41a4:	8732                	mv	a4,a2
+    41a6:	87b6                	mv	a5,a3
+}
+    41a8:	853a                	mv	a0,a4
+    41aa:	85be                	mv	a1,a5
+    41ac:	50b2                	lw	ra,44(sp)
+    41ae:	5422                	lw	s0,40(sp)
+    41b0:	6145                	addi	sp,sp,48
+    41b2:	8082                	ret
+
+000041b4 <bitfield_bit32_read.lto_priv.2>:
+                                bitfield_bit32_index_t bit_index) {
+    41b4:	7179                	addi	sp,sp,-48
+    41b6:	d606                	sw	ra,44(sp)
+    41b8:	d422                	sw	s0,40(sp)
+    41ba:	1800                	addi	s0,sp,48
+    41bc:	fca42e23          	sw	a0,-36(s0)
+    41c0:	fcb42c23          	sw	a1,-40(s0)
+  return bitfield_field32_read(bitfield,
+    41c4:	fd842503          	lw	a0,-40(s0)
+    41c8:	3f5d                	jal	417e <bitfield_bit32_to_field32.lto_priv.5>
+    41ca:	872a                	mv	a4,a0
+    41cc:	87ae                	mv	a5,a1
+    41ce:	fee42423          	sw	a4,-24(s0)
+    41d2:	fef42623          	sw	a5,-20(s0)
+    41d6:	fe842583          	lw	a1,-24(s0)
+    41da:	fec42603          	lw	a2,-20(s0)
+    41de:	fdc42503          	lw	a0,-36(s0)
+    41e2:	3f01                	jal	40f2 <bitfield_field32_read.lto_priv.3>
+    41e4:	87aa                	mv	a5,a0
+                               bitfield_bit32_to_field32(bit_index)) == 0x1u;
+    41e6:	17fd                	addi	a5,a5,-1 # 7fffffff <syscalls_cpp.cpp.cfa7c3ef+0x7ffe841d>
+    41e8:	0017b793          	seqz	a5,a5
+    41ec:	0ff7f793          	zext.b	a5,a5
+}
+    41f0:	853e                	mv	a0,a5
+    41f2:	50b2                	lw	ra,44(sp)
+    41f4:	5422                	lw	s0,40(sp)
+    41f6:	6145                	addi	sp,sp,48
+    41f8:	8082                	ret
+
+000041fa <bitfield_bit32_write.lto_priv.5>:
+                                     bool value) {
+    41fa:	7179                	addi	sp,sp,-48
+    41fc:	d606                	sw	ra,44(sp)
+    41fe:	d422                	sw	s0,40(sp)
+    4200:	1800                	addi	s0,sp,48
+    4202:	fca42e23          	sw	a0,-36(s0)
+    4206:	fcb42c23          	sw	a1,-40(s0)
+    420a:	87b2                	mv	a5,a2
+    420c:	fcf40ba3          	sb	a5,-41(s0)
+  return bitfield_field32_write(bitfield, bitfield_bit32_to_field32(bit_index),
+    4210:	fd842503          	lw	a0,-40(s0)
+    4214:	37ad                	jal	417e <bitfield_bit32_to_field32.lto_priv.5>
+    4216:	872a                	mv	a4,a0
+    4218:	87ae                	mv	a5,a1
+    421a:	fee42423          	sw	a4,-24(s0)
+    421e:	fef42623          	sw	a5,-20(s0)
+    4222:	fd744783          	lbu	a5,-41(s0)
+    4226:	c399                	beqz	a5,422c <bitfield_bit32_write.lto_priv.5+0x32>
+    4228:	4785                	li	a5,1
+    422a:	a011                	j	422e <bitfield_bit32_write.lto_priv.5+0x34>
+    422c:	4781                	li	a5,0
+    422e:	86be                	mv	a3,a5
+    4230:	fe842583          	lw	a1,-24(s0)
+    4234:	fec42603          	lw	a2,-20(s0)
+    4238:	fdc42503          	lw	a0,-36(s0)
+    423c:	35dd                	jal	4122 <bitfield_field32_write.lto_priv.5>
+    423e:	87aa                	mv	a5,a0
+}
+    4240:	853e                	mv	a0,a5
+    4242:	50b2                	lw	ra,44(sp)
+    4244:	5422                	lw	s0,40(sp)
+    4246:	6145                	addi	sp,sp,48
+    4248:	8082                	ret
+
+0000424a <mmio_region_read32.lto_priv.6>:
+static inline uint32_t mmio_region_read32(mmio_region_t base, ptrdiff_t offset) {
+    424a:	1101                	addi	sp,sp,-32
+    424c:	ce06                	sw	ra,28(sp)
+    424e:	cc22                	sw	s0,24(sp)
+    4250:	1000                	addi	s0,sp,32
+    4252:	fea42623          	sw	a0,-20(s0)
+    4256:	feb42423          	sw	a1,-24(s0)
+  return ((volatile uint32_t *)base.base)[offset / sizeof(uint32_t)];
+    425a:	fec42703          	lw	a4,-20(s0)
+    425e:	fe842783          	lw	a5,-24(s0)
+    4262:	9bf1                	andi	a5,a5,-4
+    4264:	97ba                	add	a5,a5,a4
+    4266:	439c                	lw	a5,0(a5)
+}
+    4268:	853e                	mv	a0,a5
+    426a:	40f2                	lw	ra,28(sp)
+    426c:	4462                	lw	s0,24(sp)
+    426e:	6105                	addi	sp,sp,32
+    4270:	8082                	ret
+
+00004272 <mmio_region_write32.lto_priv.6>:
+                                uint32_t value) {
+    4272:	1101                	addi	sp,sp,-32
+    4274:	ce06                	sw	ra,28(sp)
+    4276:	cc22                	sw	s0,24(sp)
+    4278:	1000                	addi	s0,sp,32
+    427a:	fea42623          	sw	a0,-20(s0)
+    427e:	feb42423          	sw	a1,-24(s0)
+    4282:	fec42223          	sw	a2,-28(s0)
+  ((volatile uint32_t *)base.base)[offset / sizeof(uint32_t)] = value;
+    4286:	fec42703          	lw	a4,-20(s0)
+    428a:	fe842783          	lw	a5,-24(s0)
+    428e:	9bf1                	andi	a5,a5,-4
+    4290:	97ba                	add	a5,a5,a4
+    4292:	fe442703          	lw	a4,-28(s0)
+    4296:	c398                	sw	a4,0(a5)
+}
+    4298:	0001                	nop
+    429a:	40f2                	lw	ra,28(sp)
+    429c:	4462                	lw	s0,24(sp)
+    429e:	6105                	addi	sp,sp,32
+    42a0:	8082                	ret
+
+000042a2 <uart_reset>:
+static_assert((1UL << NCO_WIDTH) - 1 == UART_CTRL_NCO_MASK, "Bad value for NCO_WIDTH");
+//#else
+static_assert((1UL << NCO_WIDTH) - 1 == UART_CTRL_NCO_MASK, "Bad value for NCO_WIDTH");
+//#endif
+
+static void uart_reset(const uart_t *uart) {
+    42a2:	7179                	addi	sp,sp,-48
+    42a4:	d606                	sw	ra,44(sp)
+    42a6:	d422                	sw	s0,40(sp)
+    42a8:	1800                	addi	s0,sp,48
+    42aa:	fca42e23          	sw	a0,-36(s0)
+  mmio_region_write32(uart->base_addr, UART_CTRL_REG_OFFSET, 0u);
+    42ae:	fdc42783          	lw	a5,-36(s0)
+    42b2:	4601                	li	a2,0
+    42b4:	45b1                	li	a1,12
+    42b6:	4388                	lw	a0,0(a5)
+    42b8:	3f6d                	jal	4272 <mmio_region_write32.lto_priv.6>
+
+  // Write to the relevant bits clears the FIFOs.
+  uint32_t reg = 0;
+    42ba:	fe042623          	sw	zero,-20(s0)
+  reg = bitfield_bit32_write(reg, UART_FIFO_CTRL_RXRST_BIT, true);
+    42be:	4605                	li	a2,1
+    42c0:	4581                	li	a1,0
+    42c2:	fec42503          	lw	a0,-20(s0)
+    42c6:	3f15                	jal	41fa <bitfield_bit32_write.lto_priv.5>
+    42c8:	fea42623          	sw	a0,-20(s0)
+  reg = bitfield_bit32_write(reg, UART_FIFO_CTRL_TXRST_BIT, true);
+    42cc:	4605                	li	a2,1
+    42ce:	4585                	li	a1,1
+    42d0:	fec42503          	lw	a0,-20(s0)
+    42d4:	371d                	jal	41fa <bitfield_bit32_write.lto_priv.5>
+    42d6:	fea42623          	sw	a0,-20(s0)
+  mmio_region_write32(uart->base_addr, UART_FIFO_CTRL_REG_OFFSET, reg);
+    42da:	fdc42783          	lw	a5,-36(s0)
+    42de:	fec42603          	lw	a2,-20(s0)
+    42e2:	45f1                	li	a1,28
+    42e4:	4388                	lw	a0,0(a5)
+    42e6:	3771                	jal	4272 <mmio_region_write32.lto_priv.6>
+
+  mmio_region_write32(uart->base_addr, UART_OVRD_REG_OFFSET, 0u);
+    42e8:	fdc42783          	lw	a5,-36(s0)
+    42ec:	4601                	li	a2,0
+    42ee:	02400593          	li	a1,36
+    42f2:	4388                	lw	a0,0(a5)
+    42f4:	3fbd                	jal	4272 <mmio_region_write32.lto_priv.6>
+  mmio_region_write32(uart->base_addr, UART_TIMEOUT_CTRL_REG_OFFSET, 0u);
+    42f6:	fdc42783          	lw	a5,-36(s0)
+    42fa:	4601                	li	a2,0
+    42fc:	02c00593          	li	a1,44
+    4300:	4388                	lw	a0,0(a5)
+    4302:	3f85                	jal	4272 <mmio_region_write32.lto_priv.6>
+  mmio_region_write32(uart->base_addr, UART_INTR_ENABLE_REG_OFFSET, 0u);
+    4304:	fdc42783          	lw	a5,-36(s0)
+    4308:	4601                	li	a2,0
+    430a:	4591                	li	a1,4
+    430c:	4388                	lw	a0,0(a5)
+    430e:	3795                	jal	4272 <mmio_region_write32.lto_priv.6>
+  mmio_region_write32(uart->base_addr, UART_INTR_STATE_REG_OFFSET, UINT32_MAX);
+    4310:	fdc42783          	lw	a5,-36(s0)
+    4314:	567d                	li	a2,-1
+    4316:	4581                	li	a1,0
+    4318:	4388                	lw	a0,0(a5)
+    431a:	3fa1                	jal	4272 <mmio_region_write32.lto_priv.6>
+}
+    431c:	0001                	nop
+    431e:	50b2                	lw	ra,44(sp)
+    4320:	5422                	lw	s0,40(sp)
+    4322:	6145                	addi	sp,sp,48
+    4324:	8082                	ret
+
+00004326 <uart_init>:
+
+system_error_t uart_init(const uart_t *uart) {
+    4326:	7179                	addi	sp,sp,-48
+    4328:	d606                	sw	ra,44(sp)
+    432a:	d422                	sw	s0,40(sp)
+    432c:	1800                	addi	s0,sp,48
+    432e:	fca42e23          	sw	a0,-36(s0)
+  if (uart == NULL) {
+    4332:	fdc42783          	lw	a5,-36(s0)
+    4336:	e791                	bnez	a5,4342 <uart_init+0x1c>
+    return kErrorUartInvalidArgument;
+    4338:	014157b7          	lui	a5,0x1415
+    433c:	50378793          	addi	a5,a5,1283 # 1415503 <syscalls_cpp.cpp.cfa7c3ef+0x13fd921>
+    4340:	a0f9                	j	440e <uart_init+0xe8>
+  }
+
+  if (uart->baudrate == 0 || uart->clk_freq_hz == 0) {
+    4342:	fdc42783          	lw	a5,-36(s0)
+    4346:	43dc                	lw	a5,4(a5)
+    4348:	c789                	beqz	a5,4352 <uart_init+0x2c>
+    434a:	fdc42783          	lw	a5,-36(s0)
+    434e:	4b9c                	lw	a5,16(a5)
+    4350:	e791                	bnez	a5,435c <uart_init+0x36>
+    return kErrorUartInvalidArgument;
+    4352:	014157b7          	lui	a5,0x1415
+    4356:	50378793          	addi	a5,a5,1283 # 1415503 <syscalls_cpp.cpp.cfa7c3ef+0x13fd921>
+    435a:	a855                	j	440e <uart_init+0xe8>
+  }
+
+  uint32_t nco_masked = uart->nco & UART_CTRL_NCO_MASK;
+    435c:	fdc42783          	lw	a5,-36(s0)
+    4360:	4798                	lw	a4,8(a5)
+    4362:	47dc                	lw	a5,12(a5)
+    4364:	87ba                	mv	a5,a4
+    4366:	0807c7b3          	zext.h	a5,a5
+    436a:	fef42623          	sw	a5,-20(s0)
+
+  // Requested baudrate is too high for the given clock frequency.
+  if (uart->nco != nco_masked) {
+    436e:	fdc42783          	lw	a5,-36(s0)
+    4372:	4798                	lw	a4,8(a5)
+    4374:	47dc                	lw	a5,12(a5)
+    4376:	fec42583          	lw	a1,-20(s0)
+    437a:	862e                	mv	a2,a1
+    437c:	4681                	li	a3,0
+    437e:	853a                	mv	a0,a4
+    4380:	85b2                	mv	a1,a2
+    4382:	00b51663          	bne	a0,a1,438e <uart_init+0x68>
+    4386:	873e                	mv	a4,a5
+    4388:	87b6                	mv	a5,a3
+    438a:	00f70763          	beq	a4,a5,4398 <uart_init+0x72>
+    return kErrorUartBadBaudRate;
+    438e:	024157b7          	lui	a5,0x2415
+    4392:	50378793          	addi	a5,a5,1283 # 2415503 <syscalls_cpp.cpp.cfa7c3ef+0x23fd921>
+    4396:	a8a5                	j	440e <uart_init+0xe8>
+  }
+
+  // Must be called before the first write to any of the UART registers.
+  uart_reset(uart);
+    4398:	fdc42503          	lw	a0,-36(s0)
+    439c:	3719                	jal	42a2 <uart_reset>
+
+  // Set baudrate, TX, no parity bits.
+  uint32_t reg = 0;
+    439e:	fe042423          	sw	zero,-24(s0)
+  reg = bitfield_field32_write(reg, UART_CTRL_NCO_FIELD, nco_masked);
+    43a2:	67c1                	lui	a5,0x10
+    43a4:	17fd                	addi	a5,a5,-1 # ffff <i2c.c.71b25690+0xb73>
+    43a6:	fef42023          	sw	a5,-32(s0)
+    43aa:	47c1                	li	a5,16
+    43ac:	fef42223          	sw	a5,-28(s0)
+    43b0:	fec42683          	lw	a3,-20(s0)
+    43b4:	fe042583          	lw	a1,-32(s0)
+    43b8:	fe442603          	lw	a2,-28(s0)
+    43bc:	fe842503          	lw	a0,-24(s0)
+    43c0:	338d                	jal	4122 <bitfield_field32_write.lto_priv.5>
+    43c2:	fea42423          	sw	a0,-24(s0)
+  reg = bitfield_bit32_write(reg, UART_CTRL_TX_BIT, true);
+    43c6:	4605                	li	a2,1
+    43c8:	4581                	li	a1,0
+    43ca:	fe842503          	lw	a0,-24(s0)
+    43ce:	3535                	jal	41fa <bitfield_bit32_write.lto_priv.5>
+    43d0:	fea42423          	sw	a0,-24(s0)
+  reg = bitfield_bit32_write(reg, UART_CTRL_PARITY_EN_BIT, false);
+    43d4:	4601                	li	a2,0
+    43d6:	4599                	li	a1,6
+    43d8:	fe842503          	lw	a0,-24(s0)
+    43dc:	3d39                	jal	41fa <bitfield_bit32_write.lto_priv.5>
+    43de:	fea42423          	sw	a0,-24(s0)
+  reg = bitfield_bit32_write(reg, UART_CTRL_RX_BIT, true);
+    43e2:	4605                	li	a2,1
+    43e4:	4585                	li	a1,1
+    43e6:	fe842503          	lw	a0,-24(s0)
+    43ea:	3d01                	jal	41fa <bitfield_bit32_write.lto_priv.5>
+    43ec:	fea42423          	sw	a0,-24(s0)
+  mmio_region_write32(uart->base_addr, UART_CTRL_REG_OFFSET, reg);
+    43f0:	fdc42783          	lw	a5,-36(s0)
+    43f4:	fe842603          	lw	a2,-24(s0)
+    43f8:	45b1                	li	a1,12
+    43fa:	4388                	lw	a0,0(a5)
+    43fc:	3d9d                	jal	4272 <mmio_region_write32.lto_priv.6>
+
+  // Disable interrupts.
+  mmio_region_write32(uart->base_addr, UART_INTR_ENABLE_REG_OFFSET, 0u);
+    43fe:	fdc42783          	lw	a5,-36(s0)
+    4402:	4601                	li	a2,0
+    4404:	4591                	li	a1,4
+    4406:	4388                	lw	a0,0(a5)
+    4408:	35ad                	jal	4272 <mmio_region_write32.lto_priv.6>
+  return kErrorOk;
+    440a:	73900793          	li	a5,1849
+}
+    440e:	853e                	mv	a0,a5
+    4410:	50b2                	lw	ra,44(sp)
+    4412:	5422                	lw	s0,40(sp)
+    4414:	6145                	addi	sp,sp,48
+    4416:	8082                	ret
+
+00004418 <uart_tx_full>:
+
+static bool uart_tx_full(const uart_t *uart) {
+    4418:	7179                	addi	sp,sp,-48
+    441a:	d606                	sw	ra,44(sp)
+    441c:	d422                	sw	s0,40(sp)
+    441e:	1800                	addi	s0,sp,48
+    4420:	fca42e23          	sw	a0,-36(s0)
+  uint32_t reg = mmio_region_read32(uart->base_addr, UART_STATUS_REG_OFFSET);
+    4424:	fdc42783          	lw	a5,-36(s0)
+    4428:	45c1                	li	a1,16
+    442a:	4388                	lw	a0,0(a5)
+    442c:	3d39                	jal	424a <mmio_region_read32.lto_priv.6>
+    442e:	fea42623          	sw	a0,-20(s0)
+  return bitfield_bit32_read(reg, UART_STATUS_TXFULL_BIT);
+    4432:	4581                	li	a1,0
+    4434:	fec42503          	lw	a0,-20(s0)
+    4438:	3bb5                	jal	41b4 <bitfield_bit32_read.lto_priv.2>
+    443a:	87aa                	mv	a5,a0
+}
+    443c:	853e                	mv	a0,a5
+    443e:	50b2                	lw	ra,44(sp)
+    4440:	5422                	lw	s0,40(sp)
+    4442:	6145                	addi	sp,sp,48
+    4444:	8082                	ret
+
+00004446 <uart_tx_idle>:
+
+static bool uart_tx_idle(const uart_t *uart) {
+    4446:	7179                	addi	sp,sp,-48
+    4448:	d606                	sw	ra,44(sp)
+    444a:	d422                	sw	s0,40(sp)
+    444c:	1800                	addi	s0,sp,48
+    444e:	fca42e23          	sw	a0,-36(s0)
+  uint32_t reg = mmio_region_read32(uart->base_addr, UART_STATUS_REG_OFFSET);
+    4452:	fdc42783          	lw	a5,-36(s0)
+    4456:	45c1                	li	a1,16
+    4458:	4388                	lw	a0,0(a5)
+    445a:	3bc5                	jal	424a <mmio_region_read32.lto_priv.6>
+    445c:	fea42623          	sw	a0,-20(s0)
+  return bitfield_bit32_read(reg, UART_STATUS_TXIDLE_BIT);
+    4460:	458d                	li	a1,3
+    4462:	fec42503          	lw	a0,-20(s0)
+    4466:	33b9                	jal	41b4 <bitfield_bit32_read.lto_priv.2>
+    4468:	87aa                	mv	a5,a0
+}
+    446a:	853e                	mv	a0,a5
+    446c:	50b2                	lw	ra,44(sp)
+    446e:	5422                	lw	s0,40(sp)
+    4470:	6145                	addi	sp,sp,48
+    4472:	8082                	ret
+
+00004474 <uart_putchar>:
+static bool uart_rx_empty(const uart_t *uart) {
+  uint32_t reg = mmio_region_read32(uart->base_addr, UART_STATUS_REG_OFFSET);
+  return bitfield_bit32_read(reg, UART_STATUS_RXEMPTY_BIT);
+}
+
+void uart_putchar(const uart_t *uart, uint8_t byte) {
+    4474:	7179                	addi	sp,sp,-48
+    4476:	d606                	sw	ra,44(sp)
+    4478:	d422                	sw	s0,40(sp)
+    447a:	1800                	addi	s0,sp,48
+    447c:	fca42e23          	sw	a0,-36(s0)
+    4480:	87ae                	mv	a5,a1
+    4482:	fcf40da3          	sb	a5,-37(s0)
+  // If the transmit FIFO is full, wait.
+  while (uart_tx_full(uart)) {
+    4486:	0001                	nop
+    4488:	fdc42503          	lw	a0,-36(s0)
+    448c:	3771                	jal	4418 <uart_tx_full>
+    448e:	87aa                	mv	a5,a0
+    4490:	ffe5                	bnez	a5,4488 <uart_putchar+0x14>
+  }
+  uint32_t reg = bitfield_field32_write(0, UART_WDATA_WDATA_FIELD, byte);
+    4492:	0ff00793          	li	a5,255
+    4496:	fef42223          	sw	a5,-28(s0)
+    449a:	fe042423          	sw	zero,-24(s0)
+    449e:	fdb44783          	lbu	a5,-37(s0)
+    44a2:	86be                	mv	a3,a5
+    44a4:	fe442583          	lw	a1,-28(s0)
+    44a8:	fe842603          	lw	a2,-24(s0)
+    44ac:	4501                	li	a0,0
+    44ae:	3995                	jal	4122 <bitfield_field32_write.lto_priv.5>
+    44b0:	fea42623          	sw	a0,-20(s0)
+  mmio_region_write32(uart->base_addr, UART_WDATA_REG_OFFSET, reg);
+    44b4:	fdc42783          	lw	a5,-36(s0)
+    44b8:	fec42603          	lw	a2,-20(s0)
+    44bc:	45e1                	li	a1,24
+    44be:	4388                	lw	a0,0(a5)
+    44c0:	3b4d                	jal	4272 <mmio_region_write32.lto_priv.6>
+
+  // If the transmitter is active, wait.
+  while (!uart_tx_idle(uart)) {
+    44c2:	0001                	nop
+    44c4:	fdc42503          	lw	a0,-36(s0)
+    44c8:	3fbd                	jal	4446 <uart_tx_idle>
+    44ca:	87aa                	mv	a5,a0
+    44cc:	dfe5                	beqz	a5,44c4 <uart_putchar+0x50>
+  }
+}
+    44ce:	0001                	nop
+    44d0:	0001                	nop
+    44d2:	50b2                	lw	ra,44(sp)
+    44d4:	5422                	lw	s0,40(sp)
+    44d6:	6145                	addi	sp,sp,48
+    44d8:	8082                	ret
+
+000044da <uart_write>:
+}
+
+/**
+ * Write `len` bytes to the UART TX FIFO.
+ */
+size_t uart_write(const uart_t *uart, const uint8_t *data, size_t len) {
+    44da:	7179                	addi	sp,sp,-48
+    44dc:	d606                	sw	ra,44(sp)
+    44de:	d422                	sw	s0,40(sp)
+    44e0:	1800                	addi	s0,sp,48
+    44e2:	fca42e23          	sw	a0,-36(s0)
+    44e6:	fcb42c23          	sw	a1,-40(s0)
+    44ea:	fcc42a23          	sw	a2,-44(s0)
+  size_t total = len;
+    44ee:	fd442783          	lw	a5,-44(s0)
+    44f2:	fef42623          	sw	a5,-20(s0)
+  while (len) {
+    44f6:	a01d                	j	451c <uart_write+0x42>
+    uart_putchar(uart, *data);
+    44f8:	fd842783          	lw	a5,-40(s0)
+    44fc:	0007c783          	lbu	a5,0(a5)
+    4500:	85be                	mv	a1,a5
+    4502:	fdc42503          	lw	a0,-36(s0)
+    4506:	37bd                	jal	4474 <uart_putchar>
+    data++;
+    4508:	fd842783          	lw	a5,-40(s0)
+    450c:	0785                	addi	a5,a5,1
+    450e:	fcf42c23          	sw	a5,-40(s0)
+    len--;
+    4512:	fd442783          	lw	a5,-44(s0)
+    4516:	17fd                	addi	a5,a5,-1
+    4518:	fcf42a23          	sw	a5,-44(s0)
+  while (len) {
+    451c:	fd442783          	lw	a5,-44(s0)
+    4520:	ffe1                	bnez	a5,44f8 <uart_write+0x1e>
+  }
+  return total;
+    4522:	fec42783          	lw	a5,-20(s0)
+}
+    4526:	853e                	mv	a0,a5
+    4528:	50b2                	lw	ra,44(sp)
+    452a:	5422                	lw	s0,40(sp)
+    452c:	6145                	addi	sp,sp,48
+    452e:	8082                	ret
+
+00004530 <print_exc_msg>:
+/**
+ * Default Error Handling
+ * @param msg error message supplied by caller
+ * TODO - this will be soon by a real print formatting
+ */
+static void print_exc_msg(const char *msg) {
+    4530:	7179                	addi	sp,sp,-48
+    4532:	d606                	sw	ra,44(sp)
+    4534:	d422                	sw	s0,40(sp)
+    4536:	1800                	addi	s0,sp,48
+    4538:	fca42e23          	sw	a0,-36(s0)
+  _writestr(msg );
+    453c:	fdc42503          	lw	a0,-36(s0)
+    4540:	2929                	jal	495a <_writestr>
+  uint32_t mtval; 
+  CSR_READ(CSR_REG_MTVAL, &mtval);
+    4542:	343027f3          	csrr	a5,mtval
+    4546:	fef42623          	sw	a5,-20(s0)
+  _writestr("MTVAL value is ");
+    454a:	67a9                	lui	a5,0xa
+    454c:	58878513          	addi	a0,a5,1416 # a588 <TPG.c.205146a8+0xd4a>
+    4550:	2129                	jal	495a <_writestr>
+  const char p[6] = {(mtval >> 24) & 0xFF, (mtval >> 16) & 0xFF, (mtval >> 8) & 0xFF, mtval & 0xFF, '\n', 0};
+    4552:	fec42783          	lw	a5,-20(s0)
+    4556:	83e1                	srli	a5,a5,0x18
+    4558:	0ff7f793          	zext.b	a5,a5
+    455c:	fef40223          	sb	a5,-28(s0)
+    4560:	fec42783          	lw	a5,-20(s0)
+    4564:	83c1                	srli	a5,a5,0x10
+    4566:	0ff7f793          	zext.b	a5,a5
+    456a:	fef402a3          	sb	a5,-27(s0)
+    456e:	fec42783          	lw	a5,-20(s0)
+    4572:	83a1                	srli	a5,a5,0x8
+    4574:	0ff7f793          	zext.b	a5,a5
+    4578:	fef40323          	sb	a5,-26(s0)
+    457c:	fec42783          	lw	a5,-20(s0)
+    4580:	0ff7f793          	zext.b	a5,a5
+    4584:	fef403a3          	sb	a5,-25(s0)
+    4588:	47a9                	li	a5,10
+    458a:	fef40423          	sb	a5,-24(s0)
+    458e:	fe0404a3          	sb	zero,-23(s0)
+  _writestr(p);
+    4592:	fe440793          	addi	a5,s0,-28
+    4596:	853e                	mv	a0,a5
+    4598:	26c9                	jal	495a <_writestr>
+  while (1) {
+    459a:	0001                	nop
+    459c:	bffd                	j	459a <print_exc_msg+0x6a>
+	...
+
+000045a0 <handler_exception>:
+  };
+}
+
+// Below functions are default weak exception handlers meant to be overriden
+__attribute__((weak)) void handler_exception(void) {
+    45a0:	711d                	addi	sp,sp,-96
+    45a2:	ce86                	sw	ra,92(sp)
+    45a4:	cc96                	sw	t0,88(sp)
+    45a6:	ca9a                	sw	t1,84(sp)
+    45a8:	c89e                	sw	t2,80(sp)
+    45aa:	c6a2                	sw	s0,76(sp)
+    45ac:	c4aa                	sw	a0,72(sp)
+    45ae:	c2ae                	sw	a1,68(sp)
+    45b0:	c0b2                	sw	a2,64(sp)
+    45b2:	de36                	sw	a3,60(sp)
+    45b4:	dc3a                	sw	a4,56(sp)
+    45b6:	da3e                	sw	a5,52(sp)
+    45b8:	d842                	sw	a6,48(sp)
+    45ba:	d646                	sw	a7,44(sp)
+    45bc:	d472                	sw	t3,40(sp)
+    45be:	d276                	sw	t4,36(sp)
+    45c0:	d07a                	sw	t5,32(sp)
+    45c2:	ce7e                	sw	t6,28(sp)
+    45c4:	1080                	addi	s0,sp,96
+  uint32_t mcause;
+  exc_id_t exc_cause;
+
+  CSR_READ(CSR_REG_MCAUSE, &mcause);
+    45c6:	342027f3          	csrr	a5,mcause
+    45ca:	faf42423          	sw	a5,-88(s0)
+  exc_cause = (exc_id_t)(mcause & kIdMax);
+    45ce:	fa842783          	lw	a5,-88(s0)
+    45d2:	8bfd                	andi	a5,a5,31
+    45d4:	faf42623          	sw	a5,-84(s0)
+
+  switch (exc_cause) {
+    45d8:	fac42703          	lw	a4,-84(s0)
+    45dc:	47ad                	li	a5,11
+    45de:	08f70463          	beq	a4,a5,4666 <handler_exception+0xc6>
+    45e2:	fac42703          	lw	a4,-84(s0)
+    45e6:	47ad                	li	a5,11
+    45e8:	08e7e263          	bltu	a5,a4,466c <handler_exception+0xcc>
+    45ec:	fac42703          	lw	a4,-84(s0)
+    45f0:	479d                	li	a5,7
+    45f2:	06f70863          	beq	a4,a5,4662 <handler_exception+0xc2>
+    45f6:	fac42703          	lw	a4,-84(s0)
+    45fa:	479d                	li	a5,7
+    45fc:	06e7e863          	bltu	a5,a4,466c <handler_exception+0xcc>
+    4600:	fac42703          	lw	a4,-84(s0)
+    4604:	4795                	li	a5,5
+    4606:	04f70c63          	beq	a4,a5,465e <handler_exception+0xbe>
+    460a:	fac42703          	lw	a4,-84(s0)
+    460e:	4795                	li	a5,5
+    4610:	04e7ee63          	bltu	a5,a4,466c <handler_exception+0xcc>
+    4614:	fac42703          	lw	a4,-84(s0)
+    4618:	478d                	li	a5,3
+    461a:	04f70063          	beq	a4,a5,465a <handler_exception+0xba>
+    461e:	fac42703          	lw	a4,-84(s0)
+    4622:	478d                	li	a5,3
+    4624:	04e7e463          	bltu	a5,a4,466c <handler_exception+0xcc>
+    4628:	fac42703          	lw	a4,-84(s0)
+    462c:	4789                	li	a5,2
+    462e:	02f70463          	beq	a4,a5,4656 <handler_exception+0xb6>
+    4632:	fac42703          	lw	a4,-84(s0)
+    4636:	4789                	li	a5,2
+    4638:	02e7ea63          	bltu	a5,a4,466c <handler_exception+0xcc>
+    463c:	fac42783          	lw	a5,-84(s0)
+    4640:	c799                	beqz	a5,464e <handler_exception+0xae>
+    4642:	fac42703          	lw	a4,-84(s0)
+    4646:	4785                	li	a5,1
+    4648:	00f70563          	beq	a4,a5,4652 <handler_exception+0xb2>
+    464c:	a005                	j	466c <handler_exception+0xcc>
+    case kInstMisa:
+      handler_instr_acc_fault();
+    464e:	2845                	jal	46fe <handler_instr_acc_fault>
+      break;
+    4650:	a839                	j	466e <handler_exception+0xce>
+    case kInstAccFault:
+      handler_instr_acc_fault();
+    4652:	2075                	jal	46fe <handler_instr_acc_fault>
+      break;
+    4654:	a829                	j	466e <handler_exception+0xce>
+    case kInstIllegalFault:
+      handler_instr_ill_fault();
+    4656:	20c9                	jal	4718 <handler_instr_ill_fault>
+      break;
+    4658:	a819                	j	466e <handler_exception+0xce>
+    case kBkpt:
+      handler_bkpt();
+    465a:	28e1                	jal	4732 <handler_bkpt>
+      break;
+    465c:	a809                	j	466e <handler_exception+0xce>
+    case kLoadAccFault:
+      handler_lsu_fault();
+    465e:	20fd                	jal	474c <handler_lsu_fault>
+      break;
+    4660:	a039                	j	466e <handler_exception+0xce>
+    case kStrAccFault:
+      handler_lsu_fault();
+    4662:	20ed                	jal	474c <handler_lsu_fault>
+      break;
+    4664:	a029                	j	466e <handler_exception+0xce>
+    case kECall:
+      handler_ecall();
+    4666:	2201                	jal	4766 <handler_ecall>
+      break;
+    4668:	a019                	j	466e <handler_exception+0xce>
+    466a:	a009                	j	466c <handler_exception+0xcc>
+    default:
+      while (1) {
+    466c:	bffd                	j	466a <handler_exception+0xca>
+      };
+  }
+}
+    466e:	0001                	nop
+    4670:	40f6                	lw	ra,92(sp)
+    4672:	42e6                	lw	t0,88(sp)
+    4674:	4356                	lw	t1,84(sp)
+    4676:	43c6                	lw	t2,80(sp)
+    4678:	4436                	lw	s0,76(sp)
+    467a:	4526                	lw	a0,72(sp)
+    467c:	4596                	lw	a1,68(sp)
+    467e:	4606                	lw	a2,64(sp)
+    4680:	56f2                	lw	a3,60(sp)
+    4682:	5762                	lw	a4,56(sp)
+    4684:	57d2                	lw	a5,52(sp)
+    4686:	5842                	lw	a6,48(sp)
+    4688:	58b2                	lw	a7,44(sp)
+    468a:	5e22                	lw	t3,40(sp)
+    468c:	5e92                	lw	t4,36(sp)
+    468e:	5f02                	lw	t5,32(sp)
+    4690:	4ff2                	lw	t6,28(sp)
+    4692:	6125                	addi	sp,sp,96
+    4694:	30200073          	mret
+
+00004698 <handler_irq_software>:
+
+__attribute__((weak)) void handler_irq_software(void) {
+    4698:	715d                	addi	sp,sp,-80
+    469a:	c686                	sw	ra,76(sp)
+    469c:	c496                	sw	t0,72(sp)
+    469e:	c29a                	sw	t1,68(sp)
+    46a0:	c09e                	sw	t2,64(sp)
+    46a2:	de22                	sw	s0,60(sp)
+    46a4:	dc2a                	sw	a0,56(sp)
+    46a6:	da2e                	sw	a1,52(sp)
+    46a8:	d832                	sw	a2,48(sp)
+    46aa:	d636                	sw	a3,44(sp)
+    46ac:	d43a                	sw	a4,40(sp)
+    46ae:	d23e                	sw	a5,36(sp)
+    46b0:	d042                	sw	a6,32(sp)
+    46b2:	ce46                	sw	a7,28(sp)
+    46b4:	cc72                	sw	t3,24(sp)
+    46b6:	ca76                	sw	t4,20(sp)
+    46b8:	c87a                	sw	t5,16(sp)
+    46ba:	c67e                	sw	t6,12(sp)
+    46bc:	0880                	addi	s0,sp,80
+  _writestr("Software IRQ triggered!\n"); 
+    46be:	67a9                	lui	a5,0xa
+    46c0:	59878513          	addi	a0,a5,1432 # a598 <TPG.c.205146a8+0xd5a>
+    46c4:	2c59                	jal	495a <_writestr>
+  while (1) {
+    46c6:	0001                	nop
+    46c8:	bffd                	j	46c6 <handler_irq_software+0x2e>
+	...
+
+000046cc <handler_irq_timer>:
+  }
+}
+
+__attribute__((weak)) void handler_irq_timer(void) {
+    46cc:	715d                	addi	sp,sp,-80
+    46ce:	c686                	sw	ra,76(sp)
+    46d0:	c496                	sw	t0,72(sp)
+    46d2:	c29a                	sw	t1,68(sp)
+    46d4:	c09e                	sw	t2,64(sp)
+    46d6:	de22                	sw	s0,60(sp)
+    46d8:	dc2a                	sw	a0,56(sp)
+    46da:	da2e                	sw	a1,52(sp)
+    46dc:	d832                	sw	a2,48(sp)
+    46de:	d636                	sw	a3,44(sp)
+    46e0:	d43a                	sw	a4,40(sp)
+    46e2:	d23e                	sw	a5,36(sp)
+    46e4:	d042                	sw	a6,32(sp)
+    46e6:	ce46                	sw	a7,28(sp)
+    46e8:	cc72                	sw	t3,24(sp)
+    46ea:	ca76                	sw	t4,20(sp)
+    46ec:	c87a                	sw	t5,16(sp)
+    46ee:	c67e                	sw	t6,12(sp)
+    46f0:	0880                	addi	s0,sp,80
+  _writestr("Timer IRQ triggered!\n"); 
+    46f2:	67a9                	lui	a5,0xa
+    46f4:	5b478513          	addi	a0,a5,1460 # a5b4 <TPG.c.205146a8+0xd76>
+    46f8:	248d                	jal	495a <_writestr>
+  while (1) {
+    46fa:	0001                	nop
+    46fc:	bffd                	j	46fa <handler_irq_timer+0x2e>
+
+000046fe <handler_instr_acc_fault>:
+  _writestr("External IRQ triggered!\n");
+  while (1) {
+  }
+}
+
+__attribute__((weak)) void handler_instr_acc_fault(void) {
+    46fe:	1141                	addi	sp,sp,-16
+    4700:	c606                	sw	ra,12(sp)
+    4702:	c422                	sw	s0,8(sp)
+    4704:	0800                	addi	s0,sp,16
+  print_exc_msg("Instruction access fault, mtval shows fault address\n");
+    4706:	67a9                	lui	a5,0xa
+    4708:	5cc78513          	addi	a0,a5,1484 # a5cc <TPG.c.205146a8+0xd8e>
+    470c:	3515                	jal	4530 <print_exc_msg>
+}
+    470e:	0001                	nop
+    4710:	40b2                	lw	ra,12(sp)
+    4712:	4422                	lw	s0,8(sp)
+    4714:	0141                	addi	sp,sp,16
+    4716:	8082                	ret
+
+00004718 <handler_instr_ill_fault>:
+
+__attribute__((weak)) void handler_instr_ill_fault(void) {
+    4718:	1141                	addi	sp,sp,-16
+    471a:	c606                	sw	ra,12(sp)
+    471c:	c422                	sw	s0,8(sp)
+    471e:	0800                	addi	s0,sp,16
+  print_exc_msg( "Illegal Instruction fault, mtval shows instruction content\n");
+    4720:	67a9                	lui	a5,0xa
+    4722:	60478513          	addi	a0,a5,1540 # a604 <TPG.c.205146a8+0xdc6>
+    4726:	3529                	jal	4530 <print_exc_msg>
+}
+    4728:	0001                	nop
+    472a:	40b2                	lw	ra,12(sp)
+    472c:	4422                	lw	s0,8(sp)
+    472e:	0141                	addi	sp,sp,16
+    4730:	8082                	ret
+
+00004732 <handler_bkpt>:
+
+__attribute__((weak)) void handler_bkpt(void) {
+    4732:	1141                	addi	sp,sp,-16
+    4734:	c606                	sw	ra,12(sp)
+    4736:	c422                	sw	s0,8(sp)
+    4738:	0800                	addi	s0,sp,16
+  print_exc_msg("Breakpoint triggerd, mtval shows the breakpoint address\n");
+    473a:	67a9                	lui	a5,0xa
+    473c:	64078513          	addi	a0,a5,1600 # a640 <TPG.c.205146a8+0xe02>
+    4740:	3bc5                	jal	4530 <print_exc_msg>
+}
+    4742:	0001                	nop
+    4744:	40b2                	lw	ra,12(sp)
+    4746:	4422                	lw	s0,8(sp)
+    4748:	0141                	addi	sp,sp,16
+    474a:	8082                	ret
+
+0000474c <handler_lsu_fault>:
+
+__attribute__((weak)) void handler_lsu_fault(void) {
+    474c:	1141                	addi	sp,sp,-16
+    474e:	c606                	sw	ra,12(sp)
+    4750:	c422                	sw	s0,8(sp)
+    4752:	0800                	addi	s0,sp,16
+  print_exc_msg("Load/Store fault, mtval shows the fault address\n");
+    4754:	67a9                	lui	a5,0xa
+    4756:	67c78513          	addi	a0,a5,1660 # a67c <TPG.c.205146a8+0xe3e>
+    475a:	3bd9                	jal	4530 <print_exc_msg>
+}
+    475c:	0001                	nop
+    475e:	40b2                	lw	ra,12(sp)
+    4760:	4422                	lw	s0,8(sp)
+    4762:	0141                	addi	sp,sp,16
+    4764:	8082                	ret
+
+00004766 <handler_ecall>:
+
+__attribute__((weak)) void handler_ecall(void) {
+    4766:	1141                	addi	sp,sp,-16
+    4768:	c606                	sw	ra,12(sp)
+    476a:	c422                	sw	s0,8(sp)
+    476c:	0800                	addi	s0,sp,16
+  _writestr("Environment call encountered\n");
+    476e:	67a9                	lui	a5,0xa
+    4770:	6b078513          	addi	a0,a5,1712 # a6b0 <TPG.c.205146a8+0xe72>
+    4774:	22dd                	jal	495a <_writestr>
+  while (1) {
+    4776:	0001                	nop
+    4778:	bffd                	j	4776 <handler_ecall+0x10>
+
+0000477a <init>:
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int init()
+{
+    477a:	1141                	addi	sp,sp,-16
+    477c:	c606                	sw	ra,12(sp)
+    477e:	c422                	sw	s0,8(sp)
+    4780:	0800                	addi	s0,sp,16
+    return 0;
+    4782:	4781                	li	a5,0
+}
+    4784:	853e                	mv	a0,a5
+    4786:	40b2                	lw	ra,12(sp)
+    4788:	4422                	lw	s0,8(sp)
+    478a:	0141                	addi	sp,sp,16
+    478c:	8082                	ret
+
+0000478e <mmio_region_from_addr.lto_priv.0>:
+static inline mmio_region_t mmio_region_from_addr(uintptr_t address) {
+    478e:	1101                	addi	sp,sp,-32
+    4790:	ce06                	sw	ra,28(sp)
+    4792:	cc22                	sw	s0,24(sp)
+    4794:	1000                	addi	s0,sp,32
+    4796:	fea42623          	sw	a0,-20(s0)
+      .base = (volatile void *)address,
+    479a:	fec42783          	lw	a5,-20(s0)
+}
+    479e:	853e                	mv	a0,a5
+    47a0:	40f2                	lw	ra,28(sp)
+    47a2:	4462                	lw	s0,24(sp)
+    47a4:	6105                	addi	sp,sp,32
+    47a6:	8082                	ret
+
+000047a8 <_close>:
+    errno = ENOSYS;
+    return -1;
+}
+
+__attribute__((used)) int _close(int file)
+{
+    47a8:	1101                	addi	sp,sp,-32
+    47aa:	ce06                	sw	ra,28(sp)
+    47ac:	cc22                	sw	s0,24(sp)
+    47ae:	1000                	addi	s0,sp,32
+    47b0:	fea42623          	sw	a0,-20(s0)
+    return -1;
+    47b4:	57fd                	li	a5,-1
+}
+    47b6:	853e                	mv	a0,a5
+    47b8:	40f2                	lw	ra,28(sp)
+    47ba:	4462                	lw	s0,24(sp)
+    47bc:	6105                	addi	sp,sp,32
+    47be:	8082                	ret
+
+000047c0 <_exit>:
+    errno = ENOMEM;
+    return -1;
+}
+
+void _exit(int exit_status)
+{
+    47c0:	7179                	addi	sp,sp,-48
+    47c2:	d606                	sw	ra,44(sp)
+    47c4:	d422                	sw	s0,40(sp)
+    47c6:	1800                	addi	s0,sp,48
+    47c8:	fca42e23          	sw	a0,-36(s0)
+    soc_ctrl_t soc_ctrl;
+    soc_ctrl.base_addr = mmio_region_from_addr((uintptr_t)SOC_CTRL_START_ADDRESS);
+    47cc:	20000537          	lui	a0,0x20000
+    47d0:	3f7d                	jal	478e <mmio_region_from_addr.lto_priv.0>
+    47d2:	fea42623          	sw	a0,-20(s0)
+    soc_ctrl_set_exit_value(&soc_ctrl, exit_status);
+    47d6:	fdc42703          	lw	a4,-36(s0)
+    47da:	fec40793          	addi	a5,s0,-20
+    47de:	85ba                	mv	a1,a4
+    47e0:	853e                	mv	a0,a5
+    47e2:	902ff0ef          	jal	38e4 <soc_ctrl_set_exit_value>
+    soc_ctrl_set_valid(&soc_ctrl, (uint8_t)1);
+    47e6:	fec40793          	addi	a5,s0,-20
+    47ea:	4585                	li	a1,1
+    47ec:	853e                	mv	a0,a5
+    47ee:	8caff0ef          	jal	38b8 <soc_ctrl_set_valid>
+
+    asm volatile("wfi");
+    47f2:	10500073          	wfi
+}
+    47f6:	9002                	ebreak
+
+000047f8 <_fstat>:
+    errno = EAGAIN;
+    return -1;
+}
+
+__attribute__((used)) int _fstat(int file, struct stat *st)
+{
+    47f8:	1101                	addi	sp,sp,-32
+    47fa:	ce06                	sw	ra,28(sp)
+    47fc:	cc22                	sw	s0,24(sp)
+    47fe:	1000                	addi	s0,sp,32
+    4800:	fea42623          	sw	a0,-20(s0)
+    4804:	feb42423          	sw	a1,-24(s0)
+    st->st_mode = S_IFCHR;
+    4808:	fe842783          	lw	a5,-24(s0)
+    480c:	6709                	lui	a4,0x2
+    480e:	c3d8                	sw	a4,4(a5)
+    return 0;
+    4810:	4781                	li	a5,0
+    // errno = -ENOSYS;
+    // return -1;
+}
+    4812:	853e                	mv	a0,a5
+    4814:	40f2                	lw	ra,28(sp)
+    4816:	4462                	lw	s0,24(sp)
+    4818:	6105                	addi	sp,sp,32
+    481a:	8082                	ret
+
+0000481c <_isatty>:
+    errno = -ENOSYS;
+    return -1;
+}
+
+__attribute__((used)) int _isatty(int file)
+{
+    481c:	1101                	addi	sp,sp,-32
+    481e:	ce06                	sw	ra,28(sp)
+    4820:	cc22                	sw	s0,24(sp)
+    4822:	1000                	addi	s0,sp,32
+    4824:	fea42623          	sw	a0,-20(s0)
+    return (file == STDOUT_FILENO);
+    4828:	fec42783          	lw	a5,-20(s0)
+    482c:	17fd                	addi	a5,a5,-1
+    482e:	0017b793          	seqz	a5,a5
+    4832:	0ff7f793          	zext.b	a5,a5
+}
+    4836:	853e                	mv	a0,a5
+    4838:	40f2                	lw	ra,28(sp)
+    483a:	4462                	lw	s0,24(sp)
+    483c:	6105                	addi	sp,sp,32
+    483e:	8082                	ret
+
+00004840 <_lseek>:
+    errno = EMLINK;
+    return -1;
+}
+
+__attribute__((used)) off_t _lseek(int file, off_t ptr, int dir)
+{
+    4840:	1101                	addi	sp,sp,-32
+    4842:	ce06                	sw	ra,28(sp)
+    4844:	cc22                	sw	s0,24(sp)
+    4846:	1000                	addi	s0,sp,32
+    4848:	fea42623          	sw	a0,-20(s0)
+    484c:	feb42423          	sw	a1,-24(s0)
+    4850:	fec42223          	sw	a2,-28(s0)
+    return 0;
+    4854:	4781                	li	a5,0
+}
+    4856:	853e                	mv	a0,a5
+    4858:	40f2                	lw	ra,28(sp)
+    485a:	4462                	lw	s0,24(sp)
+    485c:	6105                	addi	sp,sp,32
+    485e:	8082                	ret
+
+00004860 <_read>:
+    errno = ENOSYS;
+    return -1;
+}
+
+__attribute__((used)) int _read(int file, void *ptr, int len)
+{
+    4860:	1101                	addi	sp,sp,-32
+    4862:	ce06                	sw	ra,28(sp)
+    4864:	cc22                	sw	s0,24(sp)
+    4866:	1000                	addi	s0,sp,32
+    4868:	fea42623          	sw	a0,-20(s0)
+    486c:	feb42423          	sw	a1,-24(s0)
+    4870:	fec42223          	sw	a2,-28(s0)
+    return 0;
+    4874:	4781                	li	a5,0
+}
+    4876:	853e                	mv	a0,a5
+    4878:	40f2                	lw	ra,28(sp)
+    487a:	4462                	lw	s0,24(sp)
+    487c:	6105                	addi	sp,sp,32
+    487e:	8082                	ret
+
+00004880 <_write>:
+    errno = ECHILD;
+    return -1;
+}
+
+int _write(int file, const void *ptr, int len)
+{
+    4880:	7139                	addi	sp,sp,-64
+    4882:	de06                	sw	ra,60(sp)
+    4884:	dc22                	sw	s0,56(sp)
+    4886:	0080                	addi	s0,sp,64
+    4888:	fca42623          	sw	a0,-52(s0)
+    488c:	fcb42423          	sw	a1,-56(s0)
+    4890:	fcc42223          	sw	a2,-60(s0)
+    if (file != STDOUT_FILENO) {
+    4894:	fcc42703          	lw	a4,-52(s0)
+    4898:	4785                	li	a5,1
+    489a:	00f70863          	beq	a4,a5,48aa <_write+0x2a>
+        errno = ENOSYS;
+    489e:	05800713          	li	a4,88
+    48a2:	94e1a823          	sw	a4,-1712(gp) # b6d4 <errno>
+        return -1;
+    48a6:	57fd                	li	a5,-1
+    48a8:	a895                	j	491c <_write+0x9c>
+    }
+
+    soc_ctrl_t soc_ctrl;
+    soc_ctrl.base_addr = mmio_region_from_addr((uintptr_t)SOC_CTRL_START_ADDRESS);
+    48aa:	20000537          	lui	a0,0x20000
+    48ae:	35c5                	jal	478e <mmio_region_from_addr.lto_priv.0>
+    48b0:	fea42623          	sw	a0,-20(s0)
+
+    uart_t uart;
+    uart.base_addr   = mmio_region_from_addr((uintptr_t)UART_START_ADDRESS);
+    48b4:	30080537          	lui	a0,0x30080
+    48b8:	3dd9                	jal	478e <mmio_region_from_addr.lto_priv.0>
+    48ba:	fca42823          	sw	a0,-48(s0)
+    uart.baudrate    = UART_BAUDRATE;
+    48be:	0003f7b7          	lui	a5,0x3f
+    48c2:	80078793          	addi	a5,a5,-2048 # 3e800 <syscalls_cpp.cpp.cfa7c3ef+0x26c1e>
+    48c6:	fcf42a23          	sw	a5,-44(s0)
+    uart.clk_freq_hz = soc_ctrl_get_frequency(&soc_ctrl);
+    48ca:	fec40793          	addi	a5,s0,-20
+    48ce:	853e                	mv	a0,a5
+    48d0:	83cff0ef          	jal	390c <soc_ctrl_get_frequency>
+    48d4:	87aa                	mv	a5,a0
+    48d6:	fef42023          	sw	a5,-32(s0)
+    #ifdef UART_NCO
+    uart.nco         = UART_NCO;
+    48da:	6705                	lui	a4,0x1
+    48dc:	a7c70713          	addi	a4,a4,-1412 # a7c <T6_func+0x72>
+    48e0:	4781                	li	a5,0
+    48e2:	fce42c23          	sw	a4,-40(s0)
+    48e6:	fcf42e23          	sw	a5,-36(s0)
+    #else
+    uart.nco         = ((uint64_t)uart.baudrate << (NCO_WIDTH + 4)) / uart.clk_freq_hz;
+    #endif
+
+    if (uart_init(&uart) != kErrorOk) {
+    48ea:	fd040793          	addi	a5,s0,-48
+    48ee:	853e                	mv	a0,a5
+    48f0:	3c1d                	jal	4326 <uart_init>
+    48f2:	872a                	mv	a4,a0
+    48f4:	73900793          	li	a5,1849
+    48f8:	00f70863          	beq	a4,a5,4908 <_write+0x88>
+        errno = ENOSYS;
+    48fc:	05800713          	li	a4,88
+    4900:	94e1a823          	sw	a4,-1712(gp) # b6d4 <errno>
+        return -1;
+    4904:	57fd                	li	a5,-1
+    4906:	a819                	j	491c <_write+0x9c>
+    }
+    return uart_write(&uart,(uint8_t *)ptr,len);
+    4908:	fc442703          	lw	a4,-60(s0)
+    490c:	fd040793          	addi	a5,s0,-48
+    4910:	863a                	mv	a2,a4
+    4912:	fc842583          	lw	a1,-56(s0)
+    4916:	853e                	mv	a0,a5
+    4918:	36c9                	jal	44da <uart_write>
+    491a:	87aa                	mv	a5,a0
+
+}
+    491c:	853e                	mv	a0,a5
+    491e:	50f2                	lw	ra,60(sp)
+    4920:	5462                	lw	s0,56(sp)
+    4922:	6121                	addi	sp,sp,64
+    4924:	8082                	ret
+
+00004926 <_write_r>:
+
+
+__attribute__((used)) _ssize_t _write_r(struct _reent *ptr, int fd, const void *buf, size_t cnt)
+{
+    4926:	1101                	addi	sp,sp,-32
+    4928:	ce06                	sw	ra,28(sp)
+    492a:	cc22                	sw	s0,24(sp)
+    492c:	1000                	addi	s0,sp,32
+    492e:	fea42623          	sw	a0,-20(s0)
+    4932:	feb42423          	sw	a1,-24(s0)
+    4936:	fec42223          	sw	a2,-28(s0)
+    493a:	fed42023          	sw	a3,-32(s0)
+    return _write(fd,buf,cnt);
+    493e:	fe042783          	lw	a5,-32(s0)
+    4942:	863e                	mv	a2,a5
+    4944:	fe442583          	lw	a1,-28(s0)
+    4948:	fe842503          	lw	a0,-24(s0)
+    494c:	3f15                	jal	4880 <_write>
+    494e:	87aa                	mv	a5,a0
+}
+    4950:	853e                	mv	a0,a5
+    4952:	40f2                	lw	ra,28(sp)
+    4954:	4462                	lw	s0,24(sp)
+    4956:	6105                	addi	sp,sp,32
+    4958:	8082                	ret
+
+0000495a <_writestr>:
+
+void _writestr(const void *ptr)
+{
+    495a:	1101                	addi	sp,sp,-32
+    495c:	ce06                	sw	ra,28(sp)
+    495e:	cc22                	sw	s0,24(sp)
+    4960:	1000                	addi	s0,sp,32
+    4962:	fea42623          	sw	a0,-20(s0)
+    _write(STDOUT_FILENO, ptr, strlen(ptr)+1);
+    4966:	fec42503          	lw	a0,-20(s0)
+    496a:	100010ef          	jal	5a6a <strlen>
+    496e:	87aa                	mv	a5,a0
+    4970:	0785                	addi	a5,a5,1
+    4972:	863e                	mv	a2,a5
+    4974:	fec42583          	lw	a1,-20(s0)
+    4978:	4505                	li	a0,1
+    497a:	3719                	jal	4880 <_write>
+}
+    497c:	0001                	nop
+    497e:	40f2                	lw	ra,28(sp)
+    4980:	4462                	lw	s0,24(sp)
+    4982:	6105                	addi	sp,sp,32
+    4984:	8082                	ret
+
+00004986 <_sbrk>:
+        return -1; 
+    }
+}
+
+void *_sbrk(ptrdiff_t incr)
+{
+    4986:	7179                	addi	sp,sp,-48
+    4988:	d606                	sw	ra,44(sp)
+    498a:	d422                	sw	s0,40(sp)
+    498c:	1800                	addi	s0,sp,48
+    498e:	fca42e23          	sw	a0,-36(s0)
+    char *old_brk = brk;
+    4992:	9441a783          	lw	a5,-1724(gp) # b6c8 <brk>
+    4996:	fef42623          	sw	a5,-20(s0)
+
+    if (__heap_start == __heap_end) {
+    499a:	ca018713          	addi	a4,gp,-864 # ba24 <__BSS_END__>
+    499e:	67b1                	lui	a5,0xc
+    49a0:	22478793          	addi	a5,a5,548 # c224 <__heap_end>
+    49a4:	00f71463          	bne	a4,a5,49ac <_sbrk+0x26>
+        return NULL; 
+    49a8:	4781                	li	a5,0
+    49aa:	a83d                	j	49e8 <_sbrk+0x62>
+    }
+
+    if (brk + incr < __heap_end && brk + incr >= __heap_start) {
+    49ac:	9441a703          	lw	a4,-1724(gp) # b6c8 <brk>
+    49b0:	fdc42783          	lw	a5,-36(s0)
+    49b4:	973e                	add	a4,a4,a5
+    49b6:	67b1                	lui	a5,0xc
+    49b8:	22478793          	addi	a5,a5,548 # c224 <__heap_end>
+    49bc:	02f77563          	bgeu	a4,a5,49e6 <_sbrk+0x60>
+    49c0:	9441a703          	lw	a4,-1724(gp) # b6c8 <brk>
+    49c4:	fdc42783          	lw	a5,-36(s0)
+    49c8:	973e                	add	a4,a4,a5
+    49ca:	ca018793          	addi	a5,gp,-864 # ba24 <__BSS_END__>
+    49ce:	00f76c63          	bltu	a4,a5,49e6 <_sbrk+0x60>
+        brk += incr;
+    49d2:	9441a703          	lw	a4,-1724(gp) # b6c8 <brk>
+    49d6:	fdc42783          	lw	a5,-36(s0)
+    49da:	973e                	add	a4,a4,a5
+    49dc:	94e1a223          	sw	a4,-1724(gp) # b6c8 <brk>
+    } else {
+        return (void *)-1; 
+    }
+    return old_brk;
+    49e0:	fec42783          	lw	a5,-20(s0)
+    49e4:	a011                	j	49e8 <_sbrk+0x62>
+        return (void *)-1; 
+    49e6:	57fd                	li	a5,-1
+}
+    49e8:	853e                	mv	a0,a5
+    49ea:	50b2                	lw	ra,44(sp)
+    49ec:	5422                	lw	s0,40(sp)
+    49ee:	6145                	addi	sp,sp,48
+    49f0:	8082                	ret
+
+000049f2 <bitfield_read.lto_priv.3>:
+{
+    49f2:	1101                	addi	sp,sp,-32
+    49f4:	ce06                	sw	ra,28(sp)
+    49f6:	cc22                	sw	s0,24(sp)
+    49f8:	1000                	addi	s0,sp,32
+    49fa:	fea42623          	sw	a0,-20(s0)
+    49fe:	feb42423          	sw	a1,-24(s0)
+    4a02:	fec42223          	sw	a2,-28(s0)
+  return (bitfield >> index) & mask;
+    4a06:	fe442783          	lw	a5,-28(s0)
+    4a0a:	fec42703          	lw	a4,-20(s0)
+    4a0e:	00f75733          	srl	a4,a4,a5
+    4a12:	fe842783          	lw	a5,-24(s0)
+    4a16:	8ff9                	and	a5,a5,a4
+}
+    4a18:	853e                	mv	a0,a5
+    4a1a:	40f2                	lw	ra,28(sp)
+    4a1c:	4462                	lw	s0,24(sp)
+    4a1e:	6105                	addi	sp,sp,32
+    4a20:	8082                	ret
+
+00004a22 <bitfield_write.lto_priv.4>:
+{
+    4a22:	1101                	addi	sp,sp,-32
+    4a24:	ce06                	sw	ra,28(sp)
+    4a26:	cc22                	sw	s0,24(sp)
+    4a28:	1000                	addi	s0,sp,32
+    4a2a:	fea42623          	sw	a0,-20(s0)
+    4a2e:	feb42423          	sw	a1,-24(s0)
+    4a32:	fec42223          	sw	a2,-28(s0)
+    4a36:	fed42023          	sw	a3,-32(s0)
+  bitfield &= ~(mask << index);
+    4a3a:	fe442783          	lw	a5,-28(s0)
+    4a3e:	fe842703          	lw	a4,-24(s0)
+    4a42:	00f717b3          	sll	a5,a4,a5
+    4a46:	fff7c793          	not	a5,a5
+    4a4a:	fec42703          	lw	a4,-20(s0)
+    4a4e:	8ff9                	and	a5,a5,a4
+    4a50:	fef42623          	sw	a5,-20(s0)
+  bitfield |= (value & mask) << index;
+    4a54:	fe042703          	lw	a4,-32(s0)
+    4a58:	fe842783          	lw	a5,-24(s0)
+    4a5c:	8f7d                	and	a4,a4,a5
+    4a5e:	fe442783          	lw	a5,-28(s0)
+    4a62:	00f717b3          	sll	a5,a4,a5
+    4a66:	fec42703          	lw	a4,-20(s0)
+    4a6a:	8fd9                	or	a5,a5,a4
+    4a6c:	fef42623          	sw	a5,-20(s0)
+  return bitfield;
+    4a70:	fec42783          	lw	a5,-20(s0)
+}
+    4a74:	853e                	mv	a0,a5
+    4a76:	40f2                	lw	ra,28(sp)
+    4a78:	4462                	lw	s0,24(sp)
+    4a7a:	6105                	addi	sp,sp,32
+    4a7c:	8082                	ret
+
+00004a7e <spi_fill_tx>:
+
+    return true;
+}
+
+bool spi_fill_tx(spi_peripheral_t* peri) 
+{
+    4a7e:	1101                	addi	sp,sp,-32
+    4a80:	ce06                	sw	ra,28(sp)
+    4a82:	cc22                	sw	s0,24(sp)
+    4a84:	1000                	addi	s0,sp,32
+    4a86:	fea42623          	sw	a0,-20(s0)
+    // If we have a TX buffer and didn't exceed the count then fill the TX FIFO
+    if (peri->txn.txbuffer != NULL && peri->txcnt < peri->txn.txlen) {
+    4a8a:	fec42783          	lw	a5,-20(s0)
+    4a8e:	4fdc                	lw	a5,28(a5)
+    4a90:	cfb1                	beqz	a5,4aec <spi_fill_tx+0x6e>
+    4a92:	fec42783          	lw	a5,-20(s0)
+    4a96:	5b98                	lw	a4,48(a5)
+    4a98:	fec42783          	lw	a5,-20(s0)
+    4a9c:	539c                	lw	a5,32(a5)
+    4a9e:	04f77763          	bgeu	a4,a5,4aec <spi_fill_tx+0x6e>
+        // While there is still data to be fed and there wasn't an error from HAL
+        // continue. HAL error in this case means that the fifo is full since
+        // it's the only possibility.
+        while (
+    4aa2:	a809                	j	4ab4 <spi_fill_tx+0x36>
+            peri->txcnt < peri->txn.txlen 
+            && !spi_write_word(peri->instance, peri->txn.txbuffer[peri->txcnt])
+        ) peri->txcnt++; // Keep track of counter
+    4aa4:	fec42783          	lw	a5,-20(s0)
+    4aa8:	5b9c                	lw	a5,48(a5)
+    4aaa:	00178713          	addi	a4,a5,1
+    4aae:	fec42783          	lw	a5,-20(s0)
+    4ab2:	db98                	sw	a4,48(a5)
+            peri->txcnt < peri->txn.txlen 
+    4ab4:	fec42783          	lw	a5,-20(s0)
+    4ab8:	5b98                	lw	a4,48(a5)
+    4aba:	fec42783          	lw	a5,-20(s0)
+    4abe:	539c                	lw	a5,32(a5)
+            && !spi_write_word(peri->instance, peri->txn.txbuffer[peri->txcnt])
+    4ac0:	02f77463          	bgeu	a4,a5,4ae8 <spi_fill_tx+0x6a>
+    4ac4:	fec42783          	lw	a5,-20(s0)
+    4ac8:	4394                	lw	a3,0(a5)
+    4aca:	fec42783          	lw	a5,-20(s0)
+    4ace:	4fd8                	lw	a4,28(a5)
+    4ad0:	fec42783          	lw	a5,-20(s0)
+    4ad4:	5b9c                	lw	a5,48(a5)
+    4ad6:	078a                	slli	a5,a5,0x2
+    4ad8:	97ba                	add	a5,a5,a4
+    4ada:	439c                	lw	a5,0(a5)
+    4adc:	85be                	mv	a1,a5
+    4ade:	8536                	mv	a0,a3
+    4ae0:	ae4ff0ef          	jal	3dc4 <spi_write_word>
+    4ae4:	87aa                	mv	a5,a0
+    4ae6:	dfdd                	beqz	a5,4aa4 <spi_fill_tx+0x26>
+        return true;
+    4ae8:	4785                	li	a5,1
+    4aea:	a011                	j	4aee <spi_fill_tx+0x70>
+    }
+    return false;
+    4aec:	4781                	li	a5,0
+}
+    4aee:	853e                	mv	a0,a5
+    4af0:	40f2                	lw	ra,28(sp)
+    4af2:	4462                	lw	s0,24(sp)
+    4af4:	6105                	addi	sp,sp,32
+    4af6:	8082                	ret
+
+00004af8 <spi_empty_rx>:
+
+bool spi_empty_rx(spi_peripheral_t* peri) 
+{
+    4af8:	1101                	addi	sp,sp,-32
+    4afa:	ce06                	sw	ra,28(sp)
+    4afc:	cc22                	sw	s0,24(sp)
+    4afe:	1000                	addi	s0,sp,32
+    4b00:	fea42623          	sw	a0,-20(s0)
+    // If we have a RX buffer and didn't exceed the count then read from RX FIFO
+    if (peri->txn.rxbuffer != NULL && peri->rxcnt < peri->txn.rxlen) {
+    4b04:	fec42783          	lw	a5,-20(s0)
+    4b08:	53dc                	lw	a5,36(a5)
+    4b0a:	cfa9                	beqz	a5,4b64 <spi_empty_rx+0x6c>
+    4b0c:	fec42783          	lw	a5,-20(s0)
+    4b10:	5bd8                	lw	a4,52(a5)
+    4b12:	fec42783          	lw	a5,-20(s0)
+    4b16:	579c                	lw	a5,40(a5)
+    4b18:	04f77663          	bgeu	a4,a5,4b64 <spi_empty_rx+0x6c>
+        // While there is still data to be read and there wasn't an error from HAL
+        // continue. HAL error in this case means that the fifo is empty since
+        // it's the only possibility.
+        while (
+    4b1c:	a809                	j	4b2e <spi_empty_rx+0x36>
+            peri->rxcnt < peri->txn.rxlen 
+            && !spi_read_word(peri->instance, &peri->txn.rxbuffer[peri->rxcnt])
+        ) peri->rxcnt++; // Keep track of counter
+    4b1e:	fec42783          	lw	a5,-20(s0)
+    4b22:	5bdc                	lw	a5,52(a5)
+    4b24:	00178713          	addi	a4,a5,1
+    4b28:	fec42783          	lw	a5,-20(s0)
+    4b2c:	dbd8                	sw	a4,52(a5)
+            peri->rxcnt < peri->txn.rxlen 
+    4b2e:	fec42783          	lw	a5,-20(s0)
+    4b32:	5bd8                	lw	a4,52(a5)
+    4b34:	fec42783          	lw	a5,-20(s0)
+    4b38:	579c                	lw	a5,40(a5)
+            && !spi_read_word(peri->instance, &peri->txn.rxbuffer[peri->rxcnt])
+    4b3a:	02f77363          	bgeu	a4,a5,4b60 <spi_empty_rx+0x68>
+    4b3e:	fec42783          	lw	a5,-20(s0)
+    4b42:	4394                	lw	a3,0(a5)
+    4b44:	fec42783          	lw	a5,-20(s0)
+    4b48:	53d8                	lw	a4,36(a5)
+    4b4a:	fec42783          	lw	a5,-20(s0)
+    4b4e:	5bdc                	lw	a5,52(a5)
+    4b50:	078a                	slli	a5,a5,0x2
+    4b52:	97ba                	add	a5,a5,a4
+    4b54:	85be                	mv	a1,a5
+    4b56:	8536                	mv	a0,a3
+    4b58:	ab4ff0ef          	jal	3e0c <spi_read_word>
+    4b5c:	87aa                	mv	a5,a0
+    4b5e:	d3e1                	beqz	a5,4b1e <spi_empty_rx+0x26>
+        return true;
+    4b60:	4785                	li	a5,1
+    4b62:	a011                	j	4b66 <spi_empty_rx+0x6e>
+    }
+    return false;
+    4b64:	4781                	li	a5,0
+}
+    4b66:	853e                	mv	a0,a5
+    4b68:	40f2                	lw	ra,28(sp)
+    4b6a:	4462                	lw	s0,24(sp)
+    4b6c:	6105                	addi	sp,sp,32
+    4b6e:	8082                	ret
+
+00004b70 <spi_issue_next_seg>:
+        
+    } while (SPI_BUSY((*peri)));
+}
+
+void spi_issue_next_seg(spi_peripheral_t* peri) 
+{
+    4b70:	7179                	addi	sp,sp,-48
+    4b72:	d606                	sw	ra,44(sp)
+    4b74:	d422                	sw	s0,40(sp)
+    4b76:	d226                	sw	s1,36(sp)
+    4b78:	1800                	addi	s0,sp,48
+    4b7a:	fca42e23          	sw	a0,-36(s0)
+    const spi_segment_t seg = peri->txn.segments[peri->scnt];
+    4b7e:	fdc42783          	lw	a5,-36(s0)
+    4b82:	4bd8                	lw	a4,20(a5)
+    4b84:	fdc42783          	lw	a5,-36(s0)
+    4b88:	57dc                	lw	a5,44(a5)
+    4b8a:	078a                	slli	a5,a5,0x2
+    4b8c:	97ba                	add	a5,a5,a4
+    4b8e:	439c                	lw	a5,0(a5)
+    4b90:	fef42223          	sw	a5,-28(s0)
+    peri->scnt++;
+    4b94:	fdc42783          	lw	a5,-36(s0)
+    4b98:	57dc                	lw	a5,44(a5)
+    4b9a:	00178713          	addi	a4,a5,1
+    4b9e:	fdc42783          	lw	a5,-36(s0)
+    4ba2:	d7d8                	sw	a4,44(a5)
+    // Construct our word command to be passed to HAL
+    uint32_t cmd_reg = spi_create_command((spi_command_t) {
+        .len       = seg.len - 1, // -1 because of SPI Host IP specifications
+    4ba4:	fe442703          	lw	a4,-28(s0)
+    4ba8:	010007b7          	lui	a5,0x1000
+    4bac:	17fd                	addi	a5,a5,-1 # ffffff <syscalls_cpp.cpp.cfa7c3ef+0xfe841d>
+    4bae:	8ff9                	and	a5,a5,a4
+    4bb0:	fff78713          	addi	a4,a5,-1
+    4bb4:	010007b7          	lui	a5,0x1000
+    4bb8:	17fd                	addi	a5,a5,-1 # ffffff <syscalls_cpp.cpp.cfa7c3ef+0xfe841d>
+    4bba:	8f7d                	and	a4,a4,a5
+    uint32_t cmd_reg = spi_create_command((spi_command_t) {
+    4bbc:	010007b7          	lui	a5,0x1000
+    4bc0:	17fd                	addi	a5,a5,-1 # ffffff <syscalls_cpp.cpp.cfa7c3ef+0xfe841d>
+    4bc2:	8ff9                	and	a5,a5,a4
+    4bc4:	ff000737          	lui	a4,0xff000
+    4bc8:	8f65                	and	a4,a4,s1
+    4bca:	8fd9                	or	a5,a5,a4
+    4bcc:	84be                	mv	s1,a5
+        .csaat     = peri->txn.seglen == peri->scnt ? false : true,
+    4bce:	fdc42783          	lw	a5,-36(s0)
+    4bd2:	0187c783          	lbu	a5,24(a5)
+    4bd6:	873e                	mv	a4,a5
+    4bd8:	fdc42783          	lw	a5,-36(s0)
+    4bdc:	57dc                	lw	a5,44(a5)
+    4bde:	40f707b3          	sub	a5,a4,a5
+    4be2:	00f037b3          	snez	a5,a5
+    4be6:	0ff7f793          	zext.b	a5,a5
+    uint32_t cmd_reg = spi_create_command((spi_command_t) {
+    4bea:	8b85                	andi	a5,a5,1
+    4bec:	07e2                	slli	a5,a5,0x18
+    4bee:	ff000737          	lui	a4,0xff000
+    4bf2:	177d                	addi	a4,a4,-1 # feffffff <syscalls_cpp.cpp.cfa7c3ef+0xfefe841d>
+    4bf4:	8f65                	and	a4,a4,s1
+    4bf6:	8fd9                	or	a5,a5,a4
+    4bf8:	84be                	mv	s1,a5
+        .speed     = bitfield_read(seg.mode, DIR_SPD_MASK, SPD_INDEX),
+    4bfa:	fe442783          	lw	a5,-28(s0)
+    4bfe:	83e1                	srli	a5,a5,0x18
+    4c00:	8bbd                	andi	a5,a5,15
+    4c02:	0ff7f793          	zext.b	a5,a5
+    4c06:	4609                	li	a2,2
+    4c08:	458d                	li	a1,3
+    4c0a:	853e                	mv	a0,a5
+    4c0c:	33dd                	jal	49f2 <bitfield_read.lto_priv.3>
+    4c0e:	87aa                	mv	a5,a0
+    4c10:	8b8d                	andi	a5,a5,3
+    4c12:	0ff7f793          	zext.b	a5,a5
+    uint32_t cmd_reg = spi_create_command((spi_command_t) {
+    4c16:	8b8d                	andi	a5,a5,3
+    4c18:	07e6                	slli	a5,a5,0x19
+    4c1a:	fa000737          	lui	a4,0xfa000
+    4c1e:	177d                	addi	a4,a4,-1 # f9ffffff <syscalls_cpp.cpp.cfa7c3ef+0xf9fe841d>
+    4c20:	8f65                	and	a4,a4,s1
+    4c22:	8fd9                	or	a5,a5,a4
+    4c24:	84be                	mv	s1,a5
+        .direction = bitfield_read(seg.mode, DIR_SPD_MASK, DIR_INDEX),
+    4c26:	fe442783          	lw	a5,-28(s0)
+    4c2a:	83e1                	srli	a5,a5,0x18
+    4c2c:	8bbd                	andi	a5,a5,15
+    4c2e:	0ff7f793          	zext.b	a5,a5
+    4c32:	4601                	li	a2,0
+    4c34:	458d                	li	a1,3
+    4c36:	853e                	mv	a0,a5
+    4c38:	3b6d                	jal	49f2 <bitfield_read.lto_priv.3>
+    4c3a:	87aa                	mv	a5,a0
+    4c3c:	8b8d                	andi	a5,a5,3
+    4c3e:	0ff7f793          	zext.b	a5,a5
+    uint32_t cmd_reg = spi_create_command((spi_command_t) {
+    4c42:	8b8d                	andi	a5,a5,3
+    4c44:	07ee                	slli	a5,a5,0x1b
+    4c46:	e8000737          	lui	a4,0xe8000
+    4c4a:	177d                	addi	a4,a4,-1 # e7ffffff <syscalls_cpp.cpp.cfa7c3ef+0xe7fe841d>
+    4c4c:	8f65                	and	a4,a4,s1
+    4c4e:	8fd9                	or	a5,a5,a4
+    4c50:	84be                	mv	s1,a5
+ * @return uint32 representing the command.
+ */
+static inline __attribute__((always_inline)) __attribute__((const))
+uint32_t spi_create_command(const spi_command_t command)
+{
+    uint32_t cmd_reg = 0;
+    4c52:	fe042423          	sw	zero,-24(s0)
+    cmd_reg = bitfield_write(cmd_reg, SPI_HOST_COMMAND_LEN_MASK, 
+                             SPI_HOST_COMMAND_LEN_OFFSET, command.len);
+    4c56:	010007b7          	lui	a5,0x1000
+    4c5a:	17fd                	addi	a5,a5,-1 # ffffff <syscalls_cpp.cpp.cfa7c3ef+0xfe841d>
+    4c5c:	8fe5                	and	a5,a5,s1
+    cmd_reg = bitfield_write(cmd_reg, SPI_HOST_COMMAND_LEN_MASK, 
+    4c5e:	86be                	mv	a3,a5
+    4c60:	4601                	li	a2,0
+    4c62:	010007b7          	lui	a5,0x1000
+    4c66:	fff78593          	addi	a1,a5,-1 # ffffff <syscalls_cpp.cpp.cfa7c3ef+0xfe841d>
+    4c6a:	fe842503          	lw	a0,-24(s0)
+    4c6e:	3b55                	jal	4a22 <bitfield_write.lto_priv.4>
+    4c70:	fea42423          	sw	a0,-24(s0)
+    cmd_reg = bitfield_write(cmd_reg, BIT_MASK_1, 
+                             SPI_HOST_COMMAND_CSAAT_BIT, command.csaat);
+    4c74:	0184d793          	srli	a5,s1,0x18
+    4c78:	8b85                	andi	a5,a5,1
+    4c7a:	0ff7f793          	zext.b	a5,a5
+    cmd_reg = bitfield_write(cmd_reg, BIT_MASK_1, 
+    4c7e:	86be                	mv	a3,a5
+    4c80:	4661                	li	a2,24
+    4c82:	4585                	li	a1,1
+    4c84:	fe842503          	lw	a0,-24(s0)
+    4c88:	3b69                	jal	4a22 <bitfield_write.lto_priv.4>
+    4c8a:	fea42423          	sw	a0,-24(s0)
+    cmd_reg = bitfield_write(cmd_reg, SPI_HOST_COMMAND_SPEED_MASK, 
+                             SPI_HOST_COMMAND_SPEED_OFFSET, command.speed);
+    4c8e:	0194d793          	srli	a5,s1,0x19
+    4c92:	8b8d                	andi	a5,a5,3
+    4c94:	0ff7f793          	zext.b	a5,a5
+    cmd_reg = bitfield_write(cmd_reg, SPI_HOST_COMMAND_SPEED_MASK, 
+    4c98:	86be                	mv	a3,a5
+    4c9a:	4665                	li	a2,25
+    4c9c:	458d                	li	a1,3
+    4c9e:	fe842503          	lw	a0,-24(s0)
+    4ca2:	3341                	jal	4a22 <bitfield_write.lto_priv.4>
+    4ca4:	fea42423          	sw	a0,-24(s0)
+    cmd_reg = bitfield_write(cmd_reg, SPI_HOST_COMMAND_DIRECTION_MASK, 
+                             SPI_HOST_COMMAND_DIRECTION_OFFSET, command.direction);
+    4ca8:	01b4d793          	srli	a5,s1,0x1b
+    4cac:	8b8d                	andi	a5,a5,3
+    4cae:	0ff7f793          	zext.b	a5,a5
+    cmd_reg = bitfield_write(cmd_reg, SPI_HOST_COMMAND_DIRECTION_MASK, 
+    4cb2:	86be                	mv	a3,a5
+    4cb4:	466d                	li	a2,27
+    4cb6:	458d                	li	a1,3
+    4cb8:	fe842503          	lw	a0,-24(s0)
+    4cbc:	339d                	jal	4a22 <bitfield_write.lto_priv.4>
+    4cbe:	fea42423          	sw	a0,-24(s0)
+    return cmd_reg;
+    4cc2:	fe842783          	lw	a5,-24(s0)
+    4cc6:	fef42623          	sw	a5,-20(s0)
+    });
+    // Since all checks were already made we do not need to check the result of function
+    spi_set_command(peri->instance, cmd_reg);
+    4cca:	fdc42783          	lw	a5,-36(s0)
+    4cce:	439c                	lw	a5,0(a5)
+    4cd0:	fec42583          	lw	a1,-20(s0)
+    4cd4:	853e                	mv	a0,a5
+    4cd6:	ff9fe0ef          	jal	3cce <spi_set_command>
+}
+    4cda:	0001                	nop
+    4cdc:	50b2                	lw	ra,44(sp)
+    4cde:	5422                	lw	s0,40(sp)
+    4ce0:	5492                	lw	s1,36(sp)
+    4ce2:	6145                	addi	sp,sp,48
+    4ce4:	8082                	ret
+
+00004ce6 <spi_reset_peri>:
+
+void spi_reset_peri(spi_peripheral_t* peri) 
+{
+    4ce6:	1101                	addi	sp,sp,-32
+    4ce8:	ce06                	sw	ra,28(sp)
+    4cea:	cc22                	sw	s0,24(sp)
+    4cec:	1000                	addi	s0,sp,32
+    4cee:	fea42623          	sw	a0,-20(s0)
+    // Reset static peripheral variables
+    spi_reset_transaction(peri);
+    4cf2:	fec42503          	lw	a0,-20(s0)
+    4cf6:	2079                	jal	4d84 <spi_reset_transaction>
+    // Reset the SPI peripheral (at hardware level)
+    spi_sw_reset(peri->instance);
+    4cf8:	fec42783          	lw	a5,-20(s0)
+    4cfc:	439c                	lw	a5,0(a5)
+    4cfe:	853e                	mv	a0,a5
+    4d00:	e4ffe0ef          	jal	3b4e <spi_sw_reset>
+    // Enable SPI peripheral. We do not check return value since we know here that
+    // it will never return an error.
+    spi_set_enable(peri->instance, true);
+    4d04:	fec42783          	lw	a5,-20(s0)
+    4d08:	439c                	lw	a5,0(a5)
+    4d0a:	4585                	li	a1,1
+    4d0c:	853e                	mv	a0,a5
+    4d0e:	ed1fe0ef          	jal	3bde <spi_set_enable>
+    spi_output_enable(peri->instance, true);
+    4d12:	fec42783          	lw	a5,-20(s0)
+    4d16:	439c                	lw	a5,0(a5)
+    4d18:	4585                	li	a1,1
+    4d1a:	853e                	mv	a0,a5
+    4d1c:	9baff0ef          	jal	3ed6 <spi_output_enable>
+    // Enable all error interrupts so that the SPI peripheral doesn't get stuck if
+    // there is an error. And we don't check return value since we know it's error free.
+    spi_set_errors_enabled(peri->instance, SPI_ERROR_IRQALL, true);
+    4d20:	fec42783          	lw	a5,-20(s0)
+    4d24:	439c                	lw	a5,0(a5)
+    4d26:	4605                	li	a2,1
+    4d28:	45fd                	li	a1,31
+    4d2a:	853e                	mv	a0,a5
+    4d2c:	cfdfe0ef          	jal	3a28 <spi_set_errors_enabled>
+    spi_enable_error_intr(peri->instance, true);
+    4d30:	fec42783          	lw	a5,-20(s0)
+    4d34:	439c                	lw	a5,0(a5)
+    4d36:	4585                	li	a1,1
+    4d38:	853e                	mv	a0,a5
+    4d3a:	958ff0ef          	jal	3e92 <spi_enable_error_intr>
+    // Set the watermarks for the specific peripheral.
+    spi_set_tx_watermark(peri->instance, peri->txwm);
+    4d3e:	fec42783          	lw	a5,-20(s0)
+    4d42:	4398                	lw	a4,0(a5)
+    4d44:	fec42783          	lw	a5,-20(s0)
+    4d48:	0047c783          	lbu	a5,4(a5)
+    4d4c:	85be                	mv	a1,a5
+    4d4e:	853a                	mv	a0,a4
+    4d50:	ed3fe0ef          	jal	3c22 <spi_set_tx_watermark>
+    spi_set_rx_watermark(peri->instance, peri->rxwm);
+    4d54:	fec42783          	lw	a5,-20(s0)
+    4d58:	4398                	lw	a4,0(a5)
+    4d5a:	fec42783          	lw	a5,-20(s0)
+    4d5e:	0057c783          	lbu	a5,5(a5)
+    4d62:	85be                	mv	a1,a5
+    4d64:	853a                	mv	a0,a4
+    4d66:	f13fe0ef          	jal	3c78 <spi_set_rx_watermark>
+    // Just reset the state.
+    peri->state = SPI_STATE_INIT;
+    4d6a:	fec42783          	lw	a5,-20(s0)
+    4d6e:	4705                	li	a4,1
+    4d70:	cb98                	sw	a4,16(a5)
+    // Force the next transaction to set the slave at hardware level
+    peri->last_id = 0;
+    4d72:	fec42783          	lw	a5,-20(s0)
+    4d76:	0007a423          	sw	zero,8(a5)
+}
+    4d7a:	0001                	nop
+    4d7c:	40f2                	lw	ra,28(sp)
+    4d7e:	4462                	lw	s0,24(sp)
+    4d80:	6105                	addi	sp,sp,32
+    4d82:	8082                	ret
+
+00004d84 <spi_reset_transaction>:
+
+void spi_reset_transaction(spi_peripheral_t* peri) 
+{
+    4d84:	715d                	addi	sp,sp,-80
+    4d86:	c686                	sw	ra,76(sp)
+    4d88:	c4a2                	sw	s0,72(sp)
+    4d8a:	0880                	addi	s0,sp,80
+    4d8c:	faa42e23          	sw	a0,-68(s0)
+    // Reset all variables relative to the transaction of the static peripheral
+    // instance
+    peri->scnt      = 0;
+    4d90:	fbc42783          	lw	a5,-68(s0)
+    4d94:	0207a623          	sw	zero,44(a5)
+    peri->txcnt     = 0;
+    4d98:	fbc42783          	lw	a5,-68(s0)
+    4d9c:	0207a823          	sw	zero,48(a5)
+    peri->rxcnt     = 0;
+    4da0:	fbc42783          	lw	a5,-68(s0)
+    4da4:	0207aa23          	sw	zero,52(a5)
+    peri->txn       = (spi_transaction_t) {0};
+    4da8:	fbc42783          	lw	a5,-68(s0)
+    4dac:	0007aa23          	sw	zero,20(a5)
+    4db0:	0007ac23          	sw	zero,24(a5)
+    4db4:	0007ae23          	sw	zero,28(a5)
+    4db8:	0207a023          	sw	zero,32(a5)
+    4dbc:	0207a223          	sw	zero,36(a5)
+    4dc0:	0207a423          	sw	zero,40(a5)
+    peri->callbacks = NULL_CALLBACKS;
+    4dc4:	fbc42783          	lw	a5,-68(s0)
+    4dc8:	0207ac23          	sw	zero,56(a5)
+    4dcc:	fbc42783          	lw	a5,-68(s0)
+    4dd0:	0207ae23          	sw	zero,60(a5)
+    4dd4:	fbc42783          	lw	a5,-68(s0)
+    4dd8:	0407a023          	sw	zero,64(a5)
+    4ddc:	fbc42783          	lw	a5,-68(s0)
+    4de0:	0407a223          	sw	zero,68(a5)
+}
+    4de4:	0001                	nop
+    4de6:	40b6                	lw	ra,76(sp)
+    4de8:	4426                	lw	s0,72(sp)
+    4dea:	6161                	addi	sp,sp,80
+    4dec:	8082                	ret
+
+00004dee <spi_event_handler>:
+
+void spi_event_handler(spi_peripheral_t* peri, spi_event_e events) 
+{
+    4dee:	1101                	addi	sp,sp,-32
+    4df0:	ce06                	sw	ra,28(sp)
+    4df2:	cc22                	sw	s0,24(sp)
+    4df4:	1000                	addi	s0,sp,32
+    4df6:	fea42623          	sw	a0,-20(s0)
+    4dfa:	feb42423          	sw	a1,-24(s0)
+    // Ready means it is ready to accept new command segments. So we have two
+    // possibilities if the device is ready:
+    //  1) It is ready but not idle
+    //  2) It is ready and idle
+    if (events & SPI_EVENT_READY) 
+    4dfe:	fe842783          	lw	a5,-24(s0)
+    4e02:	8bc1                	andi	a5,a5,16
+    4e04:	c7d9                	beqz	a5,4e92 <spi_event_handler+0xa4>
+    {
+        // If SPI is ready and there are still commands to execute, issue next command
+        if (peri->txn.segments != NULL && peri->scnt < peri->txn.seglen) 
+    4e06:	fec42783          	lw	a5,-20(s0)
+    4e0a:	4bdc                	lw	a5,20(a5)
+    4e0c:	cf91                	beqz	a5,4e28 <spi_event_handler+0x3a>
+    4e0e:	fec42783          	lw	a5,-20(s0)
+    4e12:	57dc                	lw	a5,44(a5)
+    4e14:	fec42703          	lw	a4,-20(s0)
+    4e18:	01874703          	lbu	a4,24(a4)
+    4e1c:	00e7f663          	bgeu	a5,a4,4e28 <spi_event_handler+0x3a>
+        {
+            spi_issue_next_seg(peri);
+    4e20:	fec42503          	lw	a0,-20(s0)
+    4e24:	33b1                	jal	4b70 <spi_issue_next_seg>
+    4e26:	a0b5                	j	4e92 <spi_event_handler+0xa4>
+        }
+        // If no more commands and SPI is idle, it means the transaction is over
+        else if (events & SPI_EVENT_IDLE) 
+    4e28:	fe842783          	lw	a5,-24(s0)
+    4e2c:	0207f793          	andi	a5,a5,32
+    4e30:	c3ad                	beqz	a5,4e92 <spi_event_handler+0xa4>
+        {
+            // Disable all event interrupts
+            spi_set_events_enabled(peri->instance, SPI_EVENT_ALL, false);
+    4e32:	fec42783          	lw	a5,-20(s0)
+    4e36:	439c                	lw	a5,0(a5)
+    4e38:	4601                	li	a2,0
+    4e3a:	03f00593          	li	a1,63
+    4e3e:	853e                	mv	a0,a5
+    4e40:	b7bfe0ef          	jal	39ba <spi_set_events_enabled>
+            spi_enable_evt_intr   (peri->instance, false);
+    4e44:	fec42783          	lw	a5,-20(s0)
+    4e48:	439c                	lw	a5,0(a5)
+    4e4a:	4581                	li	a1,0
+    4e4c:	853e                	mv	a0,a5
+    4e4e:	800ff0ef          	jal	3e4e <spi_enable_evt_intr>
+            // Read the last data from the RX fifo
+            spi_empty_rx(peri);
+    4e52:	fec42503          	lw	a0,-20(s0)
+    4e56:	314d                	jal	4af8 <spi_empty_rx>
+            // Set the state to Transaction is done (meaning successful)
+            peri->state = SPI_STATE_DONE;
+    4e58:	fec42783          	lw	a5,-20(s0)
+    4e5c:	4711                	li	a4,4
+    4e5e:	cb98                	sw	a4,16(a5)
+            // If there is a callback defined call it
+            if (peri->callbacks.done_cb != NULL) 
+    4e60:	fec42783          	lw	a5,-20(s0)
+    4e64:	5f9c                	lw	a5,56(a5)
+    4e66:	c395                	beqz	a5,4e8a <spi_event_handler+0x9c>
+            {
+                peri->callbacks.done_cb(peri->txn.txbuffer, peri->txcnt, 
+    4e68:	fec42783          	lw	a5,-20(s0)
+    4e6c:	5f9c                	lw	a5,56(a5)
+    4e6e:	fec42703          	lw	a4,-20(s0)
+    4e72:	4f48                	lw	a0,28(a4)
+    4e74:	fec42703          	lw	a4,-20(s0)
+    4e78:	5b0c                	lw	a1,48(a4)
+    4e7a:	fec42703          	lw	a4,-20(s0)
+    4e7e:	5350                	lw	a2,36(a4)
+    4e80:	fec42703          	lw	a4,-20(s0)
+    4e84:	5b58                	lw	a4,52(a4)
+    4e86:	86ba                	mv	a3,a4
+    4e88:	9782                	jalr	a5
+                                        peri->txn.rxbuffer, peri->rxcnt);
+            }
+            // Reset all transaction related variables
+            spi_reset_transaction(peri);
+    4e8a:	fec42503          	lw	a0,-20(s0)
+    4e8e:	3ddd                	jal	4d84 <spi_reset_transaction>
+            return;
+    4e90:	a8ad                	j	4f0a <spi_event_handler+0x11c>
+        }
+    }
+    if (events & SPI_EVENT_TXWM)
+    4e92:	fe842783          	lw	a5,-24(s0)
+    4e96:	8ba1                	andi	a5,a5,8
+    4e98:	cb9d                	beqz	a5,4ece <spi_event_handler+0xe0>
+    {
+        // TX watermark reached. Refill TX fifo if more data
+        // If there is a callback defined call it
+        if (spi_fill_tx(peri) && peri->callbacks.txwm_cb != NULL)
+    4e9a:	fec42503          	lw	a0,-20(s0)
+    4e9e:	36c5                	jal	4a7e <spi_fill_tx>
+    4ea0:	87aa                	mv	a5,a0
+    4ea2:	c795                	beqz	a5,4ece <spi_event_handler+0xe0>
+    4ea4:	fec42783          	lw	a5,-20(s0)
+    4ea8:	5fdc                	lw	a5,60(a5)
+    4eaa:	c395                	beqz	a5,4ece <spi_event_handler+0xe0>
+        {
+            peri->callbacks.txwm_cb(peri->txn.txbuffer, peri->txcnt, 
+    4eac:	fec42783          	lw	a5,-20(s0)
+    4eb0:	5fdc                	lw	a5,60(a5)
+    4eb2:	fec42703          	lw	a4,-20(s0)
+    4eb6:	4f48                	lw	a0,28(a4)
+    4eb8:	fec42703          	lw	a4,-20(s0)
+    4ebc:	5b0c                	lw	a1,48(a4)
+    4ebe:	fec42703          	lw	a4,-20(s0)
+    4ec2:	5350                	lw	a2,36(a4)
+    4ec4:	fec42703          	lw	a4,-20(s0)
+    4ec8:	5b58                	lw	a4,52(a4)
+    4eca:	86ba                	mv	a3,a4
+    4ecc:	9782                	jalr	a5
+                                    peri->txn.rxbuffer, peri->rxcnt);
+        }
+    }
+    if (events & SPI_EVENT_RXWM)
+    4ece:	fe842783          	lw	a5,-24(s0)
+    4ed2:	8b91                	andi	a5,a5,4
+    4ed4:	cb9d                	beqz	a5,4f0a <spi_event_handler+0x11c>
+    {
+        // RX watermark reached. Empty RX fifo to get more data
+        // If there is a callback defined call it
+        if (spi_empty_rx(peri) && peri->callbacks.rxwm_cb != NULL)
+    4ed6:	fec42503          	lw	a0,-20(s0)
+    4eda:	3939                	jal	4af8 <spi_empty_rx>
+    4edc:	87aa                	mv	a5,a0
+    4ede:	c795                	beqz	a5,4f0a <spi_event_handler+0x11c>
+    4ee0:	fec42783          	lw	a5,-20(s0)
+    4ee4:	43bc                	lw	a5,64(a5)
+    4ee6:	c395                	beqz	a5,4f0a <spi_event_handler+0x11c>
+        {
+            peri->callbacks.rxwm_cb(peri->txn.txbuffer, peri->txcnt, 
+    4ee8:	fec42783          	lw	a5,-20(s0)
+    4eec:	43bc                	lw	a5,64(a5)
+    4eee:	fec42703          	lw	a4,-20(s0)
+    4ef2:	4f48                	lw	a0,28(a4)
+    4ef4:	fec42703          	lw	a4,-20(s0)
+    4ef8:	5b0c                	lw	a1,48(a4)
+    4efa:	fec42703          	lw	a4,-20(s0)
+    4efe:	5350                	lw	a2,36(a4)
+    4f00:	fec42703          	lw	a4,-20(s0)
+    4f04:	5b58                	lw	a4,52(a4)
+    4f06:	86ba                	mv	a3,a4
+    4f08:	9782                	jalr	a5
+                                    peri->txn.rxbuffer, peri->rxcnt);
+        }
+    }
+}
+    4f0a:	40f2                	lw	ra,28(sp)
+    4f0c:	4462                	lw	s0,24(sp)
+    4f0e:	6105                	addi	sp,sp,32
+    4f10:	8082                	ret
+
+00004f12 <spi_error_handler>:
+
+void spi_error_handler(spi_peripheral_t* peri, spi_error_e error) 
+{
+    4f12:	1101                	addi	sp,sp,-32
+    4f14:	ce06                	sw	ra,28(sp)
+    4f16:	cc22                	sw	s0,24(sp)
+    4f18:	1000                	addi	s0,sp,32
+    4f1a:	fea42623          	sw	a0,-20(s0)
+    4f1e:	feb42423          	sw	a1,-24(s0)
+    // Disable event interrupts
+    spi_set_events_enabled(peri->instance, SPI_EVENT_ALL, false);
+    4f22:	fec42783          	lw	a5,-20(s0)
+    4f26:	439c                	lw	a5,0(a5)
+    4f28:	4601                	li	a2,0
+    4f2a:	03f00593          	li	a1,63
+    4f2e:	853e                	mv	a0,a5
+    4f30:	a8bfe0ef          	jal	39ba <spi_set_events_enabled>
+    spi_enable_evt_intr   (peri->instance, false);
+    4f34:	fec42783          	lw	a5,-20(s0)
+    4f38:	439c                	lw	a5,0(a5)
+    4f3a:	4581                	li	a1,0
+    4f3c:	853e                	mv	a0,a5
+    4f3e:	f11fe0ef          	jal	3e4e <spi_enable_evt_intr>
+    // If there is a callback defined invoke it
+    if (peri->callbacks.error_cb != NULL) 
+    4f42:	fec42783          	lw	a5,-20(s0)
+    4f46:	43fc                	lw	a5,68(a5)
+    4f48:	c395                	beqz	a5,4f6c <spi_error_handler+0x5a>
+    {
+        peri->callbacks.error_cb(peri->txn.txbuffer, peri->txcnt, 
+    4f4a:	fec42783          	lw	a5,-20(s0)
+    4f4e:	43fc                	lw	a5,68(a5)
+    4f50:	fec42703          	lw	a4,-20(s0)
+    4f54:	4f48                	lw	a0,28(a4)
+    4f56:	fec42703          	lw	a4,-20(s0)
+    4f5a:	5b0c                	lw	a1,48(a4)
+    4f5c:	fec42703          	lw	a4,-20(s0)
+    4f60:	5350                	lw	a2,36(a4)
+    4f62:	fec42703          	lw	a4,-20(s0)
+    4f66:	5b58                	lw	a4,52(a4)
+    4f68:	86ba                	mv	a3,a4
+    4f6a:	9782                	jalr	a5
+                                 peri->txn.rxbuffer, peri->rxcnt);
+    }
+    spi_reset_peri(peri);
+    4f6c:	fec42503          	lw	a0,-20(s0)
+    4f70:	3b9d                	jal	4ce6 <spi_reset_peri>
+    // Set the state to error
+    peri->state = SPI_STATE_ERROR;
+    4f72:	fec42783          	lw	a5,-20(s0)
+    4f76:	4721                	li	a4,8
+    4f78:	cb98                	sw	a4,16(a5)
+}
+    4f7a:	0001                	nop
+    4f7c:	40f2                	lw	ra,28(sp)
+    4f7e:	4462                	lw	s0,24(sp)
+    4f80:	6105                	addi	sp,sp,32
+    4f82:	8082                	ret
+
+00004f84 <spi_intr_handler_event_flash>:
+
+/**
+ * @brief Implementation of the weak function of the HAL
+ */
+void spi_intr_handler_event_flash(spi_event_e events) 
+{
+    4f84:	1101                	addi	sp,sp,-32
+    4f86:	ce06                	sw	ra,28(sp)
+    4f88:	cc22                	sw	s0,24(sp)
+    4f8a:	1000                	addi	s0,sp,32
+    4f8c:	fea42623          	sw	a0,-20(s0)
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_FLASH])) return;
+    4f90:	67ad                	lui	a5,0xb
+    4f92:	58478793          	addi	a5,a5,1412 # b584 <peripherals>
+    4f96:	4b98                	lw	a4,16(a5)
+    4f98:	4789                	li	a5,2
+    4f9a:	00f71963          	bne	a4,a5,4fac <spi_intr_handler_event_flash+0x28>
+    spi_event_handler(&peripherals[SPI_IDX_FLASH], events);
+    4f9e:	fec42583          	lw	a1,-20(s0)
+    4fa2:	67ad                	lui	a5,0xb
+    4fa4:	58478513          	addi	a0,a5,1412 # b584 <peripherals>
+    4fa8:	3599                	jal	4dee <spi_event_handler>
+    4faa:	a011                	j	4fae <spi_intr_handler_event_flash+0x2a>
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_FLASH])) return;
+    4fac:	0001                	nop
+}
+    4fae:	40f2                	lw	ra,28(sp)
+    4fb0:	4462                	lw	s0,24(sp)
+    4fb2:	6105                	addi	sp,sp,32
+    4fb4:	8082                	ret
+
+00004fb6 <spi_intr_handler_error_flash>:
+
+/**
+ * @brief Implementation of the weak function of the HAL
+ */
+void spi_intr_handler_error_flash(spi_error_e errors) 
+{
+    4fb6:	1101                	addi	sp,sp,-32
+    4fb8:	ce06                	sw	ra,28(sp)
+    4fba:	cc22                	sw	s0,24(sp)
+    4fbc:	1000                	addi	s0,sp,32
+    4fbe:	fea42623          	sw	a0,-20(s0)
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_FLASH])) return;
+    4fc2:	67ad                	lui	a5,0xb
+    4fc4:	58478793          	addi	a5,a5,1412 # b584 <peripherals>
+    4fc8:	4b98                	lw	a4,16(a5)
+    4fca:	4789                	li	a5,2
+    4fcc:	00f71963          	bne	a4,a5,4fde <spi_intr_handler_error_flash+0x28>
+    spi_error_handler(&peripherals[SPI_IDX_FLASH], errors);
+    4fd0:	fec42583          	lw	a1,-20(s0)
+    4fd4:	67ad                	lui	a5,0xb
+    4fd6:	58478513          	addi	a0,a5,1412 # b584 <peripherals>
+    4fda:	3f25                	jal	4f12 <spi_error_handler>
+    4fdc:	a011                	j	4fe0 <spi_intr_handler_error_flash+0x2a>
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_FLASH])) return;
+    4fde:	0001                	nop
+}
+    4fe0:	40f2                	lw	ra,28(sp)
+    4fe2:	4462                	lw	s0,24(sp)
+    4fe4:	6105                	addi	sp,sp,32
+    4fe6:	8082                	ret
+
+00004fe8 <spi_intr_handler_event_host>:
+
+/**
+ * @brief Implementation of the weak function of the HAL
+ */
+void spi_intr_handler_event_host(spi_event_e events) 
+{
+    4fe8:	1101                	addi	sp,sp,-32
+    4fea:	ce06                	sw	ra,28(sp)
+    4fec:	cc22                	sw	s0,24(sp)
+    4fee:	1000                	addi	s0,sp,32
+    4ff0:	fea42623          	sw	a0,-20(s0)
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_HOST])) return;
+    4ff4:	67ad                	lui	a5,0xb
+    4ff6:	58478793          	addi	a5,a5,1412 # b584 <peripherals>
+    4ffa:	4fb8                	lw	a4,88(a5)
+    4ffc:	4789                	li	a5,2
+    4ffe:	00f71963          	bne	a4,a5,5010 <spi_intr_handler_event_host+0x28>
+    spi_event_handler(&peripherals[SPI_IDX_HOST], events);
+    5002:	fec42583          	lw	a1,-20(s0)
+    5006:	67ad                	lui	a5,0xb
+    5008:	5cc78513          	addi	a0,a5,1484 # b5cc <peripherals+0x48>
+    500c:	33cd                	jal	4dee <spi_event_handler>
+    500e:	a011                	j	5012 <spi_intr_handler_event_host+0x2a>
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_HOST])) return;
+    5010:	0001                	nop
+}
+    5012:	40f2                	lw	ra,28(sp)
+    5014:	4462                	lw	s0,24(sp)
+    5016:	6105                	addi	sp,sp,32
+    5018:	8082                	ret
+
+0000501a <spi_intr_handler_error_host>:
+
+/**
+ * @brief Implementation of the weak function of the HAL
+ */
+void spi_intr_handler_error_host(spi_error_e errors) 
+{
+    501a:	1101                	addi	sp,sp,-32
+    501c:	ce06                	sw	ra,28(sp)
+    501e:	cc22                	sw	s0,24(sp)
+    5020:	1000                	addi	s0,sp,32
+    5022:	fea42623          	sw	a0,-20(s0)
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_HOST])) return;
+    5026:	67ad                	lui	a5,0xb
+    5028:	58478793          	addi	a5,a5,1412 # b584 <peripherals>
+    502c:	4fb8                	lw	a4,88(a5)
+    502e:	4789                	li	a5,2
+    5030:	00f71963          	bne	a4,a5,5042 <spi_intr_handler_error_host+0x28>
+    spi_error_handler(&peripherals[SPI_IDX_HOST], errors);
+    5034:	fec42583          	lw	a1,-20(s0)
+    5038:	67ad                	lui	a5,0xb
+    503a:	5cc78513          	addi	a0,a5,1484 # b5cc <peripherals+0x48>
+    503e:	3dd1                	jal	4f12 <spi_error_handler>
+    5040:	a011                	j	5044 <spi_intr_handler_error_host+0x2a>
+    if (SPI_NOT_BUSY(peripherals[SPI_IDX_HOST])) return;
+    5042:	0001                	nop
+}
+    5044:	40f2                	lw	ra,28(sp)
+    5046:	4462                	lw	s0,24(sp)
+    5048:	6105                	addi	sp,sp,32
+    504a:	8082                	ret
+
+0000504c <atexit>:
+    504c:	85aa                	mv	a1,a0
+    504e:	4681                	li	a3,0
+    5050:	4601                	li	a2,0
+    5052:	4501                	li	a0,0
+    5054:	ae2d                	j	538e <__register_exitproc>
+
+00005056 <std>:
+    5056:	1141                	addi	sp,sp,-16
+    5058:	c422                	sw	s0,8(sp)
+    505a:	c606                	sw	ra,12(sp)
+    505c:	842a                	mv	s0,a0
+    505e:	00b51623          	sh	a1,12(a0) # 3008000c <syscalls_cpp.cpp.cfa7c3ef+0x3006842a>
+    5062:	00c51723          	sh	a2,14(a0)
+    5066:	00052023          	sw	zero,0(a0)
+    506a:	00052223          	sw	zero,4(a0)
+    506e:	00052423          	sw	zero,8(a0)
+    5072:	06052223          	sw	zero,100(a0)
+    5076:	00052823          	sw	zero,16(a0)
+    507a:	00052a23          	sw	zero,20(a0)
+    507e:	00052c23          	sw	zero,24(a0)
+    5082:	4621                	li	a2,8
+    5084:	4581                	li	a1,0
+    5086:	05c50513          	addi	a0,a0,92
+    508a:	2cd5                	jal	537e <memset>
+    508c:	6795                	lui	a5,0x5
+    508e:	1aa78793          	addi	a5,a5,426 # 51aa <__sread>
+    5092:	d05c                	sw	a5,36(s0)
+    5094:	6795                	lui	a5,0x5
+    5096:	1da78793          	addi	a5,a5,474 # 51da <__swrite>
+    509a:	d41c                	sw	a5,40(s0)
+    509c:	6795                	lui	a5,0x5
+    509e:	22a78793          	addi	a5,a5,554 # 522a <__sseek>
+    50a2:	d45c                	sw	a5,44(s0)
+    50a4:	6795                	lui	a5,0x5
+    50a6:	26478793          	addi	a5,a5,612 # 5264 <__sclose>
+    50aa:	40b2                	lw	ra,12(sp)
+    50ac:	d000                	sw	s0,32(s0)
+    50ae:	d81c                	sw	a5,48(s0)
+    50b0:	4422                	lw	s0,8(sp)
+    50b2:	0141                	addi	sp,sp,16
+    50b4:	8082                	ret
+
+000050b6 <stdio_exit_handler>:
+    50b6:	6595                	lui	a1,0x5
+    50b8:	8d818613          	addi	a2,gp,-1832 # b65c <__sglue>
+    50bc:	7ea58593          	addi	a1,a1,2026 # 57ea <_fflush_r>
+    50c0:	8e418513          	addi	a0,gp,-1820 # b668 <_impure_data>
+    50c4:	a059                	j	514a <_fwalk_sglue>
+
+000050c6 <cleanup_stdio>:
+    50c6:	414c                	lw	a1,4(a0)
+    50c8:	1141                	addi	sp,sp,-16
+    50ca:	c422                	sw	s0,8(sp)
+    50cc:	c606                	sw	ra,12(sp)
+    50ce:	aa018793          	addi	a5,gp,-1376 # b824 <__sf>
+    50d2:	842a                	mv	s0,a0
+    50d4:	00f58363          	beq	a1,a5,50da <cleanup_stdio+0x14>
+    50d8:	2f09                	jal	57ea <_fflush_r>
+    50da:	440c                	lw	a1,8(s0)
+    50dc:	b0818793          	addi	a5,gp,-1272 # b88c <__sf+0x68>
+    50e0:	00f58463          	beq	a1,a5,50e8 <cleanup_stdio+0x22>
+    50e4:	8522                	mv	a0,s0
+    50e6:	2711                	jal	57ea <_fflush_r>
+    50e8:	444c                	lw	a1,12(s0)
+    50ea:	b7018793          	addi	a5,gp,-1168 # b8f4 <__sf+0xd0>
+    50ee:	00f58763          	beq	a1,a5,50fc <cleanup_stdio+0x36>
+    50f2:	8522                	mv	a0,s0
+    50f4:	4422                	lw	s0,8(sp)
+    50f6:	40b2                	lw	ra,12(sp)
+    50f8:	0141                	addi	sp,sp,16
+    50fa:	adc5                	j	57ea <_fflush_r>
+    50fc:	40b2                	lw	ra,12(sp)
+    50fe:	4422                	lw	s0,8(sp)
+    5100:	0141                	addi	sp,sp,16
+    5102:	8082                	ret
+
+00005104 <global_stdio_init.part.0>:
+    5104:	6795                	lui	a5,0x5
+    5106:	1141                	addi	sp,sp,-16
+    5108:	0b678793          	addi	a5,a5,182 # 50b6 <stdio_exit_handler>
+    510c:	4601                	li	a2,0
+    510e:	4591                	li	a1,4
+    5110:	aa018513          	addi	a0,gp,-1376 # b824 <__sf>
+    5114:	c606                	sw	ra,12(sp)
+    5116:	94f1a623          	sw	a5,-1716(gp) # b6d0 <__stdio_exit_handler>
+    511a:	3f35                	jal	5056 <std>
+    511c:	4605                	li	a2,1
+    511e:	45a5                	li	a1,9
+    5120:	b0818513          	addi	a0,gp,-1272 # b88c <__sf+0x68>
+    5124:	3f0d                	jal	5056 <std>
+    5126:	40b2                	lw	ra,12(sp)
+    5128:	4609                	li	a2,2
+    512a:	45c9                	li	a1,18
+    512c:	b7018513          	addi	a0,gp,-1168 # b8f4 <__sf+0xd0>
+    5130:	0141                	addi	sp,sp,16
+    5132:	b715                	j	5056 <std>
+
+00005134 <__sinit>:
+    5134:	511c                	lw	a5,32(a0)
+    5136:	eb89                	bnez	a5,5148 <__sinit+0x14>
+    5138:	6795                	lui	a5,0x5
+    513a:	0c678793          	addi	a5,a5,198 # 50c6 <cleanup_stdio>
+    513e:	d11c                	sw	a5,32(a0)
+    5140:	94c1a783          	lw	a5,-1716(gp) # b6d0 <__stdio_exit_handler>
+    5144:	e391                	bnez	a5,5148 <__sinit+0x14>
+    5146:	bf7d                	j	5104 <global_stdio_init.part.0>
+    5148:	8082                	ret
+
+0000514a <_fwalk_sglue>:
+    514a:	7179                	addi	sp,sp,-48
+    514c:	d422                	sw	s0,40(sp)
+    514e:	d04a                	sw	s2,32(sp)
+    5150:	ce4e                	sw	s3,28(sp)
+    5152:	cc52                	sw	s4,24(sp)
+    5154:	ca56                	sw	s5,20(sp)
+    5156:	d606                	sw	ra,44(sp)
+    5158:	d226                	sw	s1,36(sp)
+    515a:	8a2a                	mv	s4,a0
+    515c:	8aae                	mv	s5,a1
+    515e:	4401                	li	s0,0
+    5160:	4905                	li	s2,1
+    5162:	59fd                	li	s3,-1
+    5164:	460c                	lw	a1,8(a2)
+    5166:	4244                	lw	s1,4(a2)
+    5168:	14fd                	addi	s1,s1,-1
+    516a:	0004de63          	bgez	s1,5186 <_fwalk_sglue+0x3c>
+    516e:	4210                	lw	a2,0(a2)
+    5170:	fa75                	bnez	a2,5164 <_fwalk_sglue+0x1a>
+    5172:	50b2                	lw	ra,44(sp)
+    5174:	8522                	mv	a0,s0
+    5176:	5422                	lw	s0,40(sp)
+    5178:	5492                	lw	s1,36(sp)
+    517a:	5902                	lw	s2,32(sp)
+    517c:	49f2                	lw	s3,28(sp)
+    517e:	4a62                	lw	s4,24(sp)
+    5180:	4ad2                	lw	s5,20(sp)
+    5182:	6145                	addi	sp,sp,48
+    5184:	8082                	ret
+    5186:	00c5d783          	lhu	a5,12(a1)
+    518a:	00f97d63          	bgeu	s2,a5,51a4 <_fwalk_sglue+0x5a>
+    518e:	00e59783          	lh	a5,14(a1)
+    5192:	01378963          	beq	a5,s3,51a4 <_fwalk_sglue+0x5a>
+    5196:	8552                	mv	a0,s4
+    5198:	c632                	sw	a2,12(sp)
+    519a:	c42e                	sw	a1,8(sp)
+    519c:	9a82                	jalr	s5
+    519e:	4632                	lw	a2,12(sp)
+    51a0:	45a2                	lw	a1,8(sp)
+    51a2:	8c49                	or	s0,s0,a0
+    51a4:	06858593          	addi	a1,a1,104
+    51a8:	b7c1                	j	5168 <_fwalk_sglue+0x1e>
+
+000051aa <__sread>:
+    51aa:	1141                	addi	sp,sp,-16
+    51ac:	c422                	sw	s0,8(sp)
+    51ae:	842e                	mv	s0,a1
+    51b0:	00e59583          	lh	a1,14(a1)
+    51b4:	c606                	sw	ra,12(sp)
+    51b6:	2a01                	jal	52c6 <_read_r>
+    51b8:	00054963          	bltz	a0,51ca <__sread+0x20>
+    51bc:	487c                	lw	a5,84(s0)
+    51be:	97aa                	add	a5,a5,a0
+    51c0:	c87c                	sw	a5,84(s0)
+    51c2:	40b2                	lw	ra,12(sp)
+    51c4:	4422                	lw	s0,8(sp)
+    51c6:	0141                	addi	sp,sp,16
+    51c8:	8082                	ret
+    51ca:	00c45783          	lhu	a5,12(s0)
+    51ce:	777d                	lui	a4,0xfffff
+    51d0:	177d                	addi	a4,a4,-1 # ffffefff <syscalls_cpp.cpp.cfa7c3ef+0xfffe741d>
+    51d2:	8ff9                	and	a5,a5,a4
+    51d4:	00f41623          	sh	a5,12(s0)
+    51d8:	b7ed                	j	51c2 <__sread+0x18>
+
+000051da <__swrite>:
+    51da:	00c5d783          	lhu	a5,12(a1)
+    51de:	1101                	addi	sp,sp,-32
+    51e0:	cc22                	sw	s0,24(sp)
+    51e2:	ca26                	sw	s1,20(sp)
+    51e4:	c84a                	sw	s2,16(sp)
+    51e6:	c64e                	sw	s3,12(sp)
+    51e8:	ce06                	sw	ra,28(sp)
+    51ea:	1007f793          	andi	a5,a5,256
+    51ee:	84aa                	mv	s1,a0
+    51f0:	842e                	mv	s0,a1
+    51f2:	8932                	mv	s2,a2
+    51f4:	89b6                	mv	s3,a3
+    51f6:	c791                	beqz	a5,5202 <__swrite+0x28>
+    51f8:	00e59583          	lh	a1,14(a1)
+    51fc:	4689                	li	a3,2
+    51fe:	4601                	li	a2,0
+    5200:	2859                	jal	5296 <_lseek_r>
+    5202:	00c45783          	lhu	a5,12(s0)
+    5206:	777d                	lui	a4,0xfffff
+    5208:	177d                	addi	a4,a4,-1 # ffffefff <syscalls_cpp.cpp.cfa7c3ef+0xfffe741d>
+    520a:	8ff9                	and	a5,a5,a4
+    520c:	00e41583          	lh	a1,14(s0)
+    5210:	00f41623          	sh	a5,12(s0)
+    5214:	4462                	lw	s0,24(sp)
+    5216:	40f2                	lw	ra,28(sp)
+    5218:	86ce                	mv	a3,s3
+    521a:	864a                	mv	a2,s2
+    521c:	49b2                	lw	s3,12(sp)
+    521e:	4942                	lw	s2,16(sp)
+    5220:	8526                	mv	a0,s1
+    5222:	44d2                	lw	s1,20(sp)
+    5224:	6105                	addi	sp,sp,32
+    5226:	f00ff06f          	j	4926 <_write_r>
+
+0000522a <__sseek>:
+    522a:	1141                	addi	sp,sp,-16
+    522c:	c422                	sw	s0,8(sp)
+    522e:	842e                	mv	s0,a1
+    5230:	00e59583          	lh	a1,14(a1)
+    5234:	c606                	sw	ra,12(sp)
+    5236:	2085                	jal	5296 <_lseek_r>
+    5238:	577d                	li	a4,-1
+    523a:	00c41783          	lh	a5,12(s0)
+    523e:	00e51d63          	bne	a0,a4,5258 <__sseek+0x2e>
+    5242:	80050713          	addi	a4,a0,-2048
+    5246:	80070713          	addi	a4,a4,-2048
+    524a:	8ff9                	and	a5,a5,a4
+    524c:	00f41623          	sh	a5,12(s0)
+    5250:	40b2                	lw	ra,12(sp)
+    5252:	4422                	lw	s0,8(sp)
+    5254:	0141                	addi	sp,sp,16
+    5256:	8082                	ret
+    5258:	6705                	lui	a4,0x1
+    525a:	8fd9                	or	a5,a5,a4
+    525c:	00f41623          	sh	a5,12(s0)
+    5260:	c868                	sw	a0,84(s0)
+    5262:	b7fd                	j	5250 <__sseek+0x26>
+
+00005264 <__sclose>:
+    5264:	00e59583          	lh	a1,14(a1)
+    5268:	a009                	j	526a <_close_r>
+
+0000526a <_close_r>:
+    526a:	1141                	addi	sp,sp,-16
+    526c:	c422                	sw	s0,8(sp)
+    526e:	c226                	sw	s1,4(sp)
+    5270:	84aa                	mv	s1,a0
+    5272:	852e                	mv	a0,a1
+    5274:	c606                	sw	ra,12(sp)
+    5276:	9401a823          	sw	zero,-1712(gp) # b6d4 <errno>
+    527a:	d2eff0ef          	jal	47a8 <_close>
+    527e:	57fd                	li	a5,-1
+    5280:	00f51663          	bne	a0,a5,528c <_close_r+0x22>
+    5284:	9501a783          	lw	a5,-1712(gp) # b6d4 <errno>
+    5288:	c391                	beqz	a5,528c <_close_r+0x22>
+    528a:	c09c                	sw	a5,0(s1)
+    528c:	40b2                	lw	ra,12(sp)
+    528e:	4422                	lw	s0,8(sp)
+    5290:	4492                	lw	s1,4(sp)
+    5292:	0141                	addi	sp,sp,16
+    5294:	8082                	ret
+
+00005296 <_lseek_r>:
+    5296:	1141                	addi	sp,sp,-16
+    5298:	c422                	sw	s0,8(sp)
+    529a:	c226                	sw	s1,4(sp)
+    529c:	84aa                	mv	s1,a0
+    529e:	852e                	mv	a0,a1
+    52a0:	85b2                	mv	a1,a2
+    52a2:	8636                	mv	a2,a3
+    52a4:	c606                	sw	ra,12(sp)
+    52a6:	9401a823          	sw	zero,-1712(gp) # b6d4 <errno>
+    52aa:	d96ff0ef          	jal	4840 <_lseek>
+    52ae:	57fd                	li	a5,-1
+    52b0:	00f51663          	bne	a0,a5,52bc <_lseek_r+0x26>
+    52b4:	9501a783          	lw	a5,-1712(gp) # b6d4 <errno>
+    52b8:	c391                	beqz	a5,52bc <_lseek_r+0x26>
+    52ba:	c09c                	sw	a5,0(s1)
+    52bc:	40b2                	lw	ra,12(sp)
+    52be:	4422                	lw	s0,8(sp)
+    52c0:	4492                	lw	s1,4(sp)
+    52c2:	0141                	addi	sp,sp,16
+    52c4:	8082                	ret
+
+000052c6 <_read_r>:
+    52c6:	1141                	addi	sp,sp,-16
+    52c8:	c422                	sw	s0,8(sp)
+    52ca:	c226                	sw	s1,4(sp)
+    52cc:	84aa                	mv	s1,a0
+    52ce:	852e                	mv	a0,a1
+    52d0:	85b2                	mv	a1,a2
+    52d2:	8636                	mv	a2,a3
+    52d4:	c606                	sw	ra,12(sp)
+    52d6:	9401a823          	sw	zero,-1712(gp) # b6d4 <errno>
+    52da:	d86ff0ef          	jal	4860 <_read>
+    52de:	57fd                	li	a5,-1
+    52e0:	00f51663          	bne	a0,a5,52ec <_read_r+0x26>
+    52e4:	9501a783          	lw	a5,-1712(gp) # b6d4 <errno>
+    52e8:	c391                	beqz	a5,52ec <_read_r+0x26>
+    52ea:	c09c                	sw	a5,0(s1)
+    52ec:	40b2                	lw	ra,12(sp)
+    52ee:	4422                	lw	s0,8(sp)
+    52f0:	4492                	lw	s1,4(sp)
+    52f2:	0141                	addi	sp,sp,16
+    52f4:	8082                	ret
+
+000052f6 <__libc_init_array>:
+    52f6:	1141                	addi	sp,sp,-16
+    52f8:	c422                	sw	s0,8(sp)
+    52fa:	c226                	sw	s1,4(sp)
+    52fc:	642d                	lui	s0,0xb
+    52fe:	64ad                	lui	s1,0xb
+    5300:	58140413          	addi	s0,s0,1409 # b581 <__fini_array_end>
+    5304:	58148493          	addi	s1,s1,1409 # b581 <__fini_array_end>
+    5308:	8c81                	sub	s1,s1,s0
+    530a:	c04a                	sw	s2,0(sp)
+    530c:	c606                	sw	ra,12(sp)
+    530e:	8489                	srai	s1,s1,0x2
+    5310:	4901                	li	s2,0
+    5312:	02991363          	bne	s2,s1,5338 <__libc_init_array+0x42>
+    5316:	642d                	lui	s0,0xb
+    5318:	64ad                	lui	s1,0xb
+    531a:	58140413          	addi	s0,s0,1409 # b581 <__fini_array_end>
+    531e:	58148493          	addi	s1,s1,1409 # b581 <__fini_array_end>
+    5322:	8c81                	sub	s1,s1,s0
+    5324:	8489                	srai	s1,s1,0x2
+    5326:	4901                	li	s2,0
+    5328:	00991d63          	bne	s2,s1,5342 <__libc_init_array+0x4c>
+    532c:	40b2                	lw	ra,12(sp)
+    532e:	4422                	lw	s0,8(sp)
+    5330:	4492                	lw	s1,4(sp)
+    5332:	4902                	lw	s2,0(sp)
+    5334:	0141                	addi	sp,sp,16
+    5336:	8082                	ret
+    5338:	401c                	lw	a5,0(s0)
+    533a:	0905                	addi	s2,s2,1
+    533c:	0411                	addi	s0,s0,4
+    533e:	9782                	jalr	a5
+    5340:	bfc9                	j	5312 <__libc_init_array+0x1c>
+    5342:	401c                	lw	a5,0(s0)
+    5344:	0905                	addi	s2,s2,1
+    5346:	0411                	addi	s0,s0,4
+    5348:	9782                	jalr	a5
+    534a:	bff9                	j	5328 <__libc_init_array+0x32>
+
+0000534c <__libc_fini_array>:
+    534c:	1141                	addi	sp,sp,-16
+    534e:	c422                	sw	s0,8(sp)
+    5350:	c226                	sw	s1,4(sp)
+    5352:	642d                	lui	s0,0xb
+    5354:	64ad                	lui	s1,0xb
+    5356:	58148493          	addi	s1,s1,1409 # b581 <__fini_array_end>
+    535a:	58140413          	addi	s0,s0,1409 # b581 <__fini_array_end>
+    535e:	8c05                	sub	s0,s0,s1
+    5360:	c606                	sw	ra,12(sp)
+    5362:	8409                	srai	s0,s0,0x2
+    5364:	e411                	bnez	s0,5370 <__libc_fini_array+0x24>
+    5366:	40b2                	lw	ra,12(sp)
+    5368:	4422                	lw	s0,8(sp)
+    536a:	4492                	lw	s1,4(sp)
+    536c:	0141                	addi	sp,sp,16
+    536e:	8082                	ret
+    5370:	147d                	addi	s0,s0,-1
+    5372:	00241793          	slli	a5,s0,0x2
+    5376:	97a6                	add	a5,a5,s1
+    5378:	439c                	lw	a5,0(a5)
+    537a:	9782                	jalr	a5
+    537c:	b7e5                	j	5364 <__libc_fini_array+0x18>
+
+0000537e <memset>:
+    537e:	832a                	mv	t1,a0
+    5380:	c611                	beqz	a2,538c <memset+0xe>
+    5382:	00b30023          	sb	a1,0(t1)
+    5386:	167d                	addi	a2,a2,-1
+    5388:	0305                	addi	t1,t1,1
+    538a:	fe65                	bnez	a2,5382 <memset+0x4>
+    538c:	8082                	ret
+
+0000538e <__register_exitproc>:
+    538e:	9541a783          	lw	a5,-1708(gp) # b6d8 <__atexit>
+    5392:	8e2a                	mv	t3,a0
+    5394:	ef81                	bnez	a5,53ac <__register_exitproc+0x1e>
+    5396:	bd818793          	addi	a5,gp,-1064 # b95c <__atexit0>
+    539a:	94f1aa23          	sw	a5,-1708(gp) # b6d8 <__atexit>
+    539e:	00000513          	li	a0,0
+    53a2:	c509                	beqz	a0,53ac <__register_exitproc+0x1e>
+    53a4:	00002703          	lw	a4,0(zero) # 0 <__vector_start>
+    53a8:	08e7a423          	sw	a4,136(a5)
+    53ac:	43d8                	lw	a4,4(a5)
+    53ae:	487d                	li	a6,31
+    53b0:	557d                	li	a0,-1
+    53b2:	04e84763          	blt	a6,a4,5400 <__register_exitproc+0x72>
+    53b6:	020e0e63          	beqz	t3,53f2 <__register_exitproc+0x64>
+    53ba:	0887a803          	lw	a6,136(a5)
+    53be:	04080163          	beqz	a6,5400 <__register_exitproc+0x72>
+    53c2:	00271893          	slli	a7,a4,0x2
+    53c6:	98c2                	add	a7,a7,a6
+    53c8:	00c8a023          	sw	a2,0(a7)
+    53cc:	10082303          	lw	t1,256(a6)
+    53d0:	4605                	li	a2,1
+    53d2:	00e61633          	sll	a2,a2,a4
+    53d6:	00c36333          	or	t1,t1,a2
+    53da:	10682023          	sw	t1,256(a6)
+    53de:	08d8a023          	sw	a3,128(a7)
+    53e2:	4689                	li	a3,2
+    53e4:	00de1763          	bne	t3,a3,53f2 <__register_exitproc+0x64>
+    53e8:	10482683          	lw	a3,260(a6)
+    53ec:	8ed1                	or	a3,a3,a2
+    53ee:	10d82223          	sw	a3,260(a6)
+    53f2:	00170693          	addi	a3,a4,1 # 1001 <T10_func+0x79>
+    53f6:	070a                	slli	a4,a4,0x2
+    53f8:	c3d4                	sw	a3,4(a5)
+    53fa:	97ba                	add	a5,a5,a4
+    53fc:	c78c                	sw	a1,8(a5)
+    53fe:	4501                	li	a0,0
+    5400:	8082                	ret
+
+00005402 <__call_exitprocs>:
+    5402:	7179                	addi	sp,sp,-48
+    5404:	ca56                	sw	s5,20(sp)
+    5406:	c85a                	sw	s6,16(sp)
+    5408:	c65e                	sw	s7,12(sp)
+    540a:	c266                	sw	s9,4(sp)
+    540c:	d606                	sw	ra,44(sp)
+    540e:	d422                	sw	s0,40(sp)
+    5410:	d226                	sw	s1,36(sp)
+    5412:	d04a                	sw	s2,32(sp)
+    5414:	ce4e                	sw	s3,28(sp)
+    5416:	cc52                	sw	s4,24(sp)
+    5418:	c462                	sw	s8,8(sp)
+    541a:	8caa                	mv	s9,a0
+    541c:	8b2e                	mv	s6,a1
+    541e:	4b85                	li	s7,1
+    5420:	9541a483          	lw	s1,-1708(gp) # b6d8 <__atexit>
+    5424:	cc81                	beqz	s1,543c <__call_exitprocs+0x3a>
+    5426:	40c0                	lw	s0,4(s1)
+    5428:	0884a983          	lw	s3,136(s1)
+    542c:	fff40913          	addi	s2,s0,-1
+    5430:	040a                	slli	s0,s0,0x2
+    5432:	00898a33          	add	s4,s3,s0
+    5436:	9426                	add	s0,s0,s1
+    5438:	00095f63          	bgez	s2,5456 <__call_exitprocs+0x54>
+    543c:	50b2                	lw	ra,44(sp)
+    543e:	5422                	lw	s0,40(sp)
+    5440:	5492                	lw	s1,36(sp)
+    5442:	5902                	lw	s2,32(sp)
+    5444:	49f2                	lw	s3,28(sp)
+    5446:	4a62                	lw	s4,24(sp)
+    5448:	4ad2                	lw	s5,20(sp)
+    544a:	4b42                	lw	s6,16(sp)
+    544c:	4bb2                	lw	s7,12(sp)
+    544e:	4c22                	lw	s8,8(sp)
+    5450:	4c92                	lw	s9,4(sp)
+    5452:	6145                	addi	sp,sp,48
+    5454:	8082                	ret
+    5456:	000b0c63          	beqz	s6,546e <__call_exitprocs+0x6c>
+    545a:	00099663          	bnez	s3,5466 <__call_exitprocs+0x64>
+    545e:	197d                	addi	s2,s2,-1
+    5460:	1a71                	addi	s4,s4,-4
+    5462:	1471                	addi	s0,s0,-4
+    5464:	bfd1                	j	5438 <__call_exitprocs+0x36>
+    5466:	07ca2783          	lw	a5,124(s4)
+    546a:	ff679ae3          	bne	a5,s6,545e <__call_exitprocs+0x5c>
+    546e:	40d8                	lw	a4,4(s1)
+    5470:	405c                	lw	a5,4(s0)
+    5472:	177d                	addi	a4,a4,-1
+    5474:	03271863          	bne	a4,s2,54a4 <__call_exitprocs+0xa2>
+    5478:	0124a223          	sw	s2,4(s1)
+    547c:	d3ed                	beqz	a5,545e <__call_exitprocs+0x5c>
+    547e:	0044ac03          	lw	s8,4(s1)
+    5482:	00098863          	beqz	s3,5492 <__call_exitprocs+0x90>
+    5486:	1009a683          	lw	a3,256(s3)
+    548a:	012b9733          	sll	a4,s7,s2
+    548e:	8ef9                	and	a3,a3,a4
+    5490:	ee89                	bnez	a3,54aa <__call_exitprocs+0xa8>
+    5492:	9782                	jalr	a5
+    5494:	40dc                	lw	a5,4(s1)
+    5496:	f98795e3          	bne	a5,s8,5420 <__call_exitprocs+0x1e>
+    549a:	9541a783          	lw	a5,-1708(gp) # b6d8 <__atexit>
+    549e:	fcf480e3          	beq	s1,a5,545e <__call_exitprocs+0x5c>
+    54a2:	bfbd                	j	5420 <__call_exitprocs+0x1e>
+    54a4:	00042223          	sw	zero,4(s0)
+    54a8:	bfd1                	j	547c <__call_exitprocs+0x7a>
+    54aa:	1049a683          	lw	a3,260(s3)
+    54ae:	ffca2583          	lw	a1,-4(s4)
+    54b2:	8f75                	and	a4,a4,a3
+    54b4:	e701                	bnez	a4,54bc <__call_exitprocs+0xba>
+    54b6:	8566                	mv	a0,s9
+    54b8:	9782                	jalr	a5
+    54ba:	bfe9                	j	5494 <__call_exitprocs+0x92>
+    54bc:	852e                	mv	a0,a1
+    54be:	9782                	jalr	a5
+    54c0:	bfd1                	j	5494 <__call_exitprocs+0x92>
+
+000054c2 <_free_r>:
+    54c2:	cdd1                	beqz	a1,555e <_free_r+0x9c>
+    54c4:	ffc5a783          	lw	a5,-4(a1)
+    54c8:	1101                	addi	sp,sp,-32
+    54ca:	cc22                	sw	s0,24(sp)
+    54cc:	ce06                	sw	ra,28(sp)
+    54ce:	ffc58413          	addi	s0,a1,-4
+    54d2:	0007d363          	bgez	a5,54d8 <_free_r+0x16>
+    54d6:	943e                	add	s0,s0,a5
+    54d8:	c62a                	sw	a0,12(sp)
+    54da:	22e5                	jal	56c2 <__malloc_lock>
+    54dc:	95c1a783          	lw	a5,-1700(gp) # b6e0 <__malloc_free_list>
+    54e0:	4532                	lw	a0,12(sp)
+    54e2:	eb89                	bnez	a5,54f4 <_free_r+0x32>
+    54e4:	00042223          	sw	zero,4(s0)
+    54e8:	9481ae23          	sw	s0,-1700(gp) # b6e0 <__malloc_free_list>
+    54ec:	4462                	lw	s0,24(sp)
+    54ee:	40f2                	lw	ra,28(sp)
+    54f0:	6105                	addi	sp,sp,32
+    54f2:	aac9                	j	56c4 <__malloc_unlock>
+    54f4:	00f47d63          	bgeu	s0,a5,550e <_free_r+0x4c>
+    54f8:	4010                	lw	a2,0(s0)
+    54fa:	00c406b3          	add	a3,s0,a2
+    54fe:	00d79663          	bne	a5,a3,550a <_free_r+0x48>
+    5502:	4394                	lw	a3,0(a5)
+    5504:	43dc                	lw	a5,4(a5)
+    5506:	96b2                	add	a3,a3,a2
+    5508:	c014                	sw	a3,0(s0)
+    550a:	c05c                	sw	a5,4(s0)
+    550c:	bff1                	j	54e8 <_free_r+0x26>
+    550e:	873e                	mv	a4,a5
+    5510:	43dc                	lw	a5,4(a5)
+    5512:	c399                	beqz	a5,5518 <_free_r+0x56>
+    5514:	fef47de3          	bgeu	s0,a5,550e <_free_r+0x4c>
+    5518:	4314                	lw	a3,0(a4)
+    551a:	00d70633          	add	a2,a4,a3
+    551e:	00861f63          	bne	a2,s0,553c <_free_r+0x7a>
+    5522:	4010                	lw	a2,0(s0)
+    5524:	96b2                	add	a3,a3,a2
+    5526:	c314                	sw	a3,0(a4)
+    5528:	00d70633          	add	a2,a4,a3
+    552c:	fcc790e3          	bne	a5,a2,54ec <_free_r+0x2a>
+    5530:	4390                	lw	a2,0(a5)
+    5532:	43dc                	lw	a5,4(a5)
+    5534:	96b2                	add	a3,a3,a2
+    5536:	c314                	sw	a3,0(a4)
+    5538:	c35c                	sw	a5,4(a4)
+    553a:	bf4d                	j	54ec <_free_r+0x2a>
+    553c:	00c47563          	bgeu	s0,a2,5546 <_free_r+0x84>
+    5540:	47b1                	li	a5,12
+    5542:	c11c                	sw	a5,0(a0)
+    5544:	b765                	j	54ec <_free_r+0x2a>
+    5546:	4010                	lw	a2,0(s0)
+    5548:	00c406b3          	add	a3,s0,a2
+    554c:	00d79663          	bne	a5,a3,5558 <_free_r+0x96>
+    5550:	4394                	lw	a3,0(a5)
+    5552:	43dc                	lw	a5,4(a5)
+    5554:	96b2                	add	a3,a3,a2
+    5556:	c014                	sw	a3,0(s0)
+    5558:	c05c                	sw	a5,4(s0)
+    555a:	c340                	sw	s0,4(a4)
+    555c:	bf41                	j	54ec <_free_r+0x2a>
+    555e:	8082                	ret
+
+00005560 <sbrk_aligned>:
+    5560:	1141                	addi	sp,sp,-16
+    5562:	c422                	sw	s0,8(sp)
+    5564:	9581a783          	lw	a5,-1704(gp) # b6dc <__malloc_sbrk_start>
+    5568:	c226                	sw	s1,4(sp)
+    556a:	c04a                	sw	s2,0(sp)
+    556c:	c606                	sw	ra,12(sp)
+    556e:	892a                	mv	s2,a0
+    5570:	84ae                	mv	s1,a1
+    5572:	e789                	bnez	a5,557c <sbrk_aligned+0x1c>
+    5574:	4581                	li	a1,0
+    5576:	246d                	jal	5820 <_sbrk_r>
+    5578:	94a1ac23          	sw	a0,-1704(gp) # b6dc <__malloc_sbrk_start>
+    557c:	85a6                	mv	a1,s1
+    557e:	854a                	mv	a0,s2
+    5580:	2445                	jal	5820 <_sbrk_r>
+    5582:	54fd                	li	s1,-1
+    5584:	00951a63          	bne	a0,s1,5598 <sbrk_aligned+0x38>
+    5588:	547d                	li	s0,-1
+    558a:	40b2                	lw	ra,12(sp)
+    558c:	8522                	mv	a0,s0
+    558e:	4422                	lw	s0,8(sp)
+    5590:	4492                	lw	s1,4(sp)
+    5592:	4902                	lw	s2,0(sp)
+    5594:	0141                	addi	sp,sp,16
+    5596:	8082                	ret
+    5598:	00350413          	addi	s0,a0,3
+    559c:	9871                	andi	s0,s0,-4
+    559e:	fe8506e3          	beq	a0,s0,558a <sbrk_aligned+0x2a>
+    55a2:	40a405b3          	sub	a1,s0,a0
+    55a6:	854a                	mv	a0,s2
+    55a8:	2ca5                	jal	5820 <_sbrk_r>
+    55aa:	fe9510e3          	bne	a0,s1,558a <sbrk_aligned+0x2a>
+    55ae:	bfe9                	j	5588 <sbrk_aligned+0x28>
+
+000055b0 <_malloc_r>:
+    55b0:	1101                	addi	sp,sp,-32
+    55b2:	ca26                	sw	s1,20(sp)
+    55b4:	00358493          	addi	s1,a1,3
+    55b8:	98f1                	andi	s1,s1,-4
+    55ba:	ce06                	sw	ra,28(sp)
+    55bc:	cc22                	sw	s0,24(sp)
+    55be:	c84a                	sw	s2,16(sp)
+    55c0:	c64e                	sw	s3,12(sp)
+    55c2:	c452                	sw	s4,8(sp)
+    55c4:	04a1                	addi	s1,s1,8
+    55c6:	47b1                	li	a5,12
+    55c8:	00f4f363          	bgeu	s1,a5,55ce <_malloc_r+0x1e>
+    55cc:	84be                	mv	s1,a5
+    55ce:	0004c463          	bltz	s1,55d6 <_malloc_r+0x26>
+    55d2:	00b4fd63          	bgeu	s1,a1,55ec <_malloc_r+0x3c>
+    55d6:	47b1                	li	a5,12
+    55d8:	c11c                	sw	a5,0(a0)
+    55da:	4501                	li	a0,0
+    55dc:	40f2                	lw	ra,28(sp)
+    55de:	4462                	lw	s0,24(sp)
+    55e0:	44d2                	lw	s1,20(sp)
+    55e2:	4942                	lw	s2,16(sp)
+    55e4:	49b2                	lw	s3,12(sp)
+    55e6:	4a22                	lw	s4,8(sp)
+    55e8:	6105                	addi	sp,sp,32
+    55ea:	8082                	ret
+    55ec:	892a                	mv	s2,a0
+    55ee:	28d1                	jal	56c2 <__malloc_lock>
+    55f0:	95c1a783          	lw	a5,-1700(gp) # b6e0 <__malloc_free_list>
+    55f4:	843e                	mv	s0,a5
+    55f6:	e439                	bnez	s0,5644 <_malloc_r+0x94>
+    55f8:	85a6                	mv	a1,s1
+    55fa:	854a                	mv	a0,s2
+    55fc:	3795                	jal	5560 <sbrk_aligned>
+    55fe:	57fd                	li	a5,-1
+    5600:	842a                	mv	s0,a0
+    5602:	0af51e63          	bne	a0,a5,56be <_malloc_r+0x10e>
+    5606:	95c1a403          	lw	s0,-1700(gp) # b6e0 <__malloc_free_list>
+    560a:	87a2                	mv	a5,s0
+    560c:	ebc9                	bnez	a5,569e <_malloc_r+0xee>
+    560e:	c055                	beqz	s0,56b2 <_malloc_r+0x102>
+    5610:	00042a03          	lw	s4,0(s0)
+    5614:	4581                	li	a1,0
+    5616:	854a                	mv	a0,s2
+    5618:	9a22                	add	s4,s4,s0
+    561a:	2419                	jal	5820 <_sbrk_r>
+    561c:	08aa1b63          	bne	s4,a0,56b2 <_malloc_r+0x102>
+    5620:	401c                	lw	a5,0(s0)
+    5622:	854a                	mv	a0,s2
+    5624:	8c9d                	sub	s1,s1,a5
+    5626:	85a6                	mv	a1,s1
+    5628:	3f25                	jal	5560 <sbrk_aligned>
+    562a:	57fd                	li	a5,-1
+    562c:	08f50363          	beq	a0,a5,56b2 <_malloc_r+0x102>
+    5630:	401c                	lw	a5,0(s0)
+    5632:	97a6                	add	a5,a5,s1
+    5634:	c01c                	sw	a5,0(s0)
+    5636:	95c1a783          	lw	a5,-1700(gp) # b6e0 <__malloc_free_list>
+    563a:	43d8                	lw	a4,4(a5)
+    563c:	e725                	bnez	a4,56a4 <_malloc_r+0xf4>
+    563e:	9401ae23          	sw	zero,-1700(gp) # b6e0 <__malloc_free_list>
+    5642:	a015                	j	5666 <_malloc_r+0xb6>
+    5644:	4014                	lw	a3,0(s0)
+    5646:	8e85                	sub	a3,a3,s1
+    5648:	0406c863          	bltz	a3,5698 <_malloc_r+0xe8>
+    564c:	472d                	li	a4,11
+    564e:	02d77d63          	bgeu	a4,a3,5688 <_malloc_r+0xd8>
+    5652:	c004                	sw	s1,0(s0)
+    5654:	00940733          	add	a4,s0,s1
+    5658:	02879663          	bne	a5,s0,5684 <_malloc_r+0xd4>
+    565c:	94e1ae23          	sw	a4,-1700(gp) # b6e0 <__malloc_free_list>
+    5660:	405c                	lw	a5,4(s0)
+    5662:	c314                	sw	a3,0(a4)
+    5664:	c35c                	sw	a5,4(a4)
+    5666:	854a                	mv	a0,s2
+    5668:	28b1                	jal	56c4 <__malloc_unlock>
+    566a:	00b40513          	addi	a0,s0,11
+    566e:	00440793          	addi	a5,s0,4
+    5672:	9961                	andi	a0,a0,-8
+    5674:	40f50733          	sub	a4,a0,a5
+    5678:	f6f502e3          	beq	a0,a5,55dc <_malloc_r+0x2c>
+    567c:	943a                	add	s0,s0,a4
+    567e:	8f89                	sub	a5,a5,a0
+    5680:	c01c                	sw	a5,0(s0)
+    5682:	bfa9                	j	55dc <_malloc_r+0x2c>
+    5684:	c3d8                	sw	a4,4(a5)
+    5686:	bfe9                	j	5660 <_malloc_r+0xb0>
+    5688:	4058                	lw	a4,4(s0)
+    568a:	00879563          	bne	a5,s0,5694 <_malloc_r+0xe4>
+    568e:	94e1ae23          	sw	a4,-1700(gp) # b6e0 <__malloc_free_list>
+    5692:	bfd1                	j	5666 <_malloc_r+0xb6>
+    5694:	c3d8                	sw	a4,4(a5)
+    5696:	bfc1                	j	5666 <_malloc_r+0xb6>
+    5698:	87a2                	mv	a5,s0
+    569a:	4040                	lw	s0,4(s0)
+    569c:	bfa9                	j	55f6 <_malloc_r+0x46>
+    569e:	843e                	mv	s0,a5
+    56a0:	43dc                	lw	a5,4(a5)
+    56a2:	b7ad                	j	560c <_malloc_r+0x5c>
+    56a4:	873e                	mv	a4,a5
+    56a6:	43dc                	lw	a5,4(a5)
+    56a8:	fe879ee3          	bne	a5,s0,56a4 <_malloc_r+0xf4>
+    56ac:	00072223          	sw	zero,4(a4)
+    56b0:	bf5d                	j	5666 <_malloc_r+0xb6>
+    56b2:	47b1                	li	a5,12
+    56b4:	00f92023          	sw	a5,0(s2)
+    56b8:	854a                	mv	a0,s2
+    56ba:	2029                	jal	56c4 <__malloc_unlock>
+    56bc:	bf39                	j	55da <_malloc_r+0x2a>
+    56be:	c104                	sw	s1,0(a0)
+    56c0:	b75d                	j	5666 <_malloc_r+0xb6>
+
+000056c2 <__malloc_lock>:
+    56c2:	8082                	ret
+
+000056c4 <__malloc_unlock>:
+    56c4:	8082                	ret
+
+000056c6 <__sflush_r>:
+    56c6:	00c59783          	lh	a5,12(a1)
+    56ca:	1101                	addi	sp,sp,-32
+    56cc:	cc22                	sw	s0,24(sp)
+    56ce:	ca26                	sw	s1,20(sp)
+    56d0:	ce06                	sw	ra,28(sp)
+    56d2:	c84a                	sw	s2,16(sp)
+    56d4:	0087f713          	andi	a4,a5,8
+    56d8:	84aa                	mv	s1,a0
+    56da:	842e                	mv	s0,a1
+    56dc:	e361                	bnez	a4,579c <__sflush_r+0xd6>
+    56de:	41d8                	lw	a4,4(a1)
+    56e0:	00e04563          	bgtz	a4,56ea <__sflush_r+0x24>
+    56e4:	41b8                	lw	a4,64(a1)
+    56e6:	0ae05963          	blez	a4,5798 <__sflush_r+0xd2>
+    56ea:	5458                	lw	a4,44(s0)
+    56ec:	c755                	beqz	a4,5798 <__sflush_r+0xd2>
+    56ee:	0004a903          	lw	s2,0(s1)
+    56f2:	01379693          	slli	a3,a5,0x13
+    56f6:	0004a023          	sw	zero,0(s1)
+    56fa:	0606dd63          	bgez	a3,5774 <__sflush_r+0xae>
+    56fe:	4870                	lw	a2,84(s0)
+    5700:	00c45783          	lhu	a5,12(s0)
+    5704:	8b91                	andi	a5,a5,4
+    5706:	c799                	beqz	a5,5714 <__sflush_r+0x4e>
+    5708:	405c                	lw	a5,4(s0)
+    570a:	8e1d                	sub	a2,a2,a5
+    570c:	585c                	lw	a5,52(s0)
+    570e:	c399                	beqz	a5,5714 <__sflush_r+0x4e>
+    5710:	403c                	lw	a5,64(s0)
+    5712:	8e1d                	sub	a2,a2,a5
+    5714:	545c                	lw	a5,44(s0)
+    5716:	500c                	lw	a1,32(s0)
+    5718:	4681                	li	a3,0
+    571a:	8526                	mv	a0,s1
+    571c:	9782                	jalr	a5
+    571e:	577d                	li	a4,-1
+    5720:	00c41783          	lh	a5,12(s0)
+    5724:	00e51d63          	bne	a0,a4,573e <__sflush_r+0x78>
+    5728:	4094                	lw	a3,0(s1)
+    572a:	4775                	li	a4,29
+    572c:	0ad76063          	bltu	a4,a3,57cc <__sflush_r+0x106>
+    5730:	20400737          	lui	a4,0x20400
+    5734:	0705                	addi	a4,a4,1 # 20400001 <syscalls_cpp.cpp.cfa7c3ef+0x203e841f>
+    5736:	00d75733          	srl	a4,a4,a3
+    573a:	8b05                	andi	a4,a4,1
+    573c:	cb41                	beqz	a4,57cc <__sflush_r+0x106>
+    573e:	4818                	lw	a4,16(s0)
+    5740:	00042223          	sw	zero,4(s0)
+    5744:	c018                	sw	a4,0(s0)
+    5746:	01379713          	slli	a4,a5,0x13
+    574a:	00075863          	bgez	a4,575a <__sflush_r+0x94>
+    574e:	57fd                	li	a5,-1
+    5750:	00f51463          	bne	a0,a5,5758 <__sflush_r+0x92>
+    5754:	409c                	lw	a5,0(s1)
+    5756:	e391                	bnez	a5,575a <__sflush_r+0x94>
+    5758:	c868                	sw	a0,84(s0)
+    575a:	584c                	lw	a1,52(s0)
+    575c:	0124a023          	sw	s2,0(s1)
+    5760:	cd85                	beqz	a1,5798 <__sflush_r+0xd2>
+    5762:	04440793          	addi	a5,s0,68
+    5766:	00f58463          	beq	a1,a5,576e <__sflush_r+0xa8>
+    576a:	8526                	mv	a0,s1
+    576c:	3b99                	jal	54c2 <_free_r>
+    576e:	02042a23          	sw	zero,52(s0)
+    5772:	a01d                	j	5798 <__sflush_r+0xd2>
+    5774:	500c                	lw	a1,32(s0)
+    5776:	4601                	li	a2,0
+    5778:	4685                	li	a3,1
+    577a:	8526                	mv	a0,s1
+    577c:	9702                	jalr	a4
+    577e:	57fd                	li	a5,-1
+    5780:	862a                	mv	a2,a0
+    5782:	f6f51fe3          	bne	a0,a5,5700 <__sflush_r+0x3a>
+    5786:	409c                	lw	a5,0(s1)
+    5788:	dfa5                	beqz	a5,5700 <__sflush_r+0x3a>
+    578a:	fe378713          	addi	a4,a5,-29
+    578e:	c319                	beqz	a4,5794 <__sflush_r+0xce>
+    5790:	17a9                	addi	a5,a5,-22
+    5792:	eb9d                	bnez	a5,57c8 <__sflush_r+0x102>
+    5794:	0124a023          	sw	s2,0(s1)
+    5798:	4501                	li	a0,0
+    579a:	a835                	j	57d6 <__sflush_r+0x110>
+    579c:	4990                	lw	a2,16(a1)
+    579e:	de6d                	beqz	a2,5798 <__sflush_r+0xd2>
+    57a0:	4194                	lw	a3,0(a1)
+    57a2:	8b8d                	andi	a5,a5,3
+    57a4:	c190                	sw	a2,0(a1)
+    57a6:	40c68933          	sub	s2,a3,a2
+    57aa:	4701                	li	a4,0
+    57ac:	e391                	bnez	a5,57b0 <__sflush_r+0xea>
+    57ae:	49d8                	lw	a4,20(a1)
+    57b0:	c418                	sw	a4,8(s0)
+    57b2:	ff2053e3          	blez	s2,5798 <__sflush_r+0xd2>
+    57b6:	541c                	lw	a5,40(s0)
+    57b8:	500c                	lw	a1,32(s0)
+    57ba:	86ca                	mv	a3,s2
+    57bc:	8526                	mv	a0,s1
+    57be:	c632                	sw	a2,12(sp)
+    57c0:	9782                	jalr	a5
+    57c2:	4632                	lw	a2,12(sp)
+    57c4:	00a04f63          	bgtz	a0,57e2 <__sflush_r+0x11c>
+    57c8:	00c45783          	lhu	a5,12(s0)
+    57cc:	0407e793          	ori	a5,a5,64
+    57d0:	00f41623          	sh	a5,12(s0)
+    57d4:	557d                	li	a0,-1
+    57d6:	40f2                	lw	ra,28(sp)
+    57d8:	4462                	lw	s0,24(sp)
+    57da:	44d2                	lw	s1,20(sp)
+    57dc:	4942                	lw	s2,16(sp)
+    57de:	6105                	addi	sp,sp,32
+    57e0:	8082                	ret
+    57e2:	962a                	add	a2,a2,a0
+    57e4:	40a90933          	sub	s2,s2,a0
+    57e8:	b7e9                	j	57b2 <__sflush_r+0xec>
+
+000057ea <_fflush_r>:
+    57ea:	499c                	lw	a5,16(a1)
+    57ec:	cb85                	beqz	a5,581c <_fflush_r+0x32>
+    57ee:	1101                	addi	sp,sp,-32
+    57f0:	cc22                	sw	s0,24(sp)
+    57f2:	ce06                	sw	ra,28(sp)
+    57f4:	842a                	mv	s0,a0
+    57f6:	c511                	beqz	a0,5802 <_fflush_r+0x18>
+    57f8:	511c                	lw	a5,32(a0)
+    57fa:	e781                	bnez	a5,5802 <_fflush_r+0x18>
+    57fc:	c62e                	sw	a1,12(sp)
+    57fe:	3a1d                	jal	5134 <__sinit>
+    5800:	45b2                	lw	a1,12(sp)
+    5802:	00c59783          	lh	a5,12(a1)
+    5806:	c791                	beqz	a5,5812 <_fflush_r+0x28>
+    5808:	8522                	mv	a0,s0
+    580a:	4462                	lw	s0,24(sp)
+    580c:	40f2                	lw	ra,28(sp)
+    580e:	6105                	addi	sp,sp,32
+    5810:	bd5d                	j	56c6 <__sflush_r>
+    5812:	40f2                	lw	ra,28(sp)
+    5814:	4462                	lw	s0,24(sp)
+    5816:	4501                	li	a0,0
+    5818:	6105                	addi	sp,sp,32
+    581a:	8082                	ret
+    581c:	4501                	li	a0,0
+    581e:	8082                	ret
+
+00005820 <_sbrk_r>:
+    5820:	1141                	addi	sp,sp,-16
+    5822:	c422                	sw	s0,8(sp)
+    5824:	c226                	sw	s1,4(sp)
+    5826:	84aa                	mv	s1,a0
+    5828:	852e                	mv	a0,a1
+    582a:	c606                	sw	ra,12(sp)
+    582c:	9401a823          	sw	zero,-1712(gp) # b6d4 <errno>
+    5830:	956ff0ef          	jal	4986 <_sbrk>
+    5834:	57fd                	li	a5,-1
+    5836:	00f51663          	bne	a0,a5,5842 <_sbrk_r+0x22>
+    583a:	9501a783          	lw	a5,-1712(gp) # b6d4 <errno>
+    583e:	c391                	beqz	a5,5842 <_sbrk_r+0x22>
+    5840:	c09c                	sw	a5,0(s1)
+    5842:	40b2                	lw	ra,12(sp)
+    5844:	4422                	lw	s0,8(sp)
+    5846:	4492                	lw	s1,4(sp)
+    5848:	0141                	addi	sp,sp,16
+    584a:	8082                	ret
+
+0000584c <iprintf>:
+    584c:	7139                	addi	sp,sp,-64
+    584e:	da3e                	sw	a5,52(sp)
+    5850:	9481a783          	lw	a5,-1720(gp) # b6cc <_impure_ptr>
+    5854:	d432                	sw	a2,40(sp)
+    5856:	d636                	sw	a3,44(sp)
+    5858:	d22e                	sw	a1,36(sp)
+    585a:	d83a                	sw	a4,48(sp)
+    585c:	dc42                	sw	a6,56(sp)
+    585e:	de46                	sw	a7,60(sp)
+    5860:	478c                	lw	a1,8(a5)
+    5862:	1054                	addi	a3,sp,36
+    5864:	862a                	mv	a2,a0
+    5866:	853e                	mv	a0,a5
+    5868:	ce06                	sw	ra,28(sp)
+    586a:	c636                	sw	a3,12(sp)
+    586c:	2cad                	jal	5ae6 <_vfiprintf_r>
+    586e:	40f2                	lw	ra,28(sp)
+    5870:	6121                	addi	sp,sp,64
+    5872:	8082                	ret
+
+00005874 <_puts_r>:
+    5874:	511c                	lw	a5,32(a0)
+    5876:	1101                	addi	sp,sp,-32
+    5878:	cc22                	sw	s0,24(sp)
+    587a:	ca26                	sw	s1,20(sp)
+    587c:	c84a                	sw	s2,16(sp)
+    587e:	ce06                	sw	ra,28(sp)
+    5880:	c64e                	sw	s3,12(sp)
+    5882:	4500                	lw	s0,8(a0)
+    5884:	84aa                	mv	s1,a0
+    5886:	892e                	mv	s2,a1
+    5888:	e391                	bnez	a5,588c <_puts_r+0x18>
+    588a:	306d                	jal	5134 <__sinit>
+    588c:	00c45783          	lhu	a5,12(s0)
+    5890:	8ba1                	andi	a5,a5,8
+    5892:	c399                	beqz	a5,5898 <_puts_r+0x24>
+    5894:	481c                	lw	a5,16(s0)
+    5896:	e3bd                	bnez	a5,58fc <_puts_r+0x88>
+    5898:	85a2                	mv	a1,s0
+    589a:	8526                	mv	a0,s1
+    589c:	2229                	jal	59a6 <__swsetup_r>
+    589e:	cd39                	beqz	a0,58fc <_puts_r+0x88>
+    58a0:	557d                	li	a0,-1
+    58a2:	40f2                	lw	ra,28(sp)
+    58a4:	4462                	lw	s0,24(sp)
+    58a6:	44d2                	lw	s1,20(sp)
+    58a8:	4942                	lw	s2,16(sp)
+    58aa:	49b2                	lw	s3,12(sp)
+    58ac:	6105                	addi	sp,sp,32
+    58ae:	8082                	ret
+    58b0:	0007d863          	bgez	a5,58c0 <_puts_r+0x4c>
+    58b4:	4c18                	lw	a4,24(s0)
+    58b6:	02e7cd63          	blt	a5,a4,58f0 <_puts_r+0x7c>
+    58ba:	ff658793          	addi	a5,a1,-10
+    58be:	cb8d                	beqz	a5,58f0 <_puts_r+0x7c>
+    58c0:	401c                	lw	a5,0(s0)
+    58c2:	00178713          	addi	a4,a5,1
+    58c6:	c018                	sw	a4,0(s0)
+    58c8:	00b78023          	sb	a1,0(a5)
+    58cc:	0905                	addi	s2,s2,1
+    58ce:	441c                	lw	a5,8(s0)
+    58d0:	00094583          	lbu	a1,0(s2)
+    58d4:	17fd                	addi	a5,a5,-1
+    58d6:	c41c                	sw	a5,8(s0)
+    58d8:	fde1                	bnez	a1,58b0 <_puts_r+0x3c>
+    58da:	0207d363          	bgez	a5,5900 <_puts_r+0x8c>
+    58de:	8622                	mv	a2,s0
+    58e0:	45a9                	li	a1,10
+    58e2:	8526                	mv	a0,s1
+    58e4:	2815                	jal	5918 <__swbuf_r>
+    58e6:	57fd                	li	a5,-1
+    58e8:	faf50ce3          	beq	a0,a5,58a0 <_puts_r+0x2c>
+    58ec:	4529                	li	a0,10
+    58ee:	bf55                	j	58a2 <_puts_r+0x2e>
+    58f0:	8622                	mv	a2,s0
+    58f2:	8526                	mv	a0,s1
+    58f4:	2015                	jal	5918 <__swbuf_r>
+    58f6:	fd351be3          	bne	a0,s3,58cc <_puts_r+0x58>
+    58fa:	b75d                	j	58a0 <_puts_r+0x2c>
+    58fc:	59fd                	li	s3,-1
+    58fe:	bfc1                	j	58ce <_puts_r+0x5a>
+    5900:	401c                	lw	a5,0(s0)
+    5902:	00178713          	addi	a4,a5,1
+    5906:	c018                	sw	a4,0(s0)
+    5908:	4729                	li	a4,10
+    590a:	00e78023          	sb	a4,0(a5)
+    590e:	bff9                	j	58ec <_puts_r+0x78>
+
+00005910 <puts>:
+    5910:	85aa                	mv	a1,a0
+    5912:	9481a503          	lw	a0,-1720(gp) # b6cc <_impure_ptr>
+    5916:	bfb9                	j	5874 <_puts_r>
+
+00005918 <__swbuf_r>:
+    5918:	1101                	addi	sp,sp,-32
+    591a:	cc22                	sw	s0,24(sp)
+    591c:	ca26                	sw	s1,20(sp)
+    591e:	c64e                	sw	s3,12(sp)
+    5920:	ce06                	sw	ra,28(sp)
+    5922:	c84a                	sw	s2,16(sp)
+    5924:	84aa                	mv	s1,a0
+    5926:	89ae                	mv	s3,a1
+    5928:	8432                	mv	s0,a2
+    592a:	c501                	beqz	a0,5932 <__swbuf_r+0x1a>
+    592c:	511c                	lw	a5,32(a0)
+    592e:	e391                	bnez	a5,5932 <__swbuf_r+0x1a>
+    5930:	3011                	jal	5134 <__sinit>
+    5932:	4c1c                	lw	a5,24(s0)
+    5934:	c41c                	sw	a5,8(s0)
+    5936:	00c45783          	lhu	a5,12(s0)
+    593a:	8ba1                	andi	a5,a5,8
+    593c:	c399                	beqz	a5,5942 <__swbuf_r+0x2a>
+    593e:	481c                	lw	a5,16(s0)
+    5940:	ef91                	bnez	a5,595c <__swbuf_r+0x44>
+    5942:	85a2                	mv	a1,s0
+    5944:	8526                	mv	a0,s1
+    5946:	2085                	jal	59a6 <__swsetup_r>
+    5948:	c911                	beqz	a0,595c <__swbuf_r+0x44>
+    594a:	597d                	li	s2,-1
+    594c:	40f2                	lw	ra,28(sp)
+    594e:	4462                	lw	s0,24(sp)
+    5950:	44d2                	lw	s1,20(sp)
+    5952:	49b2                	lw	s3,12(sp)
+    5954:	854a                	mv	a0,s2
+    5956:	4942                	lw	s2,16(sp)
+    5958:	6105                	addi	sp,sp,32
+    595a:	8082                	ret
+    595c:	481c                	lw	a5,16(s0)
+    595e:	4008                	lw	a0,0(s0)
+    5960:	8d1d                	sub	a0,a0,a5
+    5962:	485c                	lw	a5,20(s0)
+    5964:	00f54663          	blt	a0,a5,5970 <__swbuf_r+0x58>
+    5968:	85a2                	mv	a1,s0
+    596a:	8526                	mv	a0,s1
+    596c:	3dbd                	jal	57ea <_fflush_r>
+    596e:	fd71                	bnez	a0,594a <__swbuf_r+0x32>
+    5970:	441c                	lw	a5,8(s0)
+    5972:	0505                	addi	a0,a0,1
+    5974:	0ff9f913          	zext.b	s2,s3
+    5978:	17fd                	addi	a5,a5,-1
+    597a:	c41c                	sw	a5,8(s0)
+    597c:	401c                	lw	a5,0(s0)
+    597e:	00178713          	addi	a4,a5,1
+    5982:	c018                	sw	a4,0(s0)
+    5984:	01378023          	sb	s3,0(a5)
+    5988:	485c                	lw	a5,20(s0)
+    598a:	00a78963          	beq	a5,a0,599c <__swbuf_r+0x84>
+    598e:	00c45783          	lhu	a5,12(s0)
+    5992:	8b85                	andi	a5,a5,1
+    5994:	dfc5                	beqz	a5,594c <__swbuf_r+0x34>
+    5996:	ff690793          	addi	a5,s2,-10
+    599a:	fbcd                	bnez	a5,594c <__swbuf_r+0x34>
+    599c:	85a2                	mv	a1,s0
+    599e:	8526                	mv	a0,s1
+    59a0:	35a9                	jal	57ea <_fflush_r>
+    59a2:	d54d                	beqz	a0,594c <__swbuf_r+0x34>
+    59a4:	b75d                	j	594a <__swbuf_r+0x32>
+
+000059a6 <__swsetup_r>:
+    59a6:	1141                	addi	sp,sp,-16
+    59a8:	c226                	sw	s1,4(sp)
+    59aa:	84aa                	mv	s1,a0
+    59ac:	9481a503          	lw	a0,-1720(gp) # b6cc <_impure_ptr>
+    59b0:	c422                	sw	s0,8(sp)
+    59b2:	c606                	sw	ra,12(sp)
+    59b4:	842e                	mv	s0,a1
+    59b6:	c509                	beqz	a0,59c0 <__swsetup_r+0x1a>
+    59b8:	511c                	lw	a5,32(a0)
+    59ba:	e399                	bnez	a5,59c0 <__swsetup_r+0x1a>
+    59bc:	f78ff0ef          	jal	5134 <__sinit>
+    59c0:	00c41783          	lh	a5,12(s0)
+    59c4:	0087f713          	andi	a4,a5,8
+    59c8:	e729                	bnez	a4,5a12 <__swsetup_r+0x6c>
+    59ca:	0107f713          	andi	a4,a5,16
+    59ce:	eb09                	bnez	a4,59e0 <__swsetup_r+0x3a>
+    59d0:	4725                	li	a4,9
+    59d2:	c098                	sw	a4,0(s1)
+    59d4:	0407e793          	ori	a5,a5,64
+    59d8:	00f41623          	sh	a5,12(s0)
+    59dc:	557d                	li	a0,-1
+    59de:	a0bd                	j	5a4c <__swsetup_r+0xa6>
+    59e0:	0047f713          	andi	a4,a5,4
+    59e4:	c31d                	beqz	a4,5a0a <__swsetup_r+0x64>
+    59e6:	584c                	lw	a1,52(s0)
+    59e8:	c989                	beqz	a1,59fa <__swsetup_r+0x54>
+    59ea:	04440793          	addi	a5,s0,68
+    59ee:	00f58463          	beq	a1,a5,59f6 <__swsetup_r+0x50>
+    59f2:	8526                	mv	a0,s1
+    59f4:	34f9                	jal	54c2 <_free_r>
+    59f6:	02042a23          	sw	zero,52(s0)
+    59fa:	00c45783          	lhu	a5,12(s0)
+    59fe:	4818                	lw	a4,16(s0)
+    5a00:	00042223          	sw	zero,4(s0)
+    5a04:	fdb7f793          	andi	a5,a5,-37
+    5a08:	c018                	sw	a4,0(s0)
+    5a0a:	0087e793          	ori	a5,a5,8
+    5a0e:	00f41623          	sh	a5,12(s0)
+    5a12:	481c                	lw	a5,16(s0)
+    5a14:	eb99                	bnez	a5,5a2a <__swsetup_r+0x84>
+    5a16:	445c                	lw	a5,12(s0)
+    5a18:	20000713          	li	a4,512
+    5a1c:	2807f793          	andi	a5,a5,640
+    5a20:	00e78563          	beq	a5,a4,5a2a <__swsetup_r+0x84>
+    5a24:	85a2                	mv	a1,s0
+    5a26:	8526                	mv	a0,s1
+    5a28:	25d5                	jal	610c <__smakebuf_r>
+    5a2a:	00c41783          	lh	a5,12(s0)
+    5a2e:	0017f713          	andi	a4,a5,1
+    5a32:	c315                	beqz	a4,5a56 <__swsetup_r+0xb0>
+    5a34:	4858                	lw	a4,20(s0)
+    5a36:	00042423          	sw	zero,8(s0)
+    5a3a:	40e00733          	neg	a4,a4
+    5a3e:	cc18                	sw	a4,24(s0)
+    5a40:	4818                	lw	a4,16(s0)
+    5a42:	4501                	li	a0,0
+    5a44:	e701                	bnez	a4,5a4c <__swsetup_r+0xa6>
+    5a46:	0807f713          	andi	a4,a5,128
+    5a4a:	f749                	bnez	a4,59d4 <__swsetup_r+0x2e>
+    5a4c:	40b2                	lw	ra,12(sp)
+    5a4e:	4422                	lw	s0,8(sp)
+    5a50:	4492                	lw	s1,4(sp)
+    5a52:	0141                	addi	sp,sp,16
+    5a54:	8082                	ret
+    5a56:	0027f713          	andi	a4,a5,2
+    5a5a:	4681                	li	a3,0
+    5a5c:	e311                	bnez	a4,5a60 <__swsetup_r+0xba>
+    5a5e:	4854                	lw	a3,20(s0)
+    5a60:	c414                	sw	a3,8(s0)
+    5a62:	bff9                	j	5a40 <__swsetup_r+0x9a>
+
+00005a64 <__errno>:
+    5a64:	9481a503          	lw	a0,-1720(gp) # b6cc <_impure_ptr>
+    5a68:	8082                	ret
+
+00005a6a <strlen>:
+    5a6a:	87aa                	mv	a5,a0
+    5a6c:	0007c703          	lbu	a4,0(a5)
+    5a70:	0785                	addi	a5,a5,1
+    5a72:	ff6d                	bnez	a4,5a6c <strlen+0x2>
+    5a74:	40a78533          	sub	a0,a5,a0
+    5a78:	157d                	addi	a0,a0,-1
+    5a7a:	8082                	ret
+
+00005a7c <__sfputc_r>:
+    5a7c:	461c                	lw	a5,8(a2)
+    5a7e:	17fd                	addi	a5,a5,-1
+    5a80:	c61c                	sw	a5,8(a2)
+    5a82:	0007d963          	bgez	a5,5a94 <__sfputc_r+0x18>
+    5a86:	4e18                	lw	a4,24(a2)
+    5a88:	00e7c563          	blt	a5,a4,5a92 <__sfputc_r+0x16>
+    5a8c:	ff658793          	addi	a5,a1,-10
+    5a90:	e391                	bnez	a5,5a94 <__sfputc_r+0x18>
+    5a92:	b559                	j	5918 <__swbuf_r>
+    5a94:	421c                	lw	a5,0(a2)
+    5a96:	852e                	mv	a0,a1
+    5a98:	00178713          	addi	a4,a5,1
+    5a9c:	c218                	sw	a4,0(a2)
+    5a9e:	00b78023          	sb	a1,0(a5)
+    5aa2:	8082                	ret
+
+00005aa4 <__sfputs_r>:
+    5aa4:	1101                	addi	sp,sp,-32
+    5aa6:	cc22                	sw	s0,24(sp)
+    5aa8:	ca26                	sw	s1,20(sp)
+    5aaa:	c84a                	sw	s2,16(sp)
+    5aac:	c64e                	sw	s3,12(sp)
+    5aae:	c452                	sw	s4,8(sp)
+    5ab0:	ce06                	sw	ra,28(sp)
+    5ab2:	89aa                	mv	s3,a0
+    5ab4:	8a2e                	mv	s4,a1
+    5ab6:	8432                	mv	s0,a2
+    5ab8:	00d604b3          	add	s1,a2,a3
+    5abc:	597d                	li	s2,-1
+    5abe:	00941463          	bne	s0,s1,5ac6 <__sfputs_r+0x22>
+    5ac2:	4501                	li	a0,0
+    5ac4:	a809                	j	5ad6 <__sfputs_r+0x32>
+    5ac6:	00044583          	lbu	a1,0(s0)
+    5aca:	8652                	mv	a2,s4
+    5acc:	854e                	mv	a0,s3
+    5ace:	377d                	jal	5a7c <__sfputc_r>
+    5ad0:	0405                	addi	s0,s0,1
+    5ad2:	ff2516e3          	bne	a0,s2,5abe <__sfputs_r+0x1a>
+    5ad6:	40f2                	lw	ra,28(sp)
+    5ad8:	4462                	lw	s0,24(sp)
+    5ada:	44d2                	lw	s1,20(sp)
+    5adc:	4942                	lw	s2,16(sp)
+    5ade:	49b2                	lw	s3,12(sp)
+    5ae0:	4a22                	lw	s4,8(sp)
+    5ae2:	6105                	addi	sp,sp,32
+    5ae4:	8082                	ret
+
+00005ae6 <_vfiprintf_r>:
+    5ae6:	7171                	addi	sp,sp,-176
+    5ae8:	d522                	sw	s0,168(sp)
+    5aea:	d326                	sw	s1,164(sp)
+    5aec:	cf4e                	sw	s3,156(sp)
+    5aee:	cd52                	sw	s4,152(sp)
+    5af0:	d706                	sw	ra,172(sp)
+    5af2:	d14a                	sw	s2,160(sp)
+    5af4:	cb56                	sw	s5,148(sp)
+    5af6:	c95a                	sw	s6,144(sp)
+    5af8:	c75e                	sw	s7,140(sp)
+    5afa:	c562                	sw	s8,136(sp)
+    5afc:	c366                	sw	s9,132(sp)
+    5afe:	89aa                	mv	s3,a0
+    5b00:	84ae                	mv	s1,a1
+    5b02:	8432                	mv	s0,a2
+    5b04:	8a36                	mv	s4,a3
+    5b06:	c509                	beqz	a0,5b10 <_vfiprintf_r+0x2a>
+    5b08:	511c                	lw	a5,32(a0)
+    5b0a:	e399                	bnez	a5,5b10 <_vfiprintf_r+0x2a>
+    5b0c:	e28ff0ef          	jal	5134 <__sinit>
+    5b10:	00c4d783          	lhu	a5,12(s1)
+    5b14:	8ba1                	andi	a5,a5,8
+    5b16:	c7f9                	beqz	a5,5be4 <_vfiprintf_r+0xfe>
+    5b18:	489c                	lw	a5,16(s1)
+    5b1a:	c7e9                	beqz	a5,5be4 <_vfiprintf_r+0xfe>
+    5b1c:	02000793          	li	a5,32
+    5b20:	02f10ca3          	sb	a5,57(sp)
+    5b24:	ce52                	sw	s4,28(sp)
+    5b26:	03000793          	li	a5,48
+    5b2a:	6a29                	lui	s4,0xa
+    5b2c:	6aa9                	lui	s5,0xa
+    5b2e:	da02                	sw	zero,52(sp)
+    5b30:	02f10d23          	sb	a5,58(sp)
+    5b34:	5b7d                	li	s6,-1
+    5b36:	6d0a0a13          	addi	s4,s4,1744 # a6d0 <TPG.c.205146a8+0xe92>
+    5b3a:	4b85                	li	s7,1
+    5b3c:	6d8a8a93          	addi	s5,s5,1752 # a6d8 <TPG.c.205146a8+0xe9a>
+    5b40:	8c22                	mv	s8,s0
+    5b42:	000c4783          	lbu	a5,0(s8)
+    5b46:	00f03cb3          	snez	s9,a5
+    5b4a:	fdb78793          	addi	a5,a5,-37
+    5b4e:	00f037b3          	snez	a5,a5
+    5b52:	00fcfcb3          	and	s9,s9,a5
+    5b56:	0a0c9963          	bnez	s9,5c08 <_vfiprintf_r+0x122>
+    5b5a:	408c06b3          	sub	a3,s8,s0
+    5b5e:	008c0d63          	beq	s8,s0,5b78 <_vfiprintf_r+0x92>
+    5b62:	8622                	mv	a2,s0
+    5b64:	85a6                	mv	a1,s1
+    5b66:	854e                	mv	a0,s3
+    5b68:	c636                	sw	a3,12(sp)
+    5b6a:	3f2d                	jal	5aa4 <__sfputs_r>
+    5b6c:	1b650963          	beq	a0,s6,5d1e <_vfiprintf_r+0x238>
+    5b70:	57d2                	lw	a5,52(sp)
+    5b72:	46b2                	lw	a3,12(sp)
+    5b74:	97b6                	add	a5,a5,a3
+    5b76:	da3e                	sw	a5,52(sp)
+    5b78:	000c4783          	lbu	a5,0(s8)
+    5b7c:	1a078163          	beqz	a5,5d1e <_vfiprintf_r+0x238>
+    5b80:	001c0413          	addi	s0,s8,1
+    5b84:	d002                	sw	zero,32(sp)
+    5b86:	d602                	sw	zero,44(sp)
+    5b88:	d25a                	sw	s6,36(sp)
+    5b8a:	d402                	sw	zero,40(sp)
+    5b8c:	060101a3          	sb	zero,99(sp)
+    5b90:	dc82                	sw	zero,120(sp)
+    5b92:	00044583          	lbu	a1,0(s0)
+    5b96:	4615                	li	a2,5
+    5b98:	8552                	mv	a0,s4
+    5b9a:	2bcd                	jal	618c <memchr>
+    5b9c:	5782                	lw	a5,32(sp)
+    5b9e:	00140693          	addi	a3,s0,1
+    5ba2:	e52d                	bnez	a0,5c0c <_vfiprintf_r+0x126>
+    5ba4:	0107f713          	andi	a4,a5,16
+    5ba8:	c709                	beqz	a4,5bb2 <_vfiprintf_r+0xcc>
+    5baa:	02000713          	li	a4,32
+    5bae:	06e101a3          	sb	a4,99(sp)
+    5bb2:	0087f713          	andi	a4,a5,8
+    5bb6:	c709                	beqz	a4,5bc0 <_vfiprintf_r+0xda>
+    5bb8:	02b00713          	li	a4,43
+    5bbc:	06e101a3          	sb	a4,99(sp)
+    5bc0:	00044603          	lbu	a2,0(s0)
+    5bc4:	02a00713          	li	a4,42
+    5bc8:	04e60a63          	beq	a2,a4,5c1c <_vfiprintf_r+0x136>
+    5bcc:	5732                	lw	a4,44(sp)
+    5bce:	4781                	li	a5,0
+    5bd0:	4625                	li	a2,9
+    5bd2:	00044683          	lbu	a3,0(s0)
+    5bd6:	fd068693          	addi	a3,a3,-48
+    5bda:	0ed67063          	bgeu	a2,a3,5cba <_vfiprintf_r+0x1d4>
+    5bde:	cba1                	beqz	a5,5c2e <_vfiprintf_r+0x148>
+    5be0:	d63a                	sw	a4,44(sp)
+    5be2:	a0b1                	j	5c2e <_vfiprintf_r+0x148>
+    5be4:	85a6                	mv	a1,s1
+    5be6:	854e                	mv	a0,s3
+    5be8:	3b7d                	jal	59a6 <__swsetup_r>
+    5bea:	d90d                	beqz	a0,5b1c <_vfiprintf_r+0x36>
+    5bec:	557d                	li	a0,-1
+    5bee:	50ba                	lw	ra,172(sp)
+    5bf0:	542a                	lw	s0,168(sp)
+    5bf2:	549a                	lw	s1,164(sp)
+    5bf4:	590a                	lw	s2,160(sp)
+    5bf6:	49fa                	lw	s3,156(sp)
+    5bf8:	4a6a                	lw	s4,152(sp)
+    5bfa:	4ada                	lw	s5,148(sp)
+    5bfc:	4b4a                	lw	s6,144(sp)
+    5bfe:	4bba                	lw	s7,140(sp)
+    5c00:	4c2a                	lw	s8,136(sp)
+    5c02:	4c9a                	lw	s9,132(sp)
+    5c04:	614d                	addi	sp,sp,176
+    5c06:	8082                	ret
+    5c08:	0c05                	addi	s8,s8,1
+    5c0a:	bf25                	j	5b42 <_vfiprintf_r+0x5c>
+    5c0c:	41450533          	sub	a0,a0,s4
+    5c10:	00ab9533          	sll	a0,s7,a0
+    5c14:	8d5d                	or	a0,a0,a5
+    5c16:	d02a                	sw	a0,32(sp)
+    5c18:	8436                	mv	s0,a3
+    5c1a:	bfa5                	j	5b92 <_vfiprintf_r+0xac>
+    5c1c:	4772                	lw	a4,28(sp)
+    5c1e:	00470613          	addi	a2,a4,4
+    5c22:	4318                	lw	a4,0(a4)
+    5c24:	ce32                	sw	a2,28(sp)
+    5c26:	08074363          	bltz	a4,5cac <_vfiprintf_r+0x1c6>
+    5c2a:	d63a                	sw	a4,44(sp)
+    5c2c:	8436                	mv	s0,a3
+    5c2e:	00044703          	lbu	a4,0(s0)
+    5c32:	02e00793          	li	a5,46
+    5c36:	02f71263          	bne	a4,a5,5c5a <_vfiprintf_r+0x174>
+    5c3a:	00144703          	lbu	a4,1(s0)
+    5c3e:	02a00793          	li	a5,42
+    5c42:	08f71563          	bne	a4,a5,5ccc <_vfiprintf_r+0x1e6>
+    5c46:	47f2                	lw	a5,28(sp)
+    5c48:	0409                	addi	s0,s0,2
+    5c4a:	00478713          	addi	a4,a5,4
+    5c4e:	439c                	lw	a5,0(a5)
+    5c50:	ce3a                	sw	a4,28(sp)
+    5c52:	0007d363          	bgez	a5,5c58 <_vfiprintf_r+0x172>
+    5c56:	57fd                	li	a5,-1
+    5c58:	d23e                	sw	a5,36(sp)
+    5c5a:	00044583          	lbu	a1,0(s0)
+    5c5e:	460d                	li	a2,3
+    5c60:	8556                	mv	a0,s5
+    5c62:	232d                	jal	618c <memchr>
+    5c64:	c919                	beqz	a0,5c7a <_vfiprintf_r+0x194>
+    5c66:	5782                	lw	a5,32(sp)
+    5c68:	41550533          	sub	a0,a0,s5
+    5c6c:	04000713          	li	a4,64
+    5c70:	00a71733          	sll	a4,a4,a0
+    5c74:	8fd9                	or	a5,a5,a4
+    5c76:	0405                	addi	s0,s0,1
+    5c78:	d03e                	sw	a5,32(sp)
+    5c7a:	00044583          	lbu	a1,0(s0)
+    5c7e:	6529                	lui	a0,0xa
+    5c80:	4619                	li	a2,6
+    5c82:	6dc50513          	addi	a0,a0,1756 # a6dc <TPG.c.205146a8+0xe9e>
+    5c86:	02b10c23          	sb	a1,56(sp)
+    5c8a:	2309                	jal	618c <memchr>
+    5c8c:	c14d                	beqz	a0,5d2e <_vfiprintf_r+0x248>
+    5c8e:	00000793          	li	a5,0
+    5c92:	eba5                	bnez	a5,5d02 <_vfiprintf_r+0x21c>
+    5c94:	5702                	lw	a4,32(sp)
+    5c96:	47f2                	lw	a5,28(sp)
+    5c98:	10077713          	andi	a4,a4,256
+    5c9c:	cf39                	beqz	a4,5cfa <_vfiprintf_r+0x214>
+    5c9e:	0791                	addi	a5,a5,4
+    5ca0:	ce3e                	sw	a5,28(sp)
+    5ca2:	57d2                	lw	a5,52(sp)
+    5ca4:	0405                	addi	s0,s0,1
+    5ca6:	97ca                	add	a5,a5,s2
+    5ca8:	da3e                	sw	a5,52(sp)
+    5caa:	bd59                	j	5b40 <_vfiprintf_r+0x5a>
+    5cac:	40e00733          	neg	a4,a4
+    5cb0:	0027e793          	ori	a5,a5,2
+    5cb4:	d63a                	sw	a4,44(sp)
+    5cb6:	d03e                	sw	a5,32(sp)
+    5cb8:	bf95                	j	5c2c <_vfiprintf_r+0x146>
+    5cba:	00271793          	slli	a5,a4,0x2
+    5cbe:	97ba                	add	a5,a5,a4
+    5cc0:	0786                	slli	a5,a5,0x1
+    5cc2:	00d78733          	add	a4,a5,a3
+    5cc6:	0405                	addi	s0,s0,1
+    5cc8:	4785                	li	a5,1
+    5cca:	b721                	j	5bd2 <_vfiprintf_r+0xec>
+    5ccc:	0405                	addi	s0,s0,1
+    5cce:	d202                	sw	zero,36(sp)
+    5cd0:	4701                	li	a4,0
+    5cd2:	4625                	li	a2,9
+    5cd4:	00044683          	lbu	a3,0(s0)
+    5cd8:	fd068693          	addi	a3,a3,-48
+    5cdc:	00d67663          	bgeu	a2,a3,5ce8 <_vfiprintf_r+0x202>
+    5ce0:	f60c8de3          	beqz	s9,5c5a <_vfiprintf_r+0x174>
+    5ce4:	d23a                	sw	a4,36(sp)
+    5ce6:	bf95                	j	5c5a <_vfiprintf_r+0x174>
+    5ce8:	00271793          	slli	a5,a4,0x2
+    5cec:	97ba                	add	a5,a5,a4
+    5cee:	0786                	slli	a5,a5,0x1
+    5cf0:	0405                	addi	s0,s0,1
+    5cf2:	00d78733          	add	a4,a5,a3
+    5cf6:	4c85                	li	s9,1
+    5cf8:	bff1                	j	5cd4 <_vfiprintf_r+0x1ee>
+    5cfa:	079d                	addi	a5,a5,7
+    5cfc:	9be1                	andi	a5,a5,-8
+    5cfe:	07a1                	addi	a5,a5,8
+    5d00:	b745                	j	5ca0 <_vfiprintf_r+0x1ba>
+    5d02:	6699                	lui	a3,0x6
+    5d04:	0878                	addi	a4,sp,28
+    5d06:	aa468693          	addi	a3,a3,-1372 # 5aa4 <__sfputs_r>
+    5d0a:	8626                	mv	a2,s1
+    5d0c:	100c                	addi	a1,sp,32
+    5d0e:	854e                	mv	a0,s3
+    5d10:	00000097          	auipc	ra,0x0
+    5d14:	000000e7          	jalr	zero # 0 <__vector_start>
+    5d18:	892a                	mv	s2,a0
+    5d1a:	f96514e3          	bne	a0,s6,5ca2 <_vfiprintf_r+0x1bc>
+    5d1e:	00c4d783          	lhu	a5,12(s1)
+    5d22:	0407f793          	andi	a5,a5,64
+    5d26:	ec0793e3          	bnez	a5,5bec <_vfiprintf_r+0x106>
+    5d2a:	5552                	lw	a0,52(sp)
+    5d2c:	b5c9                	j	5bee <_vfiprintf_r+0x108>
+    5d2e:	6699                	lui	a3,0x6
+    5d30:	0878                	addi	a4,sp,28
+    5d32:	aa468693          	addi	a3,a3,-1372 # 5aa4 <__sfputs_r>
+    5d36:	8626                	mv	a2,s1
+    5d38:	100c                	addi	a1,sp,32
+    5d3a:	854e                	mv	a0,s3
+    5d3c:	2a19                	jal	5e52 <_printf_i>
+    5d3e:	bfe9                	j	5d18 <_vfiprintf_r+0x232>
+
+00005d40 <_printf_common>:
+    5d40:	7179                	addi	sp,sp,-48
+    5d42:	ce4e                	sw	s3,28(sp)
+    5d44:	499c                	lw	a5,16(a1)
+    5d46:	89ba                	mv	s3,a4
+    5d48:	4598                	lw	a4,8(a1)
+    5d4a:	d422                	sw	s0,40(sp)
+    5d4c:	d04a                	sw	s2,32(sp)
+    5d4e:	c85a                	sw	s6,16(sp)
+    5d50:	c65e                	sw	s7,12(sp)
+    5d52:	d606                	sw	ra,44(sp)
+    5d54:	d226                	sw	s1,36(sp)
+    5d56:	cc52                	sw	s4,24(sp)
+    5d58:	ca56                	sw	s5,20(sp)
+    5d5a:	8b2a                	mv	s6,a0
+    5d5c:	842e                	mv	s0,a1
+    5d5e:	8932                	mv	s2,a2
+    5d60:	8bb6                	mv	s7,a3
+    5d62:	00e7d363          	bge	a5,a4,5d68 <_printf_common+0x28>
+    5d66:	87ba                	mv	a5,a4
+    5d68:	00f92023          	sw	a5,0(s2)
+    5d6c:	04344703          	lbu	a4,67(s0)
+    5d70:	c701                	beqz	a4,5d78 <_printf_common+0x38>
+    5d72:	0785                	addi	a5,a5,1
+    5d74:	00f92023          	sw	a5,0(s2)
+    5d78:	401c                	lw	a5,0(s0)
+    5d7a:	0207f793          	andi	a5,a5,32
+    5d7e:	c791                	beqz	a5,5d8a <_printf_common+0x4a>
+    5d80:	00092783          	lw	a5,0(s2)
+    5d84:	0789                	addi	a5,a5,2
+    5d86:	00f92023          	sw	a5,0(s2)
+    5d8a:	4004                	lw	s1,0(s0)
+    5d8c:	8899                	andi	s1,s1,6
+    5d8e:	e891                	bnez	s1,5da2 <_printf_common+0x62>
+    5d90:	01940a13          	addi	s4,s0,25
+    5d94:	5afd                	li	s5,-1
+    5d96:	445c                	lw	a5,12(s0)
+    5d98:	00092703          	lw	a4,0(s2)
+    5d9c:	8f99                	sub	a5,a5,a4
+    5d9e:	04f4cd63          	blt	s1,a5,5df8 <_printf_common+0xb8>
+    5da2:	401c                	lw	a5,0(s0)
+    5da4:	04344683          	lbu	a3,67(s0)
+    5da8:	0207f793          	andi	a5,a5,32
+    5dac:	00d036b3          	snez	a3,a3
+    5db0:	ebad                	bnez	a5,5e22 <_printf_common+0xe2>
+    5db2:	04340613          	addi	a2,s0,67
+    5db6:	85de                	mv	a1,s7
+    5db8:	855a                	mv	a0,s6
+    5dba:	9982                	jalr	s3
+    5dbc:	57fd                	li	a5,-1
+    5dbe:	04f50463          	beq	a0,a5,5e06 <_printf_common+0xc6>
+    5dc2:	401c                	lw	a5,0(s0)
+    5dc4:	4711                	li	a4,4
+    5dc6:	4481                	li	s1,0
+    5dc8:	8b99                	andi	a5,a5,6
+    5dca:	00e79a63          	bne	a5,a4,5dde <_printf_common+0x9e>
+    5dce:	00092783          	lw	a5,0(s2)
+    5dd2:	4444                	lw	s1,12(s0)
+    5dd4:	8c9d                	sub	s1,s1,a5
+    5dd6:	fff4c793          	not	a5,s1
+    5dda:	87fd                	srai	a5,a5,0x1f
+    5ddc:	8cfd                	and	s1,s1,a5
+    5dde:	441c                	lw	a5,8(s0)
+    5de0:	4818                	lw	a4,16(s0)
+    5de2:	00f75463          	bge	a4,a5,5dea <_printf_common+0xaa>
+    5de6:	8f99                	sub	a5,a5,a4
+    5de8:	94be                	add	s1,s1,a5
+    5dea:	4901                	li	s2,0
+    5dec:	0469                	addi	s0,s0,26
+    5dee:	5a7d                	li	s4,-1
+    5df0:	05249863          	bne	s1,s2,5e40 <_printf_common+0x100>
+    5df4:	4501                	li	a0,0
+    5df6:	a809                	j	5e08 <_printf_common+0xc8>
+    5df8:	4685                	li	a3,1
+    5dfa:	8652                	mv	a2,s4
+    5dfc:	85de                	mv	a1,s7
+    5dfe:	855a                	mv	a0,s6
+    5e00:	9982                	jalr	s3
+    5e02:	01551e63          	bne	a0,s5,5e1e <_printf_common+0xde>
+    5e06:	557d                	li	a0,-1
+    5e08:	50b2                	lw	ra,44(sp)
+    5e0a:	5422                	lw	s0,40(sp)
+    5e0c:	5492                	lw	s1,36(sp)
+    5e0e:	5902                	lw	s2,32(sp)
+    5e10:	49f2                	lw	s3,28(sp)
+    5e12:	4a62                	lw	s4,24(sp)
+    5e14:	4ad2                	lw	s5,20(sp)
+    5e16:	4b42                	lw	s6,16(sp)
+    5e18:	4bb2                	lw	s7,12(sp)
+    5e1a:	6145                	addi	sp,sp,48
+    5e1c:	8082                	ret
+    5e1e:	0485                	addi	s1,s1,1
+    5e20:	bf9d                	j	5d96 <_printf_common+0x56>
+    5e22:	00d40733          	add	a4,s0,a3
+    5e26:	03000613          	li	a2,48
+    5e2a:	04c701a3          	sb	a2,67(a4)
+    5e2e:	04544703          	lbu	a4,69(s0)
+    5e32:	00168793          	addi	a5,a3,1
+    5e36:	97a2                	add	a5,a5,s0
+    5e38:	0689                	addi	a3,a3,2
+    5e3a:	04e781a3          	sb	a4,67(a5)
+    5e3e:	bf95                	j	5db2 <_printf_common+0x72>
+    5e40:	4685                	li	a3,1
+    5e42:	8622                	mv	a2,s0
+    5e44:	85de                	mv	a1,s7
+    5e46:	855a                	mv	a0,s6
+    5e48:	9982                	jalr	s3
+    5e4a:	fb450ee3          	beq	a0,s4,5e06 <_printf_common+0xc6>
+    5e4e:	0905                	addi	s2,s2,1
+    5e50:	b745                	j	5df0 <_printf_common+0xb0>
+
+00005e52 <_printf_i>:
+    5e52:	7139                	addi	sp,sp,-64
+    5e54:	dc22                	sw	s0,56(sp)
+    5e56:	d452                	sw	s4,40(sp)
+    5e58:	cc62                	sw	s8,24(sp)
+    5e5a:	ca66                	sw	s9,20(sp)
+    5e5c:	de06                	sw	ra,60(sp)
+    5e5e:	da26                	sw	s1,52(sp)
+    5e60:	d84a                	sw	s2,48(sp)
+    5e62:	d64e                	sw	s3,44(sp)
+    5e64:	d256                	sw	s5,36(sp)
+    5e66:	d05a                	sw	s6,32(sp)
+    5e68:	ce5e                	sw	s7,28(sp)
+    5e6a:	0185c783          	lbu	a5,24(a1)
+    5e6e:	8a36                	mv	s4,a3
+    5e70:	07800693          	li	a3,120
+    5e74:	8c2a                	mv	s8,a0
+    5e76:	842e                	mv	s0,a1
+    5e78:	8cb2                	mv	s9,a2
+    5e7a:	00f6ee63          	bltu	a3,a5,5e96 <_printf_i+0x44>
+    5e7e:	06200693          	li	a3,98
+    5e82:	04358a93          	addi	s5,a1,67
+    5e86:	00f6eb63          	bltu	a3,a5,5e9c <_printf_i+0x4a>
+    5e8a:	1a078e63          	beqz	a5,6046 <_printf_i+0x1f4>
+    5e8e:	05800693          	li	a3,88
+    5e92:	16d78e63          	beq	a5,a3,600e <_printf_i+0x1bc>
+    5e96:	04240b93          	addi	s7,s0,66
+    5e9a:	a035                	j	5ec6 <_printf_i+0x74>
+    5e9c:	f9d78693          	addi	a3,a5,-99
+    5ea0:	0ff6f693          	zext.b	a3,a3
+    5ea4:	4655                	li	a2,21
+    5ea6:	fed668e3          	bltu	a2,a3,5e96 <_printf_i+0x44>
+    5eaa:	6629                	lui	a2,0xa
+    5eac:	068a                	slli	a3,a3,0x2
+    5eae:	70c60613          	addi	a2,a2,1804 # a70c <TPG.c.205146a8+0xece>
+    5eb2:	96b2                	add	a3,a3,a2
+    5eb4:	4294                	lw	a3,0(a3)
+    5eb6:	8682                	jr	a3
+    5eb8:	431c                	lw	a5,0(a4)
+    5eba:	04258b93          	addi	s7,a1,66
+    5ebe:	00478693          	addi	a3,a5,4
+    5ec2:	439c                	lw	a5,0(a5)
+    5ec4:	c314                	sw	a3,0(a4)
+    5ec6:	04f40123          	sb	a5,66(s0)
+    5eca:	4785                	li	a5,1
+    5ecc:	a245                	j	606c <_printf_i+0x21a>
+    5ece:	419c                	lw	a5,0(a1)
+    5ed0:	4310                	lw	a2,0(a4)
+    5ed2:	0807f593          	andi	a1,a5,128
+    5ed6:	00460693          	addi	a3,a2,4
+    5eda:	c185                	beqz	a1,5efa <_printf_i+0xa8>
+    5edc:	4204                	lw	s1,0(a2)
+    5ede:	c314                	sw	a3,0(a4)
+    5ee0:	6929                	lui	s2,0xa
+    5ee2:	0004d863          	bgez	s1,5ef2 <_printf_i+0xa0>
+    5ee6:	02d00793          	li	a5,45
+    5eea:	409004b3          	neg	s1,s1
+    5eee:	04f401a3          	sb	a5,67(s0)
+    5ef2:	6e490913          	addi	s2,s2,1764 # a6e4 <TPG.c.205146a8+0xea6>
+    5ef6:	49a9                	li	s3,10
+    5ef8:	a061                	j	5f80 <_printf_i+0x12e>
+    5efa:	4204                	lw	s1,0(a2)
+    5efc:	0407f793          	andi	a5,a5,64
+    5f00:	c314                	sw	a3,0(a4)
+    5f02:	dff9                	beqz	a5,5ee0 <_printf_i+0x8e>
+    5f04:	04c2                	slli	s1,s1,0x10
+    5f06:	84c1                	srai	s1,s1,0x10
+    5f08:	bfe1                	j	5ee0 <_printf_i+0x8e>
+    5f0a:	4194                	lw	a3,0(a1)
+    5f0c:	431c                	lw	a5,0(a4)
+    5f0e:	0806f613          	andi	a2,a3,128
+    5f12:	4384                	lw	s1,0(a5)
+    5f14:	0791                	addi	a5,a5,4
+    5f16:	e611                	bnez	a2,5f22 <_printf_i+0xd0>
+    5f18:	0406f693          	andi	a3,a3,64
+    5f1c:	c299                	beqz	a3,5f22 <_printf_i+0xd0>
+    5f1e:	04c2                	slli	s1,s1,0x10
+    5f20:	80c1                	srli	s1,s1,0x10
+    5f22:	c31c                	sw	a5,0(a4)
+    5f24:	01844703          	lbu	a4,24(s0)
+    5f28:	6929                	lui	s2,0xa
+    5f2a:	06f00793          	li	a5,111
+    5f2e:	6e490913          	addi	s2,s2,1764 # a6e4 <TPG.c.205146a8+0xea6>
+    5f32:	49a1                	li	s3,8
+    5f34:	04f70463          	beq	a4,a5,5f7c <_printf_i+0x12a>
+    5f38:	49a9                	li	s3,10
+    5f3a:	a089                	j	5f7c <_printf_i+0x12a>
+    5f3c:	419c                	lw	a5,0(a1)
+    5f3e:	0207e793          	ori	a5,a5,32
+    5f42:	c19c                	sw	a5,0(a1)
+    5f44:	6929                	lui	s2,0xa
+    5f46:	07800793          	li	a5,120
+    5f4a:	6f890913          	addi	s2,s2,1784 # a6f8 <TPG.c.205146a8+0xeba>
+    5f4e:	04f402a3          	sb	a5,69(s0)
+    5f52:	401c                	lw	a5,0(s0)
+    5f54:	4314                	lw	a3,0(a4)
+    5f56:	0807f613          	andi	a2,a5,128
+    5f5a:	4284                	lw	s1,0(a3)
+    5f5c:	0691                	addi	a3,a3,4
+    5f5e:	e611                	bnez	a2,5f6a <_printf_i+0x118>
+    5f60:	0407f613          	andi	a2,a5,64
+    5f64:	c219                	beqz	a2,5f6a <_printf_i+0x118>
+    5f66:	04c2                	slli	s1,s1,0x10
+    5f68:	80c1                	srli	s1,s1,0x10
+    5f6a:	c314                	sw	a3,0(a4)
+    5f6c:	0017f713          	andi	a4,a5,1
+    5f70:	c701                	beqz	a4,5f78 <_printf_i+0x126>
+    5f72:	0207e793          	ori	a5,a5,32
+    5f76:	c01c                	sw	a5,0(s0)
+    5f78:	ccd9                	beqz	s1,6016 <_printf_i+0x1c4>
+    5f7a:	49c1                	li	s3,16
+    5f7c:	040401a3          	sb	zero,67(s0)
+    5f80:	405c                	lw	a5,4(s0)
+    5f82:	c41c                	sw	a5,8(s0)
+    5f84:	0007c863          	bltz	a5,5f94 <_printf_i+0x142>
+    5f88:	4018                	lw	a4,0(s0)
+    5f8a:	8fc5                	or	a5,a5,s1
+    5f8c:	8bd6                	mv	s7,s5
+    5f8e:	9b6d                	andi	a4,a4,-5
+    5f90:	c018                	sw	a4,0(s0)
+    5f92:	c785                	beqz	a5,5fba <_printf_i+0x168>
+    5f94:	8bd6                	mv	s7,s5
+    5f96:	85ce                	mv	a1,s3
+    5f98:	8526                	mv	a0,s1
+    5f9a:	373010ef          	jal	7b0c <__umodsi3>
+    5f9e:	954a                	add	a0,a0,s2
+    5fa0:	00054783          	lbu	a5,0(a0)
+    5fa4:	85ce                	mv	a1,s3
+    5fa6:	8526                	mv	a0,s1
+    5fa8:	fefb8fa3          	sb	a5,-1(s7)
+    5fac:	8b26                	mv	s6,s1
+    5fae:	333010ef          	jal	7ae0 <__hidden___udivsi3>
+    5fb2:	1bfd                	addi	s7,s7,-1
+    5fb4:	84aa                	mv	s1,a0
+    5fb6:	ff3b70e3          	bgeu	s6,s3,5f96 <_printf_i+0x144>
+    5fba:	47a1                	li	a5,8
+    5fbc:	00f99e63          	bne	s3,a5,5fd8 <_printf_i+0x186>
+    5fc0:	401c                	lw	a5,0(s0)
+    5fc2:	8b85                	andi	a5,a5,1
+    5fc4:	cb91                	beqz	a5,5fd8 <_printf_i+0x186>
+    5fc6:	4058                	lw	a4,4(s0)
+    5fc8:	481c                	lw	a5,16(s0)
+    5fca:	00e7c763          	blt	a5,a4,5fd8 <_printf_i+0x186>
+    5fce:	03000793          	li	a5,48
+    5fd2:	fefb8fa3          	sb	a5,-1(s7)
+    5fd6:	1bfd                	addi	s7,s7,-1
+    5fd8:	417a8ab3          	sub	s5,s5,s7
+    5fdc:	01542823          	sw	s5,16(s0)
+    5fe0:	8752                	mv	a4,s4
+    5fe2:	86e6                	mv	a3,s9
+    5fe4:	0070                	addi	a2,sp,12
+    5fe6:	85a2                	mv	a1,s0
+    5fe8:	8562                	mv	a0,s8
+    5fea:	3b99                	jal	5d40 <_printf_common>
+    5fec:	597d                	li	s2,-1
+    5fee:	09251363          	bne	a0,s2,6074 <_printf_i+0x222>
+    5ff2:	557d                	li	a0,-1
+    5ff4:	50f2                	lw	ra,60(sp)
+    5ff6:	5462                	lw	s0,56(sp)
+    5ff8:	54d2                	lw	s1,52(sp)
+    5ffa:	5942                	lw	s2,48(sp)
+    5ffc:	59b2                	lw	s3,44(sp)
+    5ffe:	5a22                	lw	s4,40(sp)
+    6000:	5a92                	lw	s5,36(sp)
+    6002:	5b02                	lw	s6,32(sp)
+    6004:	4bf2                	lw	s7,28(sp)
+    6006:	4c62                	lw	s8,24(sp)
+    6008:	4cd2                	lw	s9,20(sp)
+    600a:	6121                	addi	sp,sp,64
+    600c:	8082                	ret
+    600e:	6929                	lui	s2,0xa
+    6010:	6e490913          	addi	s2,s2,1764 # a6e4 <TPG.c.205146a8+0xea6>
+    6014:	bf2d                	j	5f4e <_printf_i+0xfc>
+    6016:	401c                	lw	a5,0(s0)
+    6018:	fdf7f793          	andi	a5,a5,-33
+    601c:	c01c                	sw	a5,0(s0)
+    601e:	bfb1                	j	5f7a <_printf_i+0x128>
+    6020:	4194                	lw	a3,0(a1)
+    6022:	431c                	lw	a5,0(a4)
+    6024:	49d0                	lw	a2,20(a1)
+    6026:	0806f513          	andi	a0,a3,128
+    602a:	00478593          	addi	a1,a5,4
+    602e:	c509                	beqz	a0,6038 <_printf_i+0x1e6>
+    6030:	c30c                	sw	a1,0(a4)
+    6032:	439c                	lw	a5,0(a5)
+    6034:	c390                	sw	a2,0(a5)
+    6036:	a801                	j	6046 <_printf_i+0x1f4>
+    6038:	c30c                	sw	a1,0(a4)
+    603a:	0406f693          	andi	a3,a3,64
+    603e:	439c                	lw	a5,0(a5)
+    6040:	daf5                	beqz	a3,6034 <_printf_i+0x1e2>
+    6042:	00c79023          	sh	a2,0(a5)
+    6046:	00042823          	sw	zero,16(s0)
+    604a:	8bd6                	mv	s7,s5
+    604c:	bf51                	j	5fe0 <_printf_i+0x18e>
+    604e:	431c                	lw	a5,0(a4)
+    6050:	41d0                	lw	a2,4(a1)
+    6052:	4581                	li	a1,0
+    6054:	00478693          	addi	a3,a5,4
+    6058:	c314                	sw	a3,0(a4)
+    605a:	0007ab83          	lw	s7,0(a5)
+    605e:	855e                	mv	a0,s7
+    6060:	2235                	jal	618c <memchr>
+    6062:	c501                	beqz	a0,606a <_printf_i+0x218>
+    6064:	41750533          	sub	a0,a0,s7
+    6068:	c048                	sw	a0,4(s0)
+    606a:	405c                	lw	a5,4(s0)
+    606c:	c81c                	sw	a5,16(s0)
+    606e:	040401a3          	sb	zero,67(s0)
+    6072:	b7bd                	j	5fe0 <_printf_i+0x18e>
+    6074:	4814                	lw	a3,16(s0)
+    6076:	865e                	mv	a2,s7
+    6078:	85e6                	mv	a1,s9
+    607a:	8562                	mv	a0,s8
+    607c:	9a02                	jalr	s4
+    607e:	f7250ae3          	beq	a0,s2,5ff2 <_printf_i+0x1a0>
+    6082:	401c                	lw	a5,0(s0)
+    6084:	8b89                	andi	a5,a5,2
+    6086:	e795                	bnez	a5,60b2 <_printf_i+0x260>
+    6088:	47b2                	lw	a5,12(sp)
+    608a:	4448                	lw	a0,12(s0)
+    608c:	f6f554e3          	bge	a0,a5,5ff4 <_printf_i+0x1a2>
+    6090:	853e                	mv	a0,a5
+    6092:	b78d                	j	5ff4 <_printf_i+0x1a2>
+    6094:	4685                	li	a3,1
+    6096:	01940613          	addi	a2,s0,25
+    609a:	85e6                	mv	a1,s9
+    609c:	8562                	mv	a0,s8
+    609e:	9a02                	jalr	s4
+    60a0:	f52509e3          	beq	a0,s2,5ff2 <_printf_i+0x1a0>
+    60a4:	0485                	addi	s1,s1,1
+    60a6:	445c                	lw	a5,12(s0)
+    60a8:	4732                	lw	a4,12(sp)
+    60aa:	8f99                	sub	a5,a5,a4
+    60ac:	fef4c4e3          	blt	s1,a5,6094 <_printf_i+0x242>
+    60b0:	bfe1                	j	6088 <_printf_i+0x236>
+    60b2:	4481                	li	s1,0
+    60b4:	bfcd                	j	60a6 <_printf_i+0x254>
+
+000060b6 <__swhatbuf_r>:
+    60b6:	7119                	addi	sp,sp,-128
+    60b8:	dca2                	sw	s0,120(sp)
+    60ba:	842e                	mv	s0,a1
+    60bc:	00e59583          	lh	a1,14(a1)
+    60c0:	daa6                	sw	s1,116(sp)
+    60c2:	de86                	sw	ra,124(sp)
+    60c4:	84b2                	mv	s1,a2
+    60c6:	0205d163          	bgez	a1,60e8 <__swhatbuf_r+0x32>
+    60ca:	00c45783          	lhu	a5,12(s0)
+    60ce:	0807f793          	andi	a5,a5,128
+    60d2:	eb8d                	bnez	a5,6104 <__swhatbuf_r+0x4e>
+    60d4:	40000713          	li	a4,1024
+    60d8:	50f6                	lw	ra,124(sp)
+    60da:	5466                	lw	s0,120(sp)
+    60dc:	c29c                	sw	a5,0(a3)
+    60de:	c098                	sw	a4,0(s1)
+    60e0:	4501                	li	a0,0
+    60e2:	54d6                	lw	s1,116(sp)
+    60e4:	6109                	addi	sp,sp,128
+    60e6:	8082                	ret
+    60e8:	0830                	addi	a2,sp,24
+    60ea:	c636                	sw	a3,12(sp)
+    60ec:	286d                	jal	61a6 <_fstat_r>
+    60ee:	46b2                	lw	a3,12(sp)
+    60f0:	fc054de3          	bltz	a0,60ca <__swhatbuf_r+0x14>
+    60f4:	47f2                	lw	a5,28(sp)
+    60f6:	673d                	lui	a4,0xf
+    60f8:	8ff9                	and	a5,a5,a4
+    60fa:	7779                	lui	a4,0xffffe
+    60fc:	97ba                	add	a5,a5,a4
+    60fe:	0017b793          	seqz	a5,a5
+    6102:	bfc9                	j	60d4 <__swhatbuf_r+0x1e>
+    6104:	4781                	li	a5,0
+    6106:	04000713          	li	a4,64
+    610a:	b7f9                	j	60d8 <__swhatbuf_r+0x22>
+
+0000610c <__smakebuf_r>:
+    610c:	00c5d703          	lhu	a4,12(a1)
+    6110:	7179                	addi	sp,sp,-48
+    6112:	d422                	sw	s0,40(sp)
+    6114:	d606                	sw	ra,44(sp)
+    6116:	d226                	sw	s1,36(sp)
+    6118:	8b09                	andi	a4,a4,2
+    611a:	842e                	mv	s0,a1
+    611c:	cf01                	beqz	a4,6134 <__smakebuf_r+0x28>
+    611e:	04740793          	addi	a5,s0,71
+    6122:	c01c                	sw	a5,0(s0)
+    6124:	c81c                	sw	a5,16(s0)
+    6126:	4785                	li	a5,1
+    6128:	c85c                	sw	a5,20(s0)
+    612a:	50b2                	lw	ra,44(sp)
+    612c:	5422                	lw	s0,40(sp)
+    612e:	5492                	lw	s1,36(sp)
+    6130:	6145                	addi	sp,sp,48
+    6132:	8082                	ret
+    6134:	0874                	addi	a3,sp,28
+    6136:	0830                	addi	a2,sp,24
+    6138:	84aa                	mv	s1,a0
+    613a:	3fb5                	jal	60b6 <__swhatbuf_r>
+    613c:	45e2                	lw	a1,24(sp)
+    613e:	8526                	mv	a0,s1
+    6140:	c62e                	sw	a1,12(sp)
+    6142:	c6eff0ef          	jal	55b0 <_malloc_r>
+    6146:	00c41783          	lh	a5,12(s0)
+    614a:	45b2                	lw	a1,12(sp)
+    614c:	e911                	bnez	a0,6160 <__smakebuf_r+0x54>
+    614e:	2007f713          	andi	a4,a5,512
+    6152:	ff61                	bnez	a4,612a <__smakebuf_r+0x1e>
+    6154:	9bf1                	andi	a5,a5,-4
+    6156:	0027e793          	ori	a5,a5,2
+    615a:	00f41623          	sh	a5,12(s0)
+    615e:	b7c1                	j	611e <__smakebuf_r+0x12>
+    6160:	0807e793          	ori	a5,a5,128
+    6164:	00f41623          	sh	a5,12(s0)
+    6168:	47f2                	lw	a5,28(sp)
+    616a:	c008                	sw	a0,0(s0)
+    616c:	c808                	sw	a0,16(s0)
+    616e:	c84c                	sw	a1,20(s0)
+    6170:	dfcd                	beqz	a5,612a <__smakebuf_r+0x1e>
+    6172:	00e41583          	lh	a1,14(s0)
+    6176:	8526                	mv	a0,s1
+    6178:	28b1                	jal	61d4 <_isatty_r>
+    617a:	d945                	beqz	a0,612a <__smakebuf_r+0x1e>
+    617c:	00c45783          	lhu	a5,12(s0)
+    6180:	9bf1                	andi	a5,a5,-4
+    6182:	0017e793          	ori	a5,a5,1
+    6186:	00f41623          	sh	a5,12(s0)
+    618a:	b745                	j	612a <__smakebuf_r+0x1e>
+
+0000618c <memchr>:
+    618c:	0ff5f593          	zext.b	a1,a1
+    6190:	962a                	add	a2,a2,a0
+    6192:	00c51463          	bne	a0,a2,619a <memchr+0xe>
+    6196:	4501                	li	a0,0
+    6198:	8082                	ret
+    619a:	00054783          	lbu	a5,0(a0)
+    619e:	feb78de3          	beq	a5,a1,6198 <memchr+0xc>
+    61a2:	0505                	addi	a0,a0,1
+    61a4:	b7fd                	j	6192 <memchr+0x6>
+
+000061a6 <_fstat_r>:
+    61a6:	1141                	addi	sp,sp,-16
+    61a8:	c422                	sw	s0,8(sp)
+    61aa:	c226                	sw	s1,4(sp)
+    61ac:	84aa                	mv	s1,a0
+    61ae:	852e                	mv	a0,a1
+    61b0:	85b2                	mv	a1,a2
+    61b2:	c606                	sw	ra,12(sp)
+    61b4:	9401a823          	sw	zero,-1712(gp) # b6d4 <errno>
+    61b8:	e40fe0ef          	jal	47f8 <_fstat>
+    61bc:	57fd                	li	a5,-1
+    61be:	00f51663          	bne	a0,a5,61ca <_fstat_r+0x24>
+    61c2:	9501a783          	lw	a5,-1712(gp) # b6d4 <errno>
+    61c6:	c391                	beqz	a5,61ca <_fstat_r+0x24>
+    61c8:	c09c                	sw	a5,0(s1)
+    61ca:	40b2                	lw	ra,12(sp)
+    61cc:	4422                	lw	s0,8(sp)
+    61ce:	4492                	lw	s1,4(sp)
+    61d0:	0141                	addi	sp,sp,16
+    61d2:	8082                	ret
+
+000061d4 <_isatty_r>:
+    61d4:	1141                	addi	sp,sp,-16
+    61d6:	c422                	sw	s0,8(sp)
+    61d8:	c226                	sw	s1,4(sp)
+    61da:	84aa                	mv	s1,a0
+    61dc:	852e                	mv	a0,a1
+    61de:	c606                	sw	ra,12(sp)
+    61e0:	9401a823          	sw	zero,-1712(gp) # b6d4 <errno>
+    61e4:	e38fe0ef          	jal	481c <_isatty>
+    61e8:	57fd                	li	a5,-1
+    61ea:	00f51663          	bne	a0,a5,61f6 <_isatty_r+0x22>
+    61ee:	9501a783          	lw	a5,-1712(gp) # b6d4 <errno>
+    61f2:	c391                	beqz	a5,61f6 <_isatty_r+0x22>
+    61f4:	c09c                	sw	a5,0(s1)
+    61f6:	40b2                	lw	ra,12(sp)
+    61f8:	4422                	lw	s0,8(sp)
+    61fa:	4492                	lw	s1,4(sp)
+    61fc:	0141                	addi	sp,sp,16
+    61fe:	8082                	ret
+
+00006200 <sqrt>:
+    6200:	1101                	addi	sp,sp,-32
+    6202:	cc22                	sw	s0,24(sp)
+    6204:	ca26                	sw	s1,20(sp)
+    6206:	c84a                	sw	s2,16(sp)
+    6208:	c64e                	sw	s3,12(sp)
+    620a:	892a                	mv	s2,a0
+    620c:	89ae                	mv	s3,a1
+    620e:	ce06                	sw	ra,28(sp)
+    6210:	20b1                	jal	625c <__ieee754_sqrt>
+    6212:	84aa                	mv	s1,a0
+    6214:	842e                	mv	s0,a1
+    6216:	864a                	mv	a2,s2
+    6218:	86ce                	mv	a3,s3
+    621a:	854a                	mv	a0,s2
+    621c:	85ce                	mv	a1,s3
+    621e:	071010ef          	jal	7a8e <__unorddf2>
+    6222:	e505                	bnez	a0,624a <sqrt+0x4a>
+    6224:	4601                	li	a2,0
+    6226:	4681                	li	a3,0
+    6228:	854a                	mv	a0,s2
+    622a:	85ce                	mv	a1,s3
+    622c:	165010ef          	jal	7b90 <__ledf2>
+    6230:	00055d63          	bgez	a0,624a <sqrt+0x4a>
+    6234:	3805                	jal	5a64 <__errno>
+    6236:	02100793          	li	a5,33
+    623a:	4601                	li	a2,0
+    623c:	4681                	li	a3,0
+    623e:	c11c                	sw	a5,0(a0)
+    6240:	85b6                	mv	a1,a3
+    6242:	8532                	mv	a0,a2
+    6244:	2f69                	jal	69de <__divdf3>
+    6246:	84aa                	mv	s1,a0
+    6248:	842e                	mv	s0,a1
+    624a:	40f2                	lw	ra,28(sp)
+    624c:	85a2                	mv	a1,s0
+    624e:	4462                	lw	s0,24(sp)
+    6250:	4942                	lw	s2,16(sp)
+    6252:	49b2                	lw	s3,12(sp)
+    6254:	8526                	mv	a0,s1
+    6256:	44d2                	lw	s1,20(sp)
+    6258:	6105                	addi	sp,sp,32
+    625a:	8082                	ret
+
+0000625c <__ieee754_sqrt>:
+    625c:	1101                	addi	sp,sp,-32
+    625e:	7ff007b7          	lui	a5,0x7ff00
+    6262:	cc22                	sw	s0,24(sp)
+    6264:	ca26                	sw	s1,20(sp)
+    6266:	ce06                	sw	ra,28(sp)
+    6268:	c84a                	sw	s2,16(sp)
+    626a:	c64e                	sw	s3,12(sp)
+    626c:	c452                	sw	s4,8(sp)
+    626e:	c256                	sw	s5,4(sp)
+    6270:	c05a                	sw	s6,0(sp)
+    6272:	00b7f733          	and	a4,a5,a1
+    6276:	84aa                	mv	s1,a0
+    6278:	842e                	mv	s0,a1
+    627a:	02f71963          	bne	a4,a5,62ac <__ieee754_sqrt+0x50>
+    627e:	862a                	mv	a2,a0
+    6280:	86ae                	mv	a3,a1
+    6282:	5bb000ef          	jal	703c <__muldf3>
+    6286:	862a                	mv	a2,a0
+    6288:	86ae                	mv	a3,a1
+    628a:	8526                	mv	a0,s1
+    628c:	85a2                	mv	a1,s0
+    628e:	22c9                	jal	6450 <__adddf3>
+    6290:	84aa                	mv	s1,a0
+    6292:	842e                	mv	s0,a1
+    6294:	40f2                	lw	ra,28(sp)
+    6296:	85a2                	mv	a1,s0
+    6298:	4462                	lw	s0,24(sp)
+    629a:	4942                	lw	s2,16(sp)
+    629c:	49b2                	lw	s3,12(sp)
+    629e:	4a22                	lw	s4,8(sp)
+    62a0:	4a92                	lw	s5,4(sp)
+    62a2:	4b02                	lw	s6,0(sp)
+    62a4:	8526                	mv	a0,s1
+    62a6:	44d2                	lw	s1,20(sp)
+    62a8:	6105                	addi	sp,sp,32
+    62aa:	8082                	ret
+    62ac:	872e                	mv	a4,a1
+    62ae:	87aa                	mv	a5,a0
+    62b0:	02b04163          	bgtz	a1,62d2 <__ieee754_sqrt+0x76>
+    62b4:	00159693          	slli	a3,a1,0x1
+    62b8:	8285                	srli	a3,a3,0x1
+    62ba:	8ec9                	or	a3,a3,a0
+    62bc:	dee1                	beqz	a3,6294 <__ieee754_sqrt+0x38>
+    62be:	4681                	li	a3,0
+    62c0:	c195                	beqz	a1,62e4 <__ieee754_sqrt+0x88>
+    62c2:	862a                	mv	a2,a0
+    62c4:	86ae                	mv	a3,a1
+    62c6:	212010ef          	jal	74d8 <__subdf3>
+    62ca:	862a                	mv	a2,a0
+    62cc:	86ae                	mv	a3,a1
+    62ce:	2f01                	jal	69de <__divdf3>
+    62d0:	b7c1                	j	6290 <__ieee754_sqrt+0x34>
+    62d2:	4145d693          	srai	a3,a1,0x14
+    62d6:	ea95                	bnez	a3,630a <__ieee754_sqrt+0xae>
+    62d8:	4601                	li	a2,0
+    62da:	a809                	j	62ec <__ieee754_sqrt+0x90>
+    62dc:	00b7d713          	srli	a4,a5,0xb
+    62e0:	16ad                	addi	a3,a3,-21
+    62e2:	07d6                	slli	a5,a5,0x15
+    62e4:	df65                	beqz	a4,62dc <__ieee754_sqrt+0x80>
+    62e6:	bfcd                	j	62d8 <__ieee754_sqrt+0x7c>
+    62e8:	0706                	slli	a4,a4,0x1
+    62ea:	0605                	addi	a2,a2,1
+    62ec:	00b71593          	slli	a1,a4,0xb
+    62f0:	fe05dce3          	bgez	a1,62e8 <__ieee754_sqrt+0x8c>
+    62f4:	fff60593          	addi	a1,a2,-1
+    62f8:	8e8d                	sub	a3,a3,a1
+    62fa:	02000593          	li	a1,32
+    62fe:	8d91                	sub	a1,a1,a2
+    6300:	00b7d5b3          	srl	a1,a5,a1
+    6304:	8f4d                	or	a4,a4,a1
+    6306:	00c797b3          	sll	a5,a5,a2
+    630a:	c0168613          	addi	a2,a3,-1023
+    630e:	001006b7          	lui	a3,0x100
+    6312:	fff68593          	addi	a1,a3,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+    6316:	8f6d                	and	a4,a4,a1
+    6318:	8ed9                	or	a3,a3,a4
+    631a:	00167713          	andi	a4,a2,1
+    631e:	c711                	beqz	a4,632a <__ieee754_sqrt+0xce>
+    6320:	01f7d713          	srli	a4,a5,0x1f
+    6324:	0686                	slli	a3,a3,0x1
+    6326:	96ba                	add	a3,a3,a4
+    6328:	0786                	slli	a5,a5,0x1
+    632a:	01f7d713          	srli	a4,a5,0x1f
+    632e:	0686                	slli	a3,a3,0x1
+    6330:	40165413          	srai	s0,a2,0x1
+    6334:	9736                	add	a4,a4,a3
+    6336:	0786                	slli	a5,a5,0x1
+    6338:	46d9                	li	a3,22
+    633a:	4981                	li	s3,0
+    633c:	4601                	li	a2,0
+    633e:	002005b7          	lui	a1,0x200
+    6342:	00b60533          	add	a0,a2,a1
+    6346:	00a74663          	blt	a4,a0,6352 <__ieee754_sqrt+0xf6>
+    634a:	00b50633          	add	a2,a0,a1
+    634e:	8f09                	sub	a4,a4,a0
+    6350:	99ae                	add	s3,s3,a1
+    6352:	01f7d513          	srli	a0,a5,0x1f
+    6356:	0706                	slli	a4,a4,0x1
+    6358:	16fd                	addi	a3,a3,-1
+    635a:	972a                	add	a4,a4,a0
+    635c:	0786                	slli	a5,a5,0x1
+    635e:	8185                	srli	a1,a1,0x1
+    6360:	f2ed                	bnez	a3,6342 <__ieee754_sqrt+0xe6>
+    6362:	4901                	li	s2,0
+    6364:	02000893          	li	a7,32
+    6368:	800005b7          	lui	a1,0x80000
+    636c:	00d58833          	add	a6,a1,a3
+    6370:	40c70333          	sub	t1,a4,a2
+    6374:	00e64663          	blt	a2,a4,6380 <__ieee754_sqrt+0x124>
+    6378:	02031363          	bnez	t1,639e <__ieee754_sqrt+0x142>
+    637c:	0307e163          	bltu	a5,a6,639e <__ieee754_sqrt+0x142>
+    6380:	00b806b3          	add	a3,a6,a1
+    6384:	fff6c513          	not	a0,a3
+    6388:	01057533          	and	a0,a0,a6
+    638c:	0107b733          	sltu	a4,a5,a6
+    6390:	817d                	srli	a0,a0,0x1f
+    6392:	40e30733          	sub	a4,t1,a4
+    6396:	410787b3          	sub	a5,a5,a6
+    639a:	992e                	add	s2,s2,a1
+    639c:	962a                	add	a2,a2,a0
+    639e:	01f7d513          	srli	a0,a5,0x1f
+    63a2:	0706                	slli	a4,a4,0x1
+    63a4:	18fd                	addi	a7,a7,-1
+    63a6:	972a                	add	a4,a4,a0
+    63a8:	0786                	slli	a5,a5,0x1
+    63aa:	8185                	srli	a1,a1,0x1
+    63ac:	fc0890e3          	bnez	a7,636c <__ieee754_sqrt+0x110>
+    63b0:	8f5d                	or	a4,a4,a5
+    63b2:	c731                	beqz	a4,63fe <__ieee754_sqrt+0x1a2>
+    63b4:	93c1a503          	lw	a0,-1732(gp) # b6c0 <one>
+    63b8:	9401a583          	lw	a1,-1728(gp) # b6c4 <one+0x4>
+    63bc:	9341a603          	lw	a2,-1740(gp) # b6b8 <tiny>
+    63c0:	9381a683          	lw	a3,-1736(gp) # b6bc <tiny+0x4>
+    63c4:	93c1a783          	lw	a5,-1732(gp) # b6c0 <one>
+    63c8:	9401a803          	lw	a6,-1728(gp) # b6c4 <one+0x4>
+    63cc:	8abe                	mv	s5,a5
+    63ce:	8b42                	mv	s6,a6
+    63d0:	108010ef          	jal	74d8 <__subdf3>
+    63d4:	862a                	mv	a2,a0
+    63d6:	86ae                	mv	a3,a1
+    63d8:	8556                	mv	a0,s5
+    63da:	85da                	mv	a1,s6
+    63dc:	7b4010ef          	jal	7b90 <__ledf2>
+    63e0:	00a04f63          	bgtz	a0,63fe <__ieee754_sqrt+0x1a2>
+    63e4:	93c1a503          	lw	a0,-1732(gp) # b6c0 <one>
+    63e8:	9401a583          	lw	a1,-1728(gp) # b6c4 <one+0x4>
+    63ec:	9341a603          	lw	a2,-1740(gp) # b6b8 <tiny>
+    63f0:	9381a683          	lw	a3,-1736(gp) # b6bc <tiny+0x4>
+    63f4:	57fd                	li	a5,-1
+    63f6:	02f91463          	bne	s2,a5,641e <__ieee754_sqrt+0x1c2>
+    63fa:	0985                	addi	s3,s3,1
+    63fc:	4901                	li	s2,0
+    63fe:	3fe007b7          	lui	a5,0x3fe00
+    6402:	4019d593          	srai	a1,s3,0x1
+    6406:	95be                	add	a1,a1,a5
+    6408:	01441613          	slli	a2,s0,0x14
+    640c:	01f99713          	slli	a4,s3,0x1f
+    6410:	00195793          	srli	a5,s2,0x1
+    6414:	00f764b3          	or	s1,a4,a5
+    6418:	00b60433          	add	s0,a2,a1
+    641c:	bda5                	j	6294 <__ieee754_sqrt+0x38>
+    641e:	93c1aa03          	lw	s4,-1732(gp) # b6c0 <one>
+    6422:	9401aa83          	lw	s5,-1728(gp) # b6c4 <one+0x4>
+    6426:	202d                	jal	6450 <__adddf3>
+    6428:	862a                	mv	a2,a0
+    642a:	86ae                	mv	a3,a1
+    642c:	8552                	mv	a0,s4
+    642e:	85d6                	mv	a1,s5
+    6430:	760010ef          	jal	7b90 <__ledf2>
+    6434:	00055963          	bgez	a0,6446 <__ieee754_sqrt+0x1ea>
+    6438:	00290793          	addi	a5,s2,2
+    643c:	0017b713          	seqz	a4,a5
+    6440:	99ba                	add	s3,s3,a4
+    6442:	893e                	mv	s2,a5
+    6444:	bf6d                	j	63fe <__ieee754_sqrt+0x1a2>
+    6446:	00190793          	addi	a5,s2,1
+    644a:	ffe7f913          	andi	s2,a5,-2
+    644e:	bf45                	j	63fe <__ieee754_sqrt+0x1a2>
+
+00006450 <__adddf3>:
+  FP_DECL_D (B);
+  FP_DECL_D (R);
+  DFtype r;
+
+  FP_INIT_ROUNDMODE;
+  FP_UNPACK_SEMIRAW_D (A, a);
+    6450:	00100737          	lui	a4,0x100
+{
+    6454:	1101                	addi	sp,sp,-32
+  FP_UNPACK_SEMIRAW_D (A, a);
+    6456:	177d                	addi	a4,a4,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+    6458:	00b777b3          	and	a5,a4,a1
+  FP_UNPACK_SEMIRAW_D (B, b);
+    645c:	0146d893          	srli	a7,a3,0x14
+    6460:	8f75                	and	a4,a4,a3
+{
+    6462:	cc22                	sw	s0,24(sp)
+  FP_UNPACK_SEMIRAW_D (A, a);
+    6464:	0145d413          	srli	s0,a1,0x14
+  FP_UNPACK_SEMIRAW_D (B, b);
+    6468:	070e                	slli	a4,a4,0x3
+    646a:	01d65813          	srli	a6,a2,0x1d
+{
+    646e:	c84a                	sw	s2,16(sp)
+  FP_UNPACK_SEMIRAW_D (A, a);
+    6470:	7ff47413          	andi	s0,s0,2047
+    6474:	01f5d913          	srli	s2,a1,0x1f
+    6478:	078e                	slli	a5,a5,0x3
+    647a:	01d55593          	srli	a1,a0,0x1d
+  FP_UNPACK_SEMIRAW_D (B, b);
+    647e:	7ff8f893          	andi	a7,a7,2047
+{
+    6482:	ce06                	sw	ra,28(sp)
+    6484:	ca26                	sw	s1,20(sp)
+    6486:	c64e                	sw	s3,12(sp)
+  FP_UNPACK_SEMIRAW_D (B, b);
+    6488:	82fd                	srli	a3,a3,0x1f
+  FP_UNPACK_SEMIRAW_D (A, a);
+    648a:	8fcd                	or	a5,a5,a1
+  FP_UNPACK_SEMIRAW_D (B, b);
+    648c:	00e86833          	or	a6,a6,a4
+  FP_UNPACK_SEMIRAW_D (A, a);
+    6490:	050e                	slli	a0,a0,0x3
+  FP_UNPACK_SEMIRAW_D (B, b);
+    6492:	060e                	slli	a2,a2,0x3
+  FP_ADD_D (R, A, B);
+    6494:	41140733          	sub	a4,s0,a7
+    6498:	7ff00593          	li	a1,2047
+    649c:	24d91563          	bne	s2,a3,66e6 <__adddf3+0x296>
+    64a0:	0ce05763          	blez	a4,656e <__adddf3+0x11e>
+    64a4:	02089363          	bnez	a7,64ca <__adddf3+0x7a>
+    64a8:	00c86733          	or	a4,a6,a2
+    64ac:	cf09                	beqz	a4,64c6 <__adddf3+0x76>
+    64ae:	fff40713          	addi	a4,s0,-1
+    64b2:	eb01                	bnez	a4,64c2 <__adddf3+0x72>
+    64b4:	962a                	add	a2,a2,a0
+    64b6:	97c2                	add	a5,a5,a6
+    64b8:	00a63533          	sltu	a0,a2,a0
+    64bc:	97aa                	add	a5,a5,a0
+    64be:	4405                	li	s0,1
+    64c0:	a891                	j	6514 <__adddf3+0xc4>
+    64c2:	00b41a63          	bne	s0,a1,64d6 <__adddf3+0x86>
+    64c6:	862a                	mv	a2,a0
+    64c8:	aa9d                	j	663e <__adddf3+0x1ee>
+    64ca:	feb40ee3          	beq	s0,a1,64c6 <__adddf3+0x76>
+    64ce:	008006b7          	lui	a3,0x800
+    64d2:	00d86833          	or	a6,a6,a3
+    64d6:	03800693          	li	a3,56
+    64da:	08e6c563          	blt	a3,a4,6564 <__adddf3+0x114>
+    64de:	46fd                	li	a3,31
+    64e0:	02000893          	li	a7,32
+    64e4:	04e6ce63          	blt	a3,a4,6540 <__adddf3+0xf0>
+    64e8:	40e888b3          	sub	a7,a7,a4
+    64ec:	011816b3          	sll	a3,a6,a7
+    64f0:	00e655b3          	srl	a1,a2,a4
+    64f4:	011618b3          	sll	a7,a2,a7
+    64f8:	8ecd                	or	a3,a3,a1
+    64fa:	011038b3          	snez	a7,a7
+    64fe:	0116e6b3          	or	a3,a3,a7
+    6502:	00e85733          	srl	a4,a6,a4
+    6506:	00a68633          	add	a2,a3,a0
+    650a:	973e                	add	a4,a4,a5
+    650c:	00d636b3          	sltu	a3,a2,a3
+    6510:	00d707b3          	add	a5,a4,a3
+    6514:	00879713          	slli	a4,a5,0x8
+    6518:	18075b63          	bgez	a4,66ae <__adddf3+0x25e>
+    651c:	0405                	addi	s0,s0,1
+    651e:	7ff00713          	li	a4,2047
+    6522:	4ae40163          	beq	s0,a4,69c4 <__adddf3+0x574>
+    6526:	ff800737          	lui	a4,0xff800
+    652a:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    652c:	8ff9                	and	a5,a5,a4
+    652e:	00165713          	srli	a4,a2,0x1
+    6532:	8a05                	andi	a2,a2,1
+    6534:	8f51                	or	a4,a4,a2
+    6536:	01f79613          	slli	a2,a5,0x1f
+    653a:	8e59                	or	a2,a2,a4
+    653c:	8385                	srli	a5,a5,0x1
+    653e:	aa85                	j	66ae <__adddf3+0x25e>
+    6540:	fe070693          	addi	a3,a4,-32
+    6544:	00d856b3          	srl	a3,a6,a3
+    6548:	4581                	li	a1,0
+    654a:	01170763          	beq	a4,a7,6558 <__adddf3+0x108>
+    654e:	04000593          	li	a1,64
+    6552:	8d99                	sub	a1,a1,a4
+    6554:	00b815b3          	sll	a1,a6,a1
+    6558:	8dd1                	or	a1,a1,a2
+    655a:	00b035b3          	snez	a1,a1
+    655e:	8ecd                	or	a3,a3,a1
+    6560:	4701                	li	a4,0
+    6562:	b755                	j	6506 <__adddf3+0xb6>
+    6564:	00c866b3          	or	a3,a6,a2
+    6568:	00d036b3          	snez	a3,a3
+    656c:	bfd5                	j	6560 <__adddf3+0x110>
+    656e:	cf41                	beqz	a4,6606 <__adddf3+0x1b6>
+    6570:	40888733          	sub	a4,a7,s0
+    6574:	ec01                	bnez	s0,658c <__adddf3+0x13c>
+    6576:	00a7e6b3          	or	a3,a5,a0
+    657a:	c691                	beqz	a3,6586 <__adddf3+0x136>
+    657c:	fff70693          	addi	a3,a4,-1
+    6580:	da95                	beqz	a3,64b4 <__adddf3+0x64>
+    6582:	00b71b63          	bne	a4,a1,6598 <__adddf3+0x148>
+    6586:	87c2                	mv	a5,a6
+    6588:	843a                	mv	s0,a4
+    658a:	a855                	j	663e <__adddf3+0x1ee>
+    658c:	44b88063          	beq	a7,a1,69cc <__adddf3+0x57c>
+    6590:	008006b7          	lui	a3,0x800
+    6594:	8fd5                	or	a5,a5,a3
+    6596:	86ba                	mv	a3,a4
+    6598:	03800713          	li	a4,56
+    659c:	06d74063          	blt	a4,a3,65fc <__adddf3+0x1ac>
+    65a0:	477d                	li	a4,31
+    65a2:	02000313          	li	t1,32
+    65a6:	02d74963          	blt	a4,a3,65d8 <__adddf3+0x188>
+    65aa:	40d30333          	sub	t1,t1,a3
+    65ae:	00679733          	sll	a4,a5,t1
+    65b2:	00d555b3          	srl	a1,a0,a3
+    65b6:	00651333          	sll	t1,a0,t1
+    65ba:	8f4d                	or	a4,a4,a1
+    65bc:	00603333          	snez	t1,t1
+    65c0:	00676733          	or	a4,a4,t1
+    65c4:	00d7d6b3          	srl	a3,a5,a3
+    65c8:	963a                	add	a2,a2,a4
+    65ca:	96c2                	add	a3,a3,a6
+    65cc:	00e63733          	sltu	a4,a2,a4
+    65d0:	00e687b3          	add	a5,a3,a4
+    65d4:	8446                	mv	s0,a7
+    65d6:	bf3d                	j	6514 <__adddf3+0xc4>
+    65d8:	fe068713          	addi	a4,a3,-32 # 7fffe0 <syscalls_cpp.cpp.cfa7c3ef+0x7e83fe>
+    65dc:	00e7d733          	srl	a4,a5,a4
+    65e0:	4581                	li	a1,0
+    65e2:	00668763          	beq	a3,t1,65f0 <__adddf3+0x1a0>
+    65e6:	04000593          	li	a1,64
+    65ea:	8d95                	sub	a1,a1,a3
+    65ec:	00b795b3          	sll	a1,a5,a1
+    65f0:	8dc9                	or	a1,a1,a0
+    65f2:	00b035b3          	snez	a1,a1
+    65f6:	8f4d                	or	a4,a4,a1
+    65f8:	4681                	li	a3,0
+    65fa:	b7f9                	j	65c8 <__adddf3+0x178>
+    65fc:	00a7e733          	or	a4,a5,a0
+    6600:	00e03733          	snez	a4,a4
+    6604:	bfd5                	j	65f8 <__adddf3+0x1a8>
+    6606:	00140713          	addi	a4,s0,1
+    660a:	7fe77693          	andi	a3,a4,2046
+    660e:	e2d9                	bnez	a3,6694 <__adddf3+0x244>
+    6610:	00a7e733          	or	a4,a5,a0
+    6614:	e825                	bnez	s0,6684 <__adddf3+0x234>
+    6616:	38070f63          	beqz	a4,69b4 <__adddf3+0x564>
+    661a:	00c86733          	or	a4,a6,a2
+    661e:	38070d63          	beqz	a4,69b8 <__adddf3+0x568>
+    6622:	962a                	add	a2,a2,a0
+    6624:	97c2                	add	a5,a5,a6
+    6626:	00a63533          	sltu	a0,a2,a0
+    662a:	97aa                	add	a5,a5,a0
+    662c:	00879713          	slli	a4,a5,0x8
+    6630:	26075f63          	bgez	a4,68ae <__adddf3+0x45e>
+    6634:	ff800737          	lui	a4,0xff800
+    6638:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    663a:	8ff9                	and	a5,a5,a4
+    663c:	4405                	li	s0,1
+  FP_PACK_SEMIRAW_D (r, R);
+    663e:	01d79713          	slli	a4,a5,0x1d
+    6642:	820d                	srli	a2,a2,0x3
+    6644:	7ff00693          	li	a3,2047
+    6648:	8f51                	or	a4,a4,a2
+    664a:	838d                	srli	a5,a5,0x3
+    664c:	00d41963          	bne	s0,a3,665e <__adddf3+0x20e>
+    6650:	8f5d                	or	a4,a4,a5
+    6652:	4781                	li	a5,0
+    6654:	c709                	beqz	a4,665e <__adddf3+0x20e>
+    6656:	000807b7          	lui	a5,0x80
+    665a:	4701                	li	a4,0
+    665c:	4901                	li	s2,0
+    665e:	7ff47413          	andi	s0,s0,2047
+    6662:	07b2                	slli	a5,a5,0xc
+    6664:	83b1                	srli	a5,a5,0xc
+    6666:	0452                	slli	s0,s0,0x14
+    6668:	01f91593          	slli	a1,s2,0x1f
+    666c:	8c5d                	or	s0,s0,a5
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    666e:	40f2                	lw	ra,28(sp)
+  FP_PACK_SEMIRAW_D (r, R);
+    6670:	00b467b3          	or	a5,s0,a1
+}
+    6674:	4462                	lw	s0,24(sp)
+    6676:	44d2                	lw	s1,20(sp)
+    6678:	4942                	lw	s2,16(sp)
+    667a:	49b2                	lw	s3,12(sp)
+    667c:	853a                	mv	a0,a4
+    667e:	85be                	mv	a1,a5
+    6680:	6105                	addi	sp,sp,32
+    6682:	8082                	ret
+  FP_ADD_D (R, A, B);
+    6684:	32070c63          	beqz	a4,69bc <__adddf3+0x56c>
+    6688:	00c86833          	or	a6,a6,a2
+    668c:	24081263          	bnez	a6,68d0 <__adddf3+0x480>
+    6690:	862a                	mv	a2,a0
+    6692:	a635                	j	69be <__adddf3+0x56e>
+    6694:	32b70763          	beq	a4,a1,69c2 <__adddf3+0x572>
+    6698:	962a                	add	a2,a2,a0
+    669a:	00a63533          	sltu	a0,a2,a0
+    669e:	97c2                	add	a5,a5,a6
+    66a0:	97aa                	add	a5,a5,a0
+    66a2:	01f79693          	slli	a3,a5,0x1f
+    66a6:	8205                	srli	a2,a2,0x1
+    66a8:	8e55                	or	a2,a2,a3
+    66aa:	8385                	srli	a5,a5,0x1
+    66ac:	843a                	mv	s0,a4
+  FP_PACK_SEMIRAW_D (r, R);
+    66ae:	00767713          	andi	a4,a2,7
+    66b2:	cf01                	beqz	a4,66ca <__adddf3+0x27a>
+    66b4:	00f67713          	andi	a4,a2,15
+    66b8:	4691                	li	a3,4
+    66ba:	00d70863          	beq	a4,a3,66ca <__adddf3+0x27a>
+    66be:	00d60733          	add	a4,a2,a3
+    66c2:	00c736b3          	sltu	a3,a4,a2
+    66c6:	97b6                	add	a5,a5,a3
+    66c8:	863a                	mv	a2,a4
+    66ca:	00879713          	slli	a4,a5,0x8
+    66ce:	f60758e3          	bgez	a4,663e <__adddf3+0x1ee>
+    66d2:	0405                	addi	s0,s0,1
+    66d4:	7ff00713          	li	a4,2047
+    66d8:	2ee40663          	beq	s0,a4,69c4 <__adddf3+0x574>
+    66dc:	ff800737          	lui	a4,0xff800
+    66e0:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    66e2:	8ff9                	and	a5,a5,a4
+    66e4:	bfa9                	j	663e <__adddf3+0x1ee>
+  FP_ADD_D (R, A, B);
+    66e6:	0ae05e63          	blez	a4,67a2 <__adddf3+0x352>
+    66ea:	06089e63          	bnez	a7,6766 <__adddf3+0x316>
+    66ee:	00c86733          	or	a4,a6,a2
+    66f2:	dc070ae3          	beqz	a4,64c6 <__adddf3+0x76>
+    66f6:	fff40713          	addi	a4,s0,-1
+    66fa:	eb11                	bnez	a4,670e <__adddf3+0x2be>
+    66fc:	40c50633          	sub	a2,a0,a2
+    6700:	410787b3          	sub	a5,a5,a6
+    6704:	00c53533          	sltu	a0,a0,a2
+    6708:	8f89                	sub	a5,a5,a0
+    670a:	4405                	li	s0,1
+    670c:	a099                	j	6752 <__adddf3+0x302>
+    670e:	dab40ce3          	beq	s0,a1,64c6 <__adddf3+0x76>
+    6712:	03800693          	li	a3,56
+    6716:	08e6c163          	blt	a3,a4,6798 <__adddf3+0x348>
+    671a:	46fd                	li	a3,31
+    671c:	02000893          	li	a7,32
+    6720:	04e6ca63          	blt	a3,a4,6774 <__adddf3+0x324>
+    6724:	40e888b3          	sub	a7,a7,a4
+    6728:	011816b3          	sll	a3,a6,a7
+    672c:	00e655b3          	srl	a1,a2,a4
+    6730:	011618b3          	sll	a7,a2,a7
+    6734:	8ecd                	or	a3,a3,a1
+    6736:	011038b3          	snez	a7,a7
+    673a:	0116e6b3          	or	a3,a3,a7
+    673e:	00e85733          	srl	a4,a6,a4
+    6742:	40d50633          	sub	a2,a0,a3
+    6746:	40e78733          	sub	a4,a5,a4
+    674a:	00c53533          	sltu	a0,a0,a2
+    674e:	40a707b3          	sub	a5,a4,a0
+    6752:	00879713          	slli	a4,a5,0x8
+    6756:	f4075ce3          	bgez	a4,66ae <__adddf3+0x25e>
+    675a:	008004b7          	lui	s1,0x800
+    675e:	14fd                	addi	s1,s1,-1 # 7fffff <syscalls_cpp.cpp.cfa7c3ef+0x7e841d>
+    6760:	8cfd                	and	s1,s1,a5
+    6762:	89b2                	mv	s3,a2
+    6764:	a255                	j	6908 <__adddf3+0x4b8>
+    6766:	d6b400e3          	beq	s0,a1,64c6 <__adddf3+0x76>
+    676a:	008006b7          	lui	a3,0x800
+    676e:	00d86833          	or	a6,a6,a3
+    6772:	b745                	j	6712 <__adddf3+0x2c2>
+    6774:	fe070693          	addi	a3,a4,-32
+    6778:	00d856b3          	srl	a3,a6,a3
+    677c:	4581                	li	a1,0
+    677e:	01170763          	beq	a4,a7,678c <__adddf3+0x33c>
+    6782:	04000593          	li	a1,64
+    6786:	8d99                	sub	a1,a1,a4
+    6788:	00b815b3          	sll	a1,a6,a1
+    678c:	8dd1                	or	a1,a1,a2
+    678e:	00b035b3          	snez	a1,a1
+    6792:	8ecd                	or	a3,a3,a1
+    6794:	4701                	li	a4,0
+    6796:	b775                	j	6742 <__adddf3+0x2f2>
+    6798:	00c866b3          	or	a3,a6,a2
+    679c:	00d036b3          	snez	a3,a3
+    67a0:	bfd5                	j	6794 <__adddf3+0x344>
+    67a2:	cf5d                	beqz	a4,6860 <__adddf3+0x410>
+    67a4:	40888333          	sub	t1,a7,s0
+    67a8:	e41d                	bnez	s0,67d6 <__adddf3+0x386>
+    67aa:	00a7e733          	or	a4,a5,a0
+    67ae:	c305                	beqz	a4,67ce <__adddf3+0x37e>
+    67b0:	fff30713          	addi	a4,t1,-1
+    67b4:	eb19                	bnez	a4,67ca <__adddf3+0x37a>
+    67b6:	40a60533          	sub	a0,a2,a0
+    67ba:	00a63733          	sltu	a4,a2,a0
+    67be:	40f807b3          	sub	a5,a6,a5
+    67c2:	862a                	mv	a2,a0
+    67c4:	8f99                	sub	a5,a5,a4
+    67c6:	8936                	mv	s2,a3
+    67c8:	b789                	j	670a <__adddf3+0x2ba>
+    67ca:	00b31c63          	bne	t1,a1,67e2 <__adddf3+0x392>
+    67ce:	8936                	mv	s2,a3
+    67d0:	87c2                	mv	a5,a6
+    67d2:	841a                	mv	s0,t1
+    67d4:	b5ad                	j	663e <__adddf3+0x1ee>
+    67d6:	1eb88a63          	beq	a7,a1,69ca <__adddf3+0x57a>
+    67da:	00800737          	lui	a4,0x800
+    67de:	8fd9                	or	a5,a5,a4
+    67e0:	871a                	mv	a4,t1
+    67e2:	03800593          	li	a1,56
+    67e6:	06e5c863          	blt	a1,a4,6856 <__adddf3+0x406>
+    67ea:	45fd                	li	a1,31
+    67ec:	02000e13          	li	t3,32
+    67f0:	02e5ce63          	blt	a1,a4,682c <__adddf3+0x3dc>
+    67f4:	40ee0e33          	sub	t3,t3,a4
+    67f8:	01c795b3          	sll	a1,a5,t3
+    67fc:	00e55333          	srl	t1,a0,a4
+    6800:	01c51e33          	sll	t3,a0,t3
+    6804:	0065e5b3          	or	a1,a1,t1
+    6808:	01c03e33          	snez	t3,t3
+    680c:	01c5e5b3          	or	a1,a1,t3
+    6810:	00e7d733          	srl	a4,a5,a4
+    6814:	40b605b3          	sub	a1,a2,a1
+    6818:	00b637b3          	sltu	a5,a2,a1
+    681c:	40e80733          	sub	a4,a6,a4
+    6820:	862e                	mv	a2,a1
+    6822:	40f707b3          	sub	a5,a4,a5
+    6826:	8446                	mv	s0,a7
+    6828:	8936                	mv	s2,a3
+    682a:	b725                	j	6752 <__adddf3+0x302>
+    682c:	fe070593          	addi	a1,a4,-32 # 7fffe0 <syscalls_cpp.cpp.cfa7c3ef+0x7e83fe>
+    6830:	00b7d5b3          	srl	a1,a5,a1
+    6834:	4301                	li	t1,0
+    6836:	01c70863          	beq	a4,t3,6846 <__adddf3+0x3f6>
+    683a:	04000313          	li	t1,64
+    683e:	40e30333          	sub	t1,t1,a4
+    6842:	00679333          	sll	t1,a5,t1
+    6846:	00a36333          	or	t1,t1,a0
+    684a:	00603333          	snez	t1,t1
+    684e:	0065e5b3          	or	a1,a1,t1
+    6852:	4701                	li	a4,0
+    6854:	b7c1                	j	6814 <__adddf3+0x3c4>
+    6856:	00a7e5b3          	or	a1,a5,a0
+    685a:	00b035b3          	snez	a1,a1
+    685e:	bfd5                	j	6852 <__adddf3+0x402>
+    6860:	00140713          	addi	a4,s0,1
+    6864:	7fe77713          	andi	a4,a4,2046
+    6868:	ef25                	bnez	a4,68e0 <__adddf3+0x490>
+    686a:	00a7e8b3          	or	a7,a5,a0
+    686e:	00c86733          	or	a4,a6,a2
+    6872:	e839                	bnez	s0,68c8 <__adddf3+0x478>
+    6874:	00089663          	bnez	a7,6880 <__adddf3+0x430>
+    6878:	87c2                	mv	a5,a6
+    687a:	eb0d                	bnez	a4,68ac <__adddf3+0x45c>
+    687c:	4901                	li	s2,0
+    687e:	a299                	j	69c4 <__adddf3+0x574>
+    6880:	12070c63          	beqz	a4,69b8 <__adddf3+0x568>
+    6884:	40c505b3          	sub	a1,a0,a2
+    6888:	00b538b3          	sltu	a7,a0,a1
+    688c:	41078733          	sub	a4,a5,a6
+    6890:	41170733          	sub	a4,a4,a7
+    6894:	00871893          	slli	a7,a4,0x8
+    6898:	0208d163          	bgez	a7,68ba <__adddf3+0x46a>
+    689c:	40a60533          	sub	a0,a2,a0
+    68a0:	00a63733          	sltu	a4,a2,a0
+    68a4:	40f807b3          	sub	a5,a6,a5
+    68a8:	862a                	mv	a2,a0
+    68aa:	8f99                	sub	a5,a5,a4
+    68ac:	8936                	mv	s2,a3
+  FP_PACK_SEMIRAW_D (r, R);
+    68ae:	00f66733          	or	a4,a2,a5
+    68b2:	12070363          	beqz	a4,69d8 <__adddf3+0x588>
+    68b6:	4401                	li	s0,0
+    68b8:	bbdd                	j	66ae <__adddf3+0x25e>
+  FP_ADD_D (R, A, B);
+    68ba:	00e5e633          	or	a2,a1,a4
+    68be:	10060a63          	beqz	a2,69d2 <__adddf3+0x582>
+    68c2:	87ba                	mv	a5,a4
+    68c4:	862e                	mv	a2,a1
+    68c6:	b7e5                	j	68ae <__adddf3+0x45e>
+    68c8:	00089963          	bnez	a7,68da <__adddf3+0x48a>
+    68cc:	8936                	mv	s2,a3
+    68ce:	e77d                	bnez	a4,69bc <__adddf3+0x56c>
+    68d0:	4901                	li	s2,0
+    68d2:	004007b7          	lui	a5,0x400
+    68d6:	4601                	li	a2,0
+    68d8:	a0dd                	j	69be <__adddf3+0x56e>
+    68da:	da070be3          	beqz	a4,6690 <__adddf3+0x240>
+    68de:	bfcd                	j	68d0 <__adddf3+0x480>
+    68e0:	40c50733          	sub	a4,a0,a2
+    68e4:	00e535b3          	sltu	a1,a0,a4
+    68e8:	410784b3          	sub	s1,a5,a6
+    68ec:	8c8d                	sub	s1,s1,a1
+    68ee:	00849593          	slli	a1,s1,0x8
+    68f2:	89ba                	mv	s3,a4
+    68f4:	0605d363          	bgez	a1,695a <__adddf3+0x50a>
+    68f8:	40a609b3          	sub	s3,a2,a0
+    68fc:	40f804b3          	sub	s1,a6,a5
+    6900:	01363633          	sltu	a2,a2,s3
+    6904:	8c91                	sub	s1,s1,a2
+    6906:	8936                	mv	s2,a3
+    6908:	c0a5                	beqz	s1,6968 <__adddf3+0x518>
+    690a:	8526                	mv	a0,s1
+    690c:	24a010ef          	jal	7b56 <__clzsi2>
+    6910:	ff850713          	addi	a4,a0,-8
+    6914:	02000793          	li	a5,32
+    6918:	8f99                	sub	a5,a5,a4
+    691a:	00e494b3          	sll	s1,s1,a4
+    691e:	00f9d7b3          	srl	a5,s3,a5
+    6922:	8fc5                	or	a5,a5,s1
+    6924:	00e99633          	sll	a2,s3,a4
+    6928:	08874063          	blt	a4,s0,69a8 <__adddf3+0x558>
+    692c:	8f01                	sub	a4,a4,s0
+    692e:	00170513          	addi	a0,a4,1
+    6932:	46fd                	li	a3,31
+    6934:	02000593          	li	a1,32
+    6938:	04a6c663          	blt	a3,a0,6984 <__adddf3+0x534>
+    693c:	8d89                	sub	a1,a1,a0
+    693e:	00b79733          	sll	a4,a5,a1
+    6942:	00a656b3          	srl	a3,a2,a0
+    6946:	00b615b3          	sll	a1,a2,a1
+    694a:	8f55                	or	a4,a4,a3
+    694c:	00b035b3          	snez	a1,a1
+    6950:	00b76633          	or	a2,a4,a1
+    6954:	00a7d7b3          	srl	a5,a5,a0
+    6958:	bf99                	j	68ae <__adddf3+0x45e>
+    695a:	00976633          	or	a2,a4,s1
+    695e:	f64d                	bnez	a2,6908 <__adddf3+0x4b8>
+    6960:	4901                	li	s2,0
+    6962:	4781                	li	a5,0
+    6964:	4401                	li	s0,0
+    6966:	b9e1                	j	663e <__adddf3+0x1ee>
+    6968:	854e                	mv	a0,s3
+    696a:	1ec010ef          	jal	7b56 <__clzsi2>
+    696e:	01850713          	addi	a4,a0,24
+    6972:	47fd                	li	a5,31
+    6974:	fae7d0e3          	bge	a5,a4,6914 <__adddf3+0x4c4>
+    6978:	ff850793          	addi	a5,a0,-8
+    697c:	00f997b3          	sll	a5,s3,a5
+    6980:	4601                	li	a2,0
+    6982:	b75d                	j	6928 <__adddf3+0x4d8>
+    6984:	1705                	addi	a4,a4,-31
+    6986:	00e7d733          	srl	a4,a5,a4
+    698a:	4681                	li	a3,0
+    698c:	00b50763          	beq	a0,a1,699a <__adddf3+0x54a>
+    6990:	04000693          	li	a3,64
+    6994:	8e89                	sub	a3,a3,a0
+    6996:	00d796b3          	sll	a3,a5,a3
+    699a:	8ed1                	or	a3,a3,a2
+    699c:	00d036b3          	snez	a3,a3
+    69a0:	00d76633          	or	a2,a4,a3
+    69a4:	4781                	li	a5,0
+    69a6:	b721                	j	68ae <__adddf3+0x45e>
+    69a8:	8c19                	sub	s0,s0,a4
+    69aa:	ff800737          	lui	a4,0xff800
+    69ae:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    69b0:	8ff9                	and	a5,a5,a4
+    69b2:	b9f5                	j	66ae <__adddf3+0x25e>
+    69b4:	87c2                	mv	a5,a6
+    69b6:	bde5                	j	68ae <__adddf3+0x45e>
+    69b8:	862a                	mv	a2,a0
+    69ba:	bdd5                	j	68ae <__adddf3+0x45e>
+    69bc:	87c2                	mv	a5,a6
+    69be:	842e                	mv	s0,a1
+    69c0:	b9bd                	j	663e <__adddf3+0x1ee>
+    69c2:	843a                	mv	s0,a4
+    69c4:	4781                	li	a5,0
+    69c6:	4601                	li	a2,0
+    69c8:	b99d                	j	663e <__adddf3+0x1ee>
+    69ca:	8936                	mv	s2,a3
+    69cc:	87c2                	mv	a5,a6
+    69ce:	8446                	mv	s0,a7
+    69d0:	b1bd                	j	663e <__adddf3+0x1ee>
+    69d2:	4901                	li	s2,0
+    69d4:	4781                	li	a5,0
+    69d6:	b1a5                	j	663e <__adddf3+0x1ee>
+    69d8:	4781                	li	a5,0
+    69da:	4601                	li	a2,0
+    69dc:	b761                	j	6964 <__adddf3+0x514>
+
+000069de <__divdf3>:
+#include "soft-fp.h"
+#include "double.h"
+
+DFtype
+__divdf3 (DFtype a, DFtype b)
+{
+    69de:	715d                	addi	sp,sp,-80
+    69e0:	da56                	sw	s5,52(sp)
+  FP_DECL_D (B);
+  FP_DECL_D (R);
+  DFtype r;
+
+  FP_INIT_ROUNDMODE;
+  FP_UNPACK_D (A, a);
+    69e2:	0145da93          	srli	s5,a1,0x14
+{
+    69e6:	c4a2                	sw	s0,72(sp)
+    69e8:	c0ca                	sw	s2,64(sp)
+    69ea:	de4e                	sw	s3,60(sp)
+    69ec:	dc52                	sw	s4,56(sp)
+    69ee:	d65e                	sw	s7,44(sp)
+  FP_UNPACK_D (A, a);
+    69f0:	00c59413          	slli	s0,a1,0xc
+{
+    69f4:	c686                	sw	ra,76(sp)
+    69f6:	c2a6                	sw	s1,68(sp)
+    69f8:	d85a                	sw	s6,48(sp)
+    69fa:	d462                	sw	s8,40(sp)
+    69fc:	d266                	sw	s9,36(sp)
+    69fe:	d06a                	sw	s10,32(sp)
+    6a00:	ce6e                	sw	s11,28(sp)
+  FP_UNPACK_D (A, a);
+    6a02:	7ffafa93          	andi	s5,s5,2047
+{
+    6a06:	892a                	mv	s2,a0
+    6a08:	8bb2                	mv	s7,a2
+    6a0a:	8a36                	mv	s4,a3
+  FP_UNPACK_D (A, a);
+    6a0c:	8031                	srli	s0,s0,0xc
+    6a0e:	01f5d993          	srli	s3,a1,0x1f
+    6a12:	080a8063          	beqz	s5,6a92 <__divdf3+0xb4>
+    6a16:	7ff00793          	li	a5,2047
+    6a1a:	0cfa8763          	beq	s5,a5,6ae8 <__divdf3+0x10a>
+    6a1e:	01d55c93          	srli	s9,a0,0x1d
+    6a22:	040e                	slli	s0,s0,0x3
+    6a24:	008cecb3          	or	s9,s9,s0
+    6a28:	008007b7          	lui	a5,0x800
+    6a2c:	00fcecb3          	or	s9,s9,a5
+    6a30:	00351493          	slli	s1,a0,0x3
+    6a34:	c01a8a93          	addi	s5,s5,-1023
+    6a38:	4b01                	li	s6,0
+  FP_UNPACK_D (B, b);
+    6a3a:	014a5793          	srli	a5,s4,0x14
+    6a3e:	00ca1413          	slli	s0,s4,0xc
+    6a42:	7ff7f793          	andi	a5,a5,2047
+    6a46:	8031                	srli	s0,s0,0xc
+    6a48:	01fa5a13          	srli	s4,s4,0x1f
+    6a4c:	cfcd                	beqz	a5,6b06 <__divdf3+0x128>
+    6a4e:	7ff00713          	li	a4,2047
+    6a52:	10e78463          	beq	a5,a4,6b5a <__divdf3+0x17c>
+    6a56:	040e                	slli	s0,s0,0x3
+    6a58:	01dbd713          	srli	a4,s7,0x1d
+    6a5c:	8f41                	or	a4,a4,s0
+    6a5e:	00800437          	lui	s0,0x800
+    6a62:	8c59                	or	s0,s0,a4
+    6a64:	003b9593          	slli	a1,s7,0x3
+    6a68:	c0178793          	addi	a5,a5,-1023 # 7ffc01 <syscalls_cpp.cpp.cfa7c3ef+0x7e801f>
+    6a6c:	4701                	li	a4,0
+  FP_DIV_D (R, A, B);
+    6a6e:	40fa8ab3          	sub	s5,s5,a5
+    6a72:	002b1793          	slli	a5,s6,0x2
+    6a76:	8fd9                	or	a5,a5,a4
+    6a78:	17fd                	addi	a5,a5,-1
+    6a7a:	46b9                	li	a3,14
+    6a7c:	0149c933          	xor	s2,s3,s4
+    6a80:	0ef6ea63          	bltu	a3,a5,6b74 <__divdf3+0x196>
+    6a84:	66a9                	lui	a3,0xa
+    6a86:	078a                	slli	a5,a5,0x2
+    6a88:	76468693          	addi	a3,a3,1892 # a764 <TPG.c.205146a8+0xf26>
+    6a8c:	97b6                	add	a5,a5,a3
+    6a8e:	439c                	lw	a5,0(a5)
+    6a90:	8782                	jr	a5
+  FP_UNPACK_D (A, a);
+    6a92:	00a46cb3          	or	s9,s0,a0
+    6a96:	060c8063          	beqz	s9,6af6 <__divdf3+0x118>
+    6a9a:	c815                	beqz	s0,6ace <__divdf3+0xf0>
+    6a9c:	8522                	mv	a0,s0
+    6a9e:	0b8010ef          	jal	7b56 <__clzsi2>
+    6aa2:	87aa                	mv	a5,a0
+    6aa4:	ff550713          	addi	a4,a0,-11
+    6aa8:	4cf5                	li	s9,29
+    6aaa:	ff878693          	addi	a3,a5,-8
+    6aae:	40ec8cb3          	sub	s9,s9,a4
+    6ab2:	00d41433          	sll	s0,s0,a3
+    6ab6:	01995cb3          	srl	s9,s2,s9
+    6aba:	008cecb3          	or	s9,s9,s0
+    6abe:	00d91433          	sll	s0,s2,a3
+    6ac2:	c0d00a93          	li	s5,-1011
+    6ac6:	40fa8ab3          	sub	s5,s5,a5
+    6aca:	84a2                	mv	s1,s0
+    6acc:	b7b5                	j	6a38 <__divdf3+0x5a>
+    6ace:	088010ef          	jal	7b56 <__clzsi2>
+    6ad2:	01550713          	addi	a4,a0,21
+    6ad6:	46f1                	li	a3,28
+    6ad8:	02050793          	addi	a5,a0,32
+    6adc:	fce6d6e3          	bge	a3,a4,6aa8 <__divdf3+0xca>
+    6ae0:	1561                	addi	a0,a0,-8
+    6ae2:	00a91cb3          	sll	s9,s2,a0
+    6ae6:	bff1                	j	6ac2 <__divdf3+0xe4>
+    6ae8:	00a46cb3          	or	s9,s0,a0
+    6aec:	000c9963          	bnez	s9,6afe <__divdf3+0x120>
+    6af0:	4481                	li	s1,0
+    6af2:	4b09                	li	s6,2
+    6af4:	b799                	j	6a3a <__divdf3+0x5c>
+    6af6:	4481                	li	s1,0
+    6af8:	4a81                	li	s5,0
+    6afa:	4b05                	li	s6,1
+    6afc:	bf3d                	j	6a3a <__divdf3+0x5c>
+    6afe:	84aa                	mv	s1,a0
+    6b00:	8ca2                	mv	s9,s0
+    6b02:	4b0d                	li	s6,3
+    6b04:	bf1d                	j	6a3a <__divdf3+0x5c>
+  FP_UNPACK_D (B, b);
+    6b06:	017465b3          	or	a1,s0,s7
+    6b0a:	cdb1                	beqz	a1,6b66 <__divdf3+0x188>
+    6b0c:	c805                	beqz	s0,6b3c <__divdf3+0x15e>
+    6b0e:	8522                	mv	a0,s0
+    6b10:	046010ef          	jal	7b56 <__clzsi2>
+    6b14:	86aa                	mv	a3,a0
+    6b16:	ff550793          	addi	a5,a0,-11
+    6b1a:	4775                	li	a4,29
+    6b1c:	ff868613          	addi	a2,a3,-8
+    6b20:	8f1d                	sub	a4,a4,a5
+    6b22:	00c41433          	sll	s0,s0,a2
+    6b26:	00ebd733          	srl	a4,s7,a4
+    6b2a:	8f41                	or	a4,a4,s0
+    6b2c:	00cb9433          	sll	s0,s7,a2
+    6b30:	c0d00793          	li	a5,-1011
+    6b34:	85a2                	mv	a1,s0
+    6b36:	8f95                	sub	a5,a5,a3
+    6b38:	843a                	mv	s0,a4
+    6b3a:	bf0d                	j	6a6c <__divdf3+0x8e>
+    6b3c:	855e                	mv	a0,s7
+    6b3e:	018010ef          	jal	7b56 <__clzsi2>
+    6b42:	01550793          	addi	a5,a0,21
+    6b46:	4771                	li	a4,28
+    6b48:	02050693          	addi	a3,a0,32
+    6b4c:	fcf757e3          	bge	a4,a5,6b1a <__divdf3+0x13c>
+    6b50:	ff850713          	addi	a4,a0,-8
+    6b54:	00eb9733          	sll	a4,s7,a4
+    6b58:	bfe1                	j	6b30 <__divdf3+0x152>
+    6b5a:	017465b3          	or	a1,s0,s7
+    6b5e:	e981                	bnez	a1,6b6e <__divdf3+0x190>
+    6b60:	4401                	li	s0,0
+    6b62:	4709                	li	a4,2
+    6b64:	b729                	j	6a6e <__divdf3+0x90>
+    6b66:	4401                	li	s0,0
+    6b68:	4781                	li	a5,0
+    6b6a:	4705                	li	a4,1
+    6b6c:	b709                	j	6a6e <__divdf3+0x90>
+    6b6e:	85de                	mv	a1,s7
+    6b70:	470d                	li	a4,3
+    6b72:	bdf5                	j	6a6e <__divdf3+0x90>
+  FP_DIV_D (R, A, B);
+    6b74:	01946663          	bltu	s0,s9,6b80 <__divdf3+0x1a2>
+    6b78:	308c9a63          	bne	s9,s0,6e8c <__divdf3+0x4ae>
+    6b7c:	30b4e863          	bltu	s1,a1,6e8c <__divdf3+0x4ae>
+    6b80:	01fc9713          	slli	a4,s9,0x1f
+    6b84:	0014d793          	srli	a5,s1,0x1
+    6b88:	01f49c13          	slli	s8,s1,0x1f
+    6b8c:	001cdc93          	srli	s9,s9,0x1
+    6b90:	00f764b3          	or	s1,a4,a5
+    6b94:	00841793          	slli	a5,s0,0x8
+    6b98:	0185db13          	srli	s6,a1,0x18
+    6b9c:	00fb6b33          	or	s6,s6,a5
+    6ba0:	0107dd13          	srli	s10,a5,0x10
+    6ba4:	010b1793          	slli	a5,s6,0x10
+    6ba8:	83c1                	srli	a5,a5,0x10
+    6baa:	00859b93          	slli	s7,a1,0x8
+    6bae:	8566                	mv	a0,s9
+    6bb0:	85ea                	mv	a1,s10
+    6bb2:	c63e                	sw	a5,12(sp)
+    6bb4:	72d000ef          	jal	7ae0 <__hidden___udivsi3>
+    6bb8:	85aa                	mv	a1,a0
+    6bba:	8a2a                	mv	s4,a0
+    6bbc:	010b1513          	slli	a0,s6,0x10
+    6bc0:	8141                	srli	a0,a0,0x10
+    6bc2:	703000ef          	jal	7ac4 <__mulsi3>
+    6bc6:	89aa                	mv	s3,a0
+    6bc8:	85ea                	mv	a1,s10
+    6bca:	8566                	mv	a0,s9
+    6bcc:	741000ef          	jal	7b0c <__umodsi3>
+    6bd0:	0542                	slli	a0,a0,0x10
+    6bd2:	0104d793          	srli	a5,s1,0x10
+    6bd6:	8fc9                	or	a5,a5,a0
+    6bd8:	0137f863          	bgeu	a5,s3,6be8 <__divdf3+0x20a>
+    6bdc:	97da                	add	a5,a5,s6
+    6bde:	0167e463          	bltu	a5,s6,6be6 <__divdf3+0x208>
+    6be2:	2b37e863          	bltu	a5,s3,6e92 <__divdf3+0x4b4>
+    6be6:	1a7d                	addi	s4,s4,-1
+    6be8:	413789b3          	sub	s3,a5,s3
+    6bec:	85ea                	mv	a1,s10
+    6bee:	854e                	mv	a0,s3
+    6bf0:	6f1000ef          	jal	7ae0 <__hidden___udivsi3>
+    6bf4:	85aa                	mv	a1,a0
+    6bf6:	842a                	mv	s0,a0
+    6bf8:	010b1513          	slli	a0,s6,0x10
+    6bfc:	8141                	srli	a0,a0,0x10
+    6bfe:	6c7000ef          	jal	7ac4 <__mulsi3>
+    6c02:	8caa                	mv	s9,a0
+    6c04:	85ea                	mv	a1,s10
+    6c06:	854e                	mv	a0,s3
+    6c08:	705000ef          	jal	7b0c <__umodsi3>
+    6c0c:	01049993          	slli	s3,s1,0x10
+    6c10:	0542                	slli	a0,a0,0x10
+    6c12:	0109d993          	srli	s3,s3,0x10
+    6c16:	00a9e9b3          	or	s3,s3,a0
+    6c1a:	0199f863          	bgeu	s3,s9,6c2a <__divdf3+0x24c>
+    6c1e:	99da                	add	s3,s3,s6
+    6c20:	0199f463          	bgeu	s3,s9,6c28 <__divdf3+0x24a>
+    6c24:	2769fa63          	bgeu	s3,s6,6e98 <__divdf3+0x4ba>
+    6c28:	147d                	addi	s0,s0,-1 # 7fffff <syscalls_cpp.cpp.cfa7c3ef+0x7e841d>
+    6c2a:	010a1513          	slli	a0,s4,0x10
+    6c2e:	00856733          	or	a4,a0,s0
+    6c32:	010b9693          	slli	a3,s7,0x10
+    6c36:	82c1                	srli	a3,a3,0x10
+    6c38:	01071513          	slli	a0,a4,0x10
+    6c3c:	419989b3          	sub	s3,s3,s9
+    6c40:	010bdd93          	srli	s11,s7,0x10
+    6c44:	8141                	srli	a0,a0,0x10
+    6c46:	c636                	sw	a3,12(sp)
+    6c48:	85b6                	mv	a1,a3
+    6c4a:	67b000ef          	jal	7ac4 <__mulsi3>
+    6c4e:	882a                	mv	a6,a0
+    6c50:	01071513          	slli	a0,a4,0x10
+    6c54:	8141                	srli	a0,a0,0x10
+    6c56:	85ee                	mv	a1,s11
+    6c58:	66d000ef          	jal	7ac4 <__mulsi3>
+    6c5c:	010b9593          	slli	a1,s7,0x10
+    6c60:	87aa                	mv	a5,a0
+    6c62:	81c1                	srli	a1,a1,0x10
+    6c64:	01075513          	srli	a0,a4,0x10
+    6c68:	65d000ef          	jal	7ac4 <__mulsi3>
+    6c6c:	88aa                	mv	a7,a0
+    6c6e:	85ee                	mv	a1,s11
+    6c70:	01075513          	srli	a0,a4,0x10
+    6c74:	651000ef          	jal	7ac4 <__mulsi3>
+    6c78:	01085a13          	srli	s4,a6,0x10
+    6c7c:	97c6                	add	a5,a5,a7
+    6c7e:	9a3e                	add	s4,s4,a5
+    6c80:	011a7463          	bgeu	s4,a7,6c88 <__divdf3+0x2aa>
+    6c84:	67c1                	lui	a5,0x10
+    6c86:	953e                	add	a0,a0,a5
+    6c88:	010a5793          	srli	a5,s4,0x10
+    6c8c:	0842                	slli	a6,a6,0x10
+    6c8e:	0a42                	slli	s4,s4,0x10
+    6c90:	01085813          	srli	a6,a6,0x10
+    6c94:	953e                	add	a0,a0,a5
+    6c96:	9a42                	add	s4,s4,a6
+    6c98:	00a9e663          	bltu	s3,a0,6ca4 <__divdf3+0x2c6>
+    6c9c:	20a99163          	bne	s3,a0,6e9e <__divdf3+0x4c0>
+    6ca0:	1f4c7f63          	bgeu	s8,s4,6e9e <__divdf3+0x4c0>
+    6ca4:	017c07b3          	add	a5,s8,s7
+    6ca8:	0187b6b3          	sltu	a3,a5,s8
+    6cac:	01668633          	add	a2,a3,s6
+    6cb0:	99b2                	add	s3,s3,a2
+    6cb2:	fff70413          	addi	s0,a4,-1
+    6cb6:	8c3e                	mv	s8,a5
+    6cb8:	013b6563          	bltu	s6,s3,6cc2 <__divdf3+0x2e4>
+    6cbc:	e28d                	bnez	a3,6cde <__divdf3+0x300>
+    6cbe:	033b1063          	bne	s6,s3,6cde <__divdf3+0x300>
+    6cc2:	00a9e663          	bltu	s3,a0,6cce <__divdf3+0x2f0>
+    6cc6:	01351c63          	bne	a0,s3,6cde <__divdf3+0x300>
+    6cca:	0147fa63          	bgeu	a5,s4,6cde <__divdf3+0x300>
+    6cce:	00fb8c33          	add	s8,s7,a5
+    6cd2:	017c37b3          	sltu	a5,s8,s7
+    6cd6:	97da                	add	a5,a5,s6
+    6cd8:	ffe70413          	addi	s0,a4,-2
+    6cdc:	99be                	add	s3,s3,a5
+    6cde:	414c0a33          	sub	s4,s8,s4
+    6ce2:	40a989b3          	sub	s3,s3,a0
+    6ce6:	014c37b3          	sltu	a5,s8,s4
+    6cea:	40f989b3          	sub	s3,s3,a5
+    6cee:	55fd                	li	a1,-1
+    6cf0:	133b0263          	beq	s6,s3,6e14 <__divdf3+0x436>
+    6cf4:	85ea                	mv	a1,s10
+    6cf6:	854e                	mv	a0,s3
+    6cf8:	5e9000ef          	jal	7ae0 <__hidden___udivsi3>
+    6cfc:	85aa                	mv	a1,a0
+    6cfe:	84aa                	mv	s1,a0
+    6d00:	010b1513          	slli	a0,s6,0x10
+    6d04:	8141                	srli	a0,a0,0x10
+    6d06:	5bf000ef          	jal	7ac4 <__mulsi3>
+    6d0a:	8c2a                	mv	s8,a0
+    6d0c:	85ea                	mv	a1,s10
+    6d0e:	854e                	mv	a0,s3
+    6d10:	5fd000ef          	jal	7b0c <__umodsi3>
+    6d14:	0542                	slli	a0,a0,0x10
+    6d16:	010a5713          	srli	a4,s4,0x10
+    6d1a:	8f49                	or	a4,a4,a0
+    6d1c:	01877863          	bgeu	a4,s8,6d2c <__divdf3+0x34e>
+    6d20:	975a                	add	a4,a4,s6
+    6d22:	01676463          	bltu	a4,s6,6d2a <__divdf3+0x34c>
+    6d26:	17876e63          	bltu	a4,s8,6ea2 <__divdf3+0x4c4>
+    6d2a:	14fd                	addi	s1,s1,-1
+    6d2c:	418709b3          	sub	s3,a4,s8
+    6d30:	85ea                	mv	a1,s10
+    6d32:	854e                	mv	a0,s3
+    6d34:	5ad000ef          	jal	7ae0 <__hidden___udivsi3>
+    6d38:	85aa                	mv	a1,a0
+    6d3a:	8c2a                	mv	s8,a0
+    6d3c:	010b1513          	slli	a0,s6,0x10
+    6d40:	8141                	srli	a0,a0,0x10
+    6d42:	583000ef          	jal	7ac4 <__mulsi3>
+    6d46:	8caa                	mv	s9,a0
+    6d48:	85ea                	mv	a1,s10
+    6d4a:	854e                	mv	a0,s3
+    6d4c:	5c1000ef          	jal	7b0c <__umodsi3>
+    6d50:	010a1793          	slli	a5,s4,0x10
+    6d54:	0542                	slli	a0,a0,0x10
+    6d56:	83c1                	srli	a5,a5,0x10
+    6d58:	8fc9                	or	a5,a5,a0
+    6d5a:	0197f863          	bgeu	a5,s9,6d6a <__divdf3+0x38c>
+    6d5e:	97da                	add	a5,a5,s6
+    6d60:	0197f463          	bgeu	a5,s9,6d68 <__divdf3+0x38a>
+    6d64:	1567f263          	bgeu	a5,s6,6ea8 <__divdf3+0x4ca>
+    6d68:	1c7d                	addi	s8,s8,-1
+    6d6a:	01049713          	slli	a4,s1,0x10
+    6d6e:	01876733          	or	a4,a4,s8
+    6d72:	01071513          	slli	a0,a4,0x10
+    6d76:	010b9593          	slli	a1,s7,0x10
+    6d7a:	419787b3          	sub	a5,a5,s9
+    6d7e:	8141                	srli	a0,a0,0x10
+    6d80:	81c1                	srli	a1,a1,0x10
+    6d82:	543000ef          	jal	7ac4 <__mulsi3>
+    6d86:	882a                	mv	a6,a0
+    6d88:	01071513          	slli	a0,a4,0x10
+    6d8c:	8141                	srli	a0,a0,0x10
+    6d8e:	85ee                	mv	a1,s11
+    6d90:	535000ef          	jal	7ac4 <__mulsi3>
+    6d94:	010b9593          	slli	a1,s7,0x10
+    6d98:	88aa                	mv	a7,a0
+    6d9a:	81c1                	srli	a1,a1,0x10
+    6d9c:	01075513          	srli	a0,a4,0x10
+    6da0:	525000ef          	jal	7ac4 <__mulsi3>
+    6da4:	832a                	mv	t1,a0
+    6da6:	85ee                	mv	a1,s11
+    6da8:	01075513          	srli	a0,a4,0x10
+    6dac:	519000ef          	jal	7ac4 <__mulsi3>
+    6db0:	01085693          	srli	a3,a6,0x10
+    6db4:	989a                	add	a7,a7,t1
+    6db6:	96c6                	add	a3,a3,a7
+    6db8:	0066f463          	bgeu	a3,t1,6dc0 <__divdf3+0x3e2>
+    6dbc:	6641                	lui	a2,0x10
+    6dbe:	9532                	add	a0,a0,a2
+    6dc0:	0106d613          	srli	a2,a3,0x10
+    6dc4:	0842                	slli	a6,a6,0x10
+    6dc6:	06c2                	slli	a3,a3,0x10
+    6dc8:	01085813          	srli	a6,a6,0x10
+    6dcc:	9532                	add	a0,a0,a2
+    6dce:	96c2                	add	a3,a3,a6
+    6dd0:	00a7e563          	bltu	a5,a0,6dda <__divdf3+0x3fc>
+    6dd4:	02a79e63          	bne	a5,a0,6e10 <__divdf3+0x432>
+    6dd8:	caf9                	beqz	a3,6eae <__divdf3+0x4d0>
+    6dda:	00fb0633          	add	a2,s6,a5
+    6dde:	fff70593          	addi	a1,a4,-1
+    6de2:	87b2                	mv	a5,a2
+    6de4:	03666163          	bltu	a2,s6,6e06 <__divdf3+0x428>
+    6de8:	00a66663          	bltu	a2,a0,6df4 <__divdf3+0x416>
+    6dec:	02a61163          	bne	a2,a0,6e0e <__divdf3+0x430>
+    6df0:	00dbfb63          	bgeu	s7,a3,6e06 <__divdf3+0x428>
+    6df4:	ffe70593          	addi	a1,a4,-2
+    6df8:	001b9713          	slli	a4,s7,0x1
+    6dfc:	017737b3          	sltu	a5,a4,s7
+    6e00:	97da                	add	a5,a5,s6
+    6e02:	97b2                	add	a5,a5,a2
+    6e04:	8bba                	mv	s7,a4
+    6e06:	00db9463          	bne	s7,a3,6e0e <__divdf3+0x430>
+    6e0a:	00a78563          	beq	a5,a0,6e14 <__divdf3+0x436>
+    6e0e:	872e                	mv	a4,a1
+    6e10:	00176593          	ori	a1,a4,1
+  FP_PACK_D (r, R);
+    6e14:	3ffa8793          	addi	a5,s5,1023
+    6e18:	0cf05063          	blez	a5,6ed8 <__divdf3+0x4fa>
+    6e1c:	0075f713          	andi	a4,a1,7
+    6e20:	cf01                	beqz	a4,6e38 <__divdf3+0x45a>
+    6e22:	00f5f713          	andi	a4,a1,15
+    6e26:	4691                	li	a3,4
+    6e28:	00d70863          	beq	a4,a3,6e38 <__divdf3+0x45a>
+    6e2c:	00d58733          	add	a4,a1,a3
+    6e30:	00b736b3          	sltu	a3,a4,a1
+    6e34:	9436                	add	s0,s0,a3
+    6e36:	85ba                	mv	a1,a4
+    6e38:	00741713          	slli	a4,s0,0x7
+    6e3c:	00075863          	bgez	a4,6e4c <__divdf3+0x46e>
+    6e40:	ff0007b7          	lui	a5,0xff000
+    6e44:	17fd                	addi	a5,a5,-1 # feffffff <syscalls_cpp.cpp.cfa7c3ef+0xfefe841d>
+    6e46:	8c7d                	and	s0,s0,a5
+    6e48:	400a8793          	addi	a5,s5,1024
+    6e4c:	7fe00713          	li	a4,2046
+    6e50:	12f74263          	blt	a4,a5,6f74 <__divdf3+0x596>
+    6e54:	01d41713          	slli	a4,s0,0x1d
+    6e58:	818d                	srli	a1,a1,0x3
+    6e5a:	8f4d                	or	a4,a4,a1
+    6e5c:	800d                	srli	s0,s0,0x3
+    6e5e:	0432                	slli	s0,s0,0xc
+    6e60:	8031                	srli	s0,s0,0xc
+    6e62:	07d2                	slli	a5,a5,0x14
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    6e64:	40b6                	lw	ra,76(sp)
+  FP_PACK_D (r, R);
+    6e66:	8fc1                	or	a5,a5,s0
+}
+    6e68:	4426                	lw	s0,72(sp)
+  FP_PACK_D (r, R);
+    6e6a:	097e                	slli	s2,s2,0x1f
+}
+    6e6c:	4496                	lw	s1,68(sp)
+    6e6e:	59f2                	lw	s3,60(sp)
+    6e70:	5a62                	lw	s4,56(sp)
+    6e72:	5ad2                	lw	s5,52(sp)
+    6e74:	5b42                	lw	s6,48(sp)
+    6e76:	5bb2                	lw	s7,44(sp)
+    6e78:	5c22                	lw	s8,40(sp)
+    6e7a:	5c92                	lw	s9,36(sp)
+    6e7c:	5d02                	lw	s10,32(sp)
+    6e7e:	4df2                	lw	s11,28(sp)
+    6e80:	0127e5b3          	or	a1,a5,s2
+    6e84:	853a                	mv	a0,a4
+    6e86:	4906                	lw	s2,64(sp)
+    6e88:	6161                	addi	sp,sp,80
+    6e8a:	8082                	ret
+  FP_DIV_D (R, A, B);
+    6e8c:	1afd                	addi	s5,s5,-1
+    6e8e:	4c01                	li	s8,0
+    6e90:	b311                	j	6b94 <__divdf3+0x1b6>
+    6e92:	1a79                	addi	s4,s4,-2
+    6e94:	97da                	add	a5,a5,s6
+    6e96:	bb89                	j	6be8 <__divdf3+0x20a>
+    6e98:	1479                	addi	s0,s0,-2
+    6e9a:	99da                	add	s3,s3,s6
+    6e9c:	b379                	j	6c2a <__divdf3+0x24c>
+    6e9e:	843a                	mv	s0,a4
+    6ea0:	bd3d                	j	6cde <__divdf3+0x300>
+    6ea2:	14f9                	addi	s1,s1,-2
+    6ea4:	975a                	add	a4,a4,s6
+    6ea6:	b559                	j	6d2c <__divdf3+0x34e>
+    6ea8:	1c79                	addi	s8,s8,-2
+    6eaa:	97da                	add	a5,a5,s6
+    6eac:	bd7d                	j	6d6a <__divdf3+0x38c>
+    6eae:	4b81                	li	s7,0
+    6eb0:	85ba                	mv	a1,a4
+    6eb2:	bf91                	j	6e06 <__divdf3+0x428>
+  FP_UNPACK_D (B, b);
+    6eb4:	8952                	mv	s2,s4
+  FP_DIV_D (R, A, B);
+    6eb6:	8b3a                	mv	s6,a4
+  FP_PACK_D (r, R);
+    6eb8:	4789                	li	a5,2
+    6eba:	0afb0d63          	beq	s6,a5,6f74 <__divdf3+0x596>
+    6ebe:	478d                	li	a5,3
+    6ec0:	0afb0363          	beq	s6,a5,6f66 <__divdf3+0x588>
+    6ec4:	4785                	li	a5,1
+    6ec6:	f4fb17e3          	bne	s6,a5,6e14 <__divdf3+0x436>
+    6eca:	4401                	li	s0,0
+    6ecc:	4701                	li	a4,0
+    6ece:	a0ad                	j	6f38 <__divdf3+0x55a>
+  FP_UNPACK_D (A, a);
+    6ed0:	894e                	mv	s2,s3
+  FP_DIV_D (R, A, B);
+    6ed2:	8466                	mv	s0,s9
+    6ed4:	85a6                	mv	a1,s1
+    6ed6:	b7cd                	j	6eb8 <__divdf3+0x4da>
+  FP_PACK_D (r, R);
+    6ed8:	c3b5                	beqz	a5,6f3c <__divdf3+0x55e>
+    6eda:	fc900713          	li	a4,-55
+    6ede:	fee7c6e3          	blt	a5,a4,6eca <__divdf3+0x4ec>
+    6ee2:	5709                	li	a4,-30
+    6ee4:	04e7ce63          	blt	a5,a4,6f40 <__divdf3+0x562>
+    6ee8:	4705                	li	a4,1
+    6eea:	8f1d                	sub	a4,a4,a5
+    6eec:	41ea8a93          	addi	s5,s5,1054
+    6ef0:	00e5d7b3          	srl	a5,a1,a4
+    6ef4:	015595b3          	sll	a1,a1,s5
+    6ef8:	00b035b3          	snez	a1,a1
+    6efc:	01541ab3          	sll	s5,s0,s5
+    6f00:	0155e5b3          	or	a1,a1,s5
+    6f04:	8fcd                	or	a5,a5,a1
+    6f06:	00e45433          	srl	s0,s0,a4
+    6f0a:	0077f713          	andi	a4,a5,7
+    6f0e:	cf01                	beqz	a4,6f26 <__divdf3+0x548>
+    6f10:	00f7f713          	andi	a4,a5,15
+    6f14:	4691                	li	a3,4
+    6f16:	00d70863          	beq	a4,a3,6f26 <__divdf3+0x548>
+    6f1a:	00d78733          	add	a4,a5,a3
+    6f1e:	00f736b3          	sltu	a3,a4,a5
+    6f22:	9436                	add	s0,s0,a3
+    6f24:	87ba                	mv	a5,a4
+    6f26:	00841713          	slli	a4,s0,0x8
+    6f2a:	04074a63          	bltz	a4,6f7e <__divdf3+0x5a0>
+    6f2e:	01d41713          	slli	a4,s0,0x1d
+    6f32:	838d                	srli	a5,a5,0x3
+    6f34:	8f5d                	or	a4,a4,a5
+    6f36:	800d                	srli	s0,s0,0x3
+    6f38:	4781                	li	a5,0
+    6f3a:	b715                	j	6e5e <__divdf3+0x480>
+    6f3c:	4705                	li	a4,1
+    6f3e:	b77d                	j	6eec <__divdf3+0x50e>
+    6f40:	5605                	li	a2,-31
+    6f42:	40f60733          	sub	a4,a2,a5
+    6f46:	00e45733          	srl	a4,s0,a4
+    6f4a:	4681                	li	a3,0
+    6f4c:	00c78663          	beq	a5,a2,6f58 <__divdf3+0x57a>
+    6f50:	43ea8a93          	addi	s5,s5,1086
+    6f54:	015416b3          	sll	a3,s0,s5
+    6f58:	8ecd                	or	a3,a3,a1
+    6f5a:	00d036b3          	snez	a3,a3
+    6f5e:	00d767b3          	or	a5,a4,a3
+    6f62:	4401                	li	s0,0
+    6f64:	b75d                	j	6f0a <__divdf3+0x52c>
+    6f66:	00080437          	lui	s0,0x80
+    6f6a:	4701                	li	a4,0
+    6f6c:	7ff00793          	li	a5,2047
+    6f70:	4901                	li	s2,0
+    6f72:	b5f5                	j	6e5e <__divdf3+0x480>
+    6f74:	4401                	li	s0,0
+    6f76:	4701                	li	a4,0
+    6f78:	7ff00793          	li	a5,2047
+    6f7c:	b5cd                	j	6e5e <__divdf3+0x480>
+    6f7e:	4401                	li	s0,0
+    6f80:	4701                	li	a4,0
+    6f82:	4785                	li	a5,1
+    6f84:	bde9                	j	6e5e <__divdf3+0x480>
+
+00006f86 <__gedf2>:
+  FP_DECL_D (A);
+  FP_DECL_D (B);
+  CMPtype r;
+
+  FP_INIT_EXCEPTIONS;
+  FP_UNPACK_RAW_D (A, a);
+    6f86:	0145d893          	srli	a7,a1,0x14
+    6f8a:	00100737          	lui	a4,0x100
+    6f8e:	177d                	addi	a4,a4,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+  FP_UNPACK_RAW_D (B, b);
+    6f90:	0146d813          	srli	a6,a3,0x14
+  FP_UNPACK_RAW_D (A, a);
+    6f94:	7ff8f893          	andi	a7,a7,2047
+  FP_CMP_D (r, A, B, -2, 2);
+    6f98:	7ff00793          	li	a5,2047
+  FP_UNPACK_RAW_D (A, a);
+    6f9c:	00b77333          	and	t1,a4,a1
+  FP_UNPACK_RAW_D (B, b);
+    6fa0:	7ff87813          	andi	a6,a6,2047
+    6fa4:	8f75                	and	a4,a4,a3
+  FP_UNPACK_RAW_D (A, a);
+    6fa6:	81fd                	srli	a1,a1,0x1f
+  FP_UNPACK_RAW_D (B, b);
+    6fa8:	82fd                	srli	a3,a3,0x1f
+  FP_CMP_D (r, A, B, -2, 2);
+    6faa:	00f88d63          	beq	a7,a5,6fc4 <__gedf2+0x3e>
+    6fae:	7ff00e13          	li	t3,2047
+  FP_UNPACK_RAW_D (B, b);
+    6fb2:	87c2                	mv	a5,a6
+  FP_CMP_D (r, A, B, -2, 2);
+    6fb4:	01c81f63          	bne	a6,t3,6fd2 <__gedf2+0x4c>
+    6fb8:	00c76e33          	or	t3,a4,a2
+    6fbc:	000e0b63          	beqz	t3,6fd2 <__gedf2+0x4c>
+    6fc0:	57f9                	li	a5,-2
+    6fc2:	a031                	j	6fce <__gedf2+0x48>
+    6fc4:	00a36e33          	or	t3,t1,a0
+    6fc8:	57f9                	li	a5,-2
+    6fca:	fe0e02e3          	beqz	t3,6fae <__gedf2+0x28>
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    6fce:	853e                	mv	a0,a5
+    6fd0:	8082                	ret
+  FP_CMP_D (r, A, B, -2, 2);
+    6fd2:	4e01                	li	t3,0
+    6fd4:	00089663          	bnez	a7,6fe0 <__gedf2+0x5a>
+    6fd8:	00a36e33          	or	t3,t1,a0
+    6fdc:	001e3e13          	seqz	t3,t3
+    6fe0:	04081363          	bnez	a6,7026 <__gedf2+0xa0>
+    6fe4:	00c76eb3          	or	t4,a4,a2
+    6fe8:	000e0863          	beqz	t3,6ff8 <__gedf2+0x72>
+    6fec:	fe0e81e3          	beqz	t4,6fce <__gedf2+0x48>
+    6ff0:	00169793          	slli	a5,a3,0x1
+    6ff4:	17fd                	addi	a5,a5,-1
+    6ff6:	bfe1                	j	6fce <__gedf2+0x48>
+    6ff8:	020e9963          	bnez	t4,702a <__gedf2+0xa4>
+    6ffc:	40b005b3          	neg	a1,a1
+    7000:	0015e793          	ori	a5,a1,1
+    7004:	b7e9                	j	6fce <__gedf2+0x48>
+    7006:	ff08c5e3          	blt	a7,a6,6ff0 <__gedf2+0x6a>
+    700a:	fe6769e3          	bltu	a4,t1,6ffc <__gedf2+0x76>
+    700e:	00a67463          	bgeu	a2,a0,7016 <__gedf2+0x90>
+    7012:	fee305e3          	beq	t1,a4,6ffc <__gedf2+0x76>
+    7016:	00c56563          	bltu	a0,a2,7020 <__gedf2+0x9a>
+    701a:	4781                	li	a5,0
+    701c:	fae379e3          	bgeu	t1,a4,6fce <__gedf2+0x48>
+    7020:	00159793          	slli	a5,a1,0x1
+    7024:	bfc1                	j	6ff4 <__gedf2+0x6e>
+    7026:	fc0e15e3          	bnez	t3,6ff0 <__gedf2+0x6a>
+    702a:	fcb699e3          	bne	a3,a1,6ffc <__gedf2+0x76>
+    702e:	fd185ce3          	bge	a6,a7,7006 <__gedf2+0x80>
+    7032:	40d006b3          	neg	a3,a3
+    7036:	0016e793          	ori	a5,a3,1
+    703a:	bf51                	j	6fce <__gedf2+0x48>
+
+0000703c <__muldf3>:
+#include "soft-fp.h"
+#include "double.h"
+
+DFtype
+__muldf3 (DFtype a, DFtype b)
+{
+    703c:	7179                	addi	sp,sp,-48
+    703e:	ce4e                	sw	s3,28(sp)
+  FP_DECL_D (B);
+  FP_DECL_D (R);
+  DFtype r;
+
+  FP_INIT_ROUNDMODE;
+  FP_UNPACK_D (A, a);
+    7040:	0145d993          	srli	s3,a1,0x14
+{
+    7044:	d422                	sw	s0,40(sp)
+    7046:	d226                	sw	s1,36(sp)
+    7048:	cc52                	sw	s4,24(sp)
+    704a:	ca56                	sw	s5,20(sp)
+    704c:	c65e                	sw	s7,12(sp)
+  FP_UNPACK_D (A, a);
+    704e:	00c59493          	slli	s1,a1,0xc
+{
+    7052:	d606                	sw	ra,44(sp)
+    7054:	d04a                	sw	s2,32(sp)
+    7056:	c85a                	sw	s6,16(sp)
+  FP_UNPACK_D (A, a);
+    7058:	7ff9f993          	andi	s3,s3,2047
+{
+    705c:	842a                	mv	s0,a0
+    705e:	8bb2                	mv	s7,a2
+    7060:	8a36                	mv	s4,a3
+  FP_UNPACK_D (A, a);
+    7062:	80b1                	srli	s1,s1,0xc
+    7064:	01f5da93          	srli	s5,a1,0x1f
+    7068:	08098b63          	beqz	s3,70fe <__muldf3+0xc2>
+    706c:	7ff00793          	li	a5,2047
+    7070:	0ef98263          	beq	s3,a5,7154 <__muldf3+0x118>
+    7074:	048e                	slli	s1,s1,0x3
+    7076:	01d55793          	srli	a5,a0,0x1d
+    707a:	8fc5                	or	a5,a5,s1
+    707c:	008004b7          	lui	s1,0x800
+    7080:	8cdd                	or	s1,s1,a5
+    7082:	00351913          	slli	s2,a0,0x3
+    7086:	c0198993          	addi	s3,s3,-1023
+    708a:	4b01                	li	s6,0
+  FP_UNPACK_D (B, b);
+    708c:	014a5793          	srli	a5,s4,0x14
+    7090:	00ca1413          	slli	s0,s4,0xc
+    7094:	7ff7f793          	andi	a5,a5,2047
+    7098:	8031                	srli	s0,s0,0xc
+    709a:	01fa5a13          	srli	s4,s4,0x1f
+    709e:	cbe9                	beqz	a5,7170 <__muldf3+0x134>
+    70a0:	7ff00713          	li	a4,2047
+    70a4:	12e78063          	beq	a5,a4,71c4 <__muldf3+0x188>
+    70a8:	040e                	slli	s0,s0,0x3
+    70aa:	01dbd713          	srli	a4,s7,0x1d
+    70ae:	8f41                	or	a4,a4,s0
+    70b0:	00800437          	lui	s0,0x800
+    70b4:	8c59                	or	s0,s0,a4
+    70b6:	003b9593          	slli	a1,s7,0x3
+    70ba:	c0178793          	addi	a5,a5,-1023
+    70be:	4681                	li	a3,0
+  FP_MUL_D (R, A, B);
+    70c0:	99be                	add	s3,s3,a5
+    70c2:	002b1793          	slli	a5,s6,0x2
+    70c6:	8fd5                	or	a5,a5,a3
+    70c8:	4729                	li	a4,10
+    70ca:	00198893          	addi	a7,s3,1
+    70ce:	12f74663          	blt	a4,a5,71fa <__muldf3+0x1be>
+    70d2:	4609                	li	a2,2
+    70d4:	014ac833          	xor	a6,s5,s4
+    70d8:	4705                	li	a4,1
+    70da:	10f64263          	blt	a2,a5,71de <__muldf3+0x1a2>
+    70de:	17fd                	addi	a5,a5,-1
+    70e0:	12f76763          	bltu	a4,a5,720e <__muldf3+0x1d2>
+    70e4:	8b36                	mv	s6,a3
+  FP_PACK_D (r, R);
+    70e6:	4789                	li	a5,2
+    70e8:	3cfb0f63          	beq	s6,a5,74c6 <__muldf3+0x48a>
+    70ec:	478d                	li	a5,3
+    70ee:	3cfb0863          	beq	s6,a5,74be <__muldf3+0x482>
+    70f2:	4785                	li	a5,1
+    70f4:	2afb1e63          	bne	s6,a5,73b0 <__muldf3+0x374>
+    70f8:	4401                	li	s0,0
+    70fa:	4701                	li	a4,0
+    70fc:	a661                	j	7484 <__muldf3+0x448>
+  FP_UNPACK_D (A, a);
+    70fe:	00a4e933          	or	s2,s1,a0
+    7102:	06090063          	beqz	s2,7162 <__muldf3+0x126>
+    7106:	c88d                	beqz	s1,7138 <__muldf3+0xfc>
+    7108:	8526                	mv	a0,s1
+    710a:	24d000ef          	jal	7b56 <__clzsi2>
+    710e:	872a                	mv	a4,a0
+    7110:	ff550693          	addi	a3,a0,-11
+    7114:	47f5                	li	a5,29
+    7116:	ff870613          	addi	a2,a4,-8
+    711a:	8f95                	sub	a5,a5,a3
+    711c:	00c494b3          	sll	s1,s1,a2
+    7120:	00f457b3          	srl	a5,s0,a5
+    7124:	8fc5                	or	a5,a5,s1
+    7126:	00c414b3          	sll	s1,s0,a2
+    712a:	c0d00993          	li	s3,-1011
+    712e:	8926                	mv	s2,s1
+    7130:	40e989b3          	sub	s3,s3,a4
+    7134:	84be                	mv	s1,a5
+    7136:	bf91                	j	708a <__muldf3+0x4e>
+    7138:	21f000ef          	jal	7b56 <__clzsi2>
+    713c:	01550693          	addi	a3,a0,21
+    7140:	47f1                	li	a5,28
+    7142:	02050713          	addi	a4,a0,32
+    7146:	fcd7d7e3          	bge	a5,a3,7114 <__muldf3+0xd8>
+    714a:	ff850793          	addi	a5,a0,-8
+    714e:	00f417b3          	sll	a5,s0,a5
+    7152:	bfe1                	j	712a <__muldf3+0xee>
+    7154:	00a4e933          	or	s2,s1,a0
+    7158:	00091963          	bnez	s2,716a <__muldf3+0x12e>
+    715c:	4481                	li	s1,0
+    715e:	4b09                	li	s6,2
+    7160:	b735                	j	708c <__muldf3+0x50>
+    7162:	4481                	li	s1,0
+    7164:	4981                	li	s3,0
+    7166:	4b05                	li	s6,1
+    7168:	b715                	j	708c <__muldf3+0x50>
+    716a:	892a                	mv	s2,a0
+    716c:	4b0d                	li	s6,3
+    716e:	bf39                	j	708c <__muldf3+0x50>
+  FP_UNPACK_D (B, b);
+    7170:	017465b3          	or	a1,s0,s7
+    7174:	cdb1                	beqz	a1,71d0 <__muldf3+0x194>
+    7176:	c805                	beqz	s0,71a6 <__muldf3+0x16a>
+    7178:	8522                	mv	a0,s0
+    717a:	1dd000ef          	jal	7b56 <__clzsi2>
+    717e:	86aa                	mv	a3,a0
+    7180:	ff550793          	addi	a5,a0,-11
+    7184:	4775                	li	a4,29
+    7186:	ff868613          	addi	a2,a3,-8
+    718a:	8f1d                	sub	a4,a4,a5
+    718c:	00c41433          	sll	s0,s0,a2
+    7190:	00ebd733          	srl	a4,s7,a4
+    7194:	8f41                	or	a4,a4,s0
+    7196:	00cb9433          	sll	s0,s7,a2
+    719a:	c0d00793          	li	a5,-1011
+    719e:	85a2                	mv	a1,s0
+    71a0:	8f95                	sub	a5,a5,a3
+    71a2:	843a                	mv	s0,a4
+    71a4:	bf29                	j	70be <__muldf3+0x82>
+    71a6:	855e                	mv	a0,s7
+    71a8:	1af000ef          	jal	7b56 <__clzsi2>
+    71ac:	01550793          	addi	a5,a0,21
+    71b0:	4771                	li	a4,28
+    71b2:	02050693          	addi	a3,a0,32
+    71b6:	fcf757e3          	bge	a4,a5,7184 <__muldf3+0x148>
+    71ba:	ff850713          	addi	a4,a0,-8
+    71be:	00eb9733          	sll	a4,s7,a4
+    71c2:	bfe1                	j	719a <__muldf3+0x15e>
+    71c4:	017465b3          	or	a1,s0,s7
+    71c8:	e981                	bnez	a1,71d8 <__muldf3+0x19c>
+    71ca:	4401                	li	s0,0
+    71cc:	4689                	li	a3,2
+    71ce:	bdcd                	j	70c0 <__muldf3+0x84>
+    71d0:	4401                	li	s0,0
+    71d2:	4781                	li	a5,0
+    71d4:	4685                	li	a3,1
+    71d6:	b5ed                	j	70c0 <__muldf3+0x84>
+    71d8:	85de                	mv	a1,s7
+    71da:	468d                	li	a3,3
+    71dc:	b5d5                	j	70c0 <__muldf3+0x84>
+    71de:	00f717b3          	sll	a5,a4,a5
+  FP_MUL_D (R, A, B);
+    71e2:	5307f713          	andi	a4,a5,1328
+    71e6:	e30d                	bnez	a4,7208 <__muldf3+0x1cc>
+    71e8:	2407f613          	andi	a2,a5,576
+    71ec:	2c061363          	bnez	a2,74b2 <__muldf3+0x476>
+    71f0:	0887f793          	andi	a5,a5,136
+    71f4:	cf89                	beqz	a5,720e <__muldf3+0x1d2>
+  FP_UNPACK_D (B, b);
+    71f6:	8852                	mv	a6,s4
+    71f8:	b5f5                	j	70e4 <__muldf3+0xa8>
+  FP_MUL_D (R, A, B);
+    71fa:	473d                	li	a4,15
+    71fc:	2ce78163          	beq	a5,a4,74be <__muldf3+0x482>
+    7200:	472d                	li	a4,11
+  FP_UNPACK_D (A, a);
+    7202:	8856                	mv	a6,s5
+  FP_MUL_D (R, A, B);
+    7204:	fee789e3          	beq	a5,a4,71f6 <__muldf3+0x1ba>
+    7208:	8426                	mv	s0,s1
+    720a:	85ca                	mv	a1,s2
+    720c:	bde9                	j	70e6 <__muldf3+0xaa>
+    720e:	01095793          	srli	a5,s2,0x10
+    7212:	01059f13          	slli	t5,a1,0x10
+    7216:	0942                	slli	s2,s2,0x10
+    7218:	01095913          	srli	s2,s2,0x10
+    721c:	010f5f13          	srli	t5,t5,0x10
+    7220:	0105de93          	srli	t4,a1,0x10
+    7224:	854a                	mv	a0,s2
+    7226:	85fa                	mv	a1,t5
+    7228:	09d000ef          	jal	7ac4 <__mulsi3>
+    722c:	8e2a                	mv	t3,a0
+    722e:	85f6                	mv	a1,t4
+    7230:	854a                	mv	a0,s2
+    7232:	093000ef          	jal	7ac4 <__mulsi3>
+    7236:	8faa                	mv	t6,a0
+    7238:	85fa                	mv	a1,t5
+    723a:	853e                	mv	a0,a5
+    723c:	089000ef          	jal	7ac4 <__mulsi3>
+    7240:	82aa                	mv	t0,a0
+    7242:	85f6                	mv	a1,t4
+    7244:	853e                	mv	a0,a5
+    7246:	07f000ef          	jal	7ac4 <__mulsi3>
+    724a:	010e5313          	srli	t1,t3,0x10
+    724e:	9f96                	add	t6,t6,t0
+    7250:	937e                	add	t1,t1,t6
+    7252:	872a                	mv	a4,a0
+    7254:	00537563          	bgeu	t1,t0,725e <__muldf3+0x222>
+    7258:	66c1                	lui	a3,0x10
+    725a:	00d50733          	add	a4,a0,a3
+    725e:	0e42                	slli	t3,t3,0x10
+    7260:	01035393          	srli	t2,t1,0x10
+    7264:	010e5e13          	srli	t3,t3,0x10
+    7268:	0342                	slli	t1,t1,0x10
+    726a:	9372                	add	t1,t1,t3
+    726c:	01045e13          	srli	t3,s0,0x10
+    7270:	0442                	slli	s0,s0,0x10
+    7272:	8041                	srli	s0,s0,0x10
+    7274:	854a                	mv	a0,s2
+    7276:	85a2                	mv	a1,s0
+    7278:	04d000ef          	jal	7ac4 <__mulsi3>
+    727c:	82aa                	mv	t0,a0
+    727e:	85f2                	mv	a1,t3
+    7280:	854a                	mv	a0,s2
+    7282:	043000ef          	jal	7ac4 <__mulsi3>
+    7286:	8faa                	mv	t6,a0
+    7288:	85a2                	mv	a1,s0
+    728a:	853e                	mv	a0,a5
+    728c:	039000ef          	jal	7ac4 <__mulsi3>
+    7290:	892a                	mv	s2,a0
+    7292:	85f2                	mv	a1,t3
+    7294:	853e                	mv	a0,a5
+    7296:	02f000ef          	jal	7ac4 <__mulsi3>
+    729a:	0102d793          	srli	a5,t0,0x10
+    729e:	9fca                	add	t6,t6,s2
+    72a0:	97fe                	add	a5,a5,t6
+    72a2:	0127f463          	bgeu	a5,s2,72aa <__muldf3+0x26e>
+    72a6:	66c1                	lui	a3,0x10
+    72a8:	9536                	add	a0,a0,a3
+    72aa:	02c2                	slli	t0,t0,0x10
+    72ac:	0107d593          	srli	a1,a5,0x10
+    72b0:	0102d293          	srli	t0,t0,0x10
+    72b4:	0104d913          	srli	s2,s1,0x10
+    72b8:	07c2                	slli	a5,a5,0x10
+    72ba:	04c2                	slli	s1,s1,0x10
+    72bc:	9796                	add	a5,a5,t0
+    72be:	80c1                	srli	s1,s1,0x10
+    72c0:	00a58fb3          	add	t6,a1,a0
+    72c4:	93be                	add	t2,t2,a5
+    72c6:	8526                	mv	a0,s1
+    72c8:	85fa                	mv	a1,t5
+    72ca:	2fed                	jal	7ac4 <__mulsi3>
+    72cc:	82aa                	mv	t0,a0
+    72ce:	85f6                	mv	a1,t4
+    72d0:	8526                	mv	a0,s1
+    72d2:	2fcd                	jal	7ac4 <__mulsi3>
+    72d4:	8a2a                	mv	s4,a0
+    72d6:	85fa                	mv	a1,t5
+    72d8:	854a                	mv	a0,s2
+    72da:	27ed                	jal	7ac4 <__mulsi3>
+    72dc:	8f2a                	mv	t5,a0
+    72de:	85f6                	mv	a1,t4
+    72e0:	854a                	mv	a0,s2
+    72e2:	27cd                	jal	7ac4 <__mulsi3>
+    72e4:	0102d613          	srli	a2,t0,0x10
+    72e8:	9a7a                	add	s4,s4,t5
+    72ea:	9652                	add	a2,a2,s4
+    72ec:	01e67463          	bgeu	a2,t5,72f4 <__muldf3+0x2b8>
+    72f0:	66c1                	lui	a3,0x10
+    72f2:	9536                	add	a0,a0,a3
+    72f4:	02c2                	slli	t0,t0,0x10
+    72f6:	01065593          	srli	a1,a2,0x10
+    72fa:	0102d293          	srli	t0,t0,0x10
+    72fe:	0642                	slli	a2,a2,0x10
+    7300:	00a58eb3          	add	t4,a1,a0
+    7304:	00560f33          	add	t5,a2,t0
+    7308:	8526                	mv	a0,s1
+    730a:	85a2                	mv	a1,s0
+    730c:	2f65                	jal	7ac4 <__mulsi3>
+    730e:	82aa                	mv	t0,a0
+    7310:	85f2                	mv	a1,t3
+    7312:	8526                	mv	a0,s1
+    7314:	2f45                	jal	7ac4 <__mulsi3>
+    7316:	84aa                	mv	s1,a0
+    7318:	85a2                	mv	a1,s0
+    731a:	854a                	mv	a0,s2
+    731c:	2765                	jal	7ac4 <__mulsi3>
+    731e:	842a                	mv	s0,a0
+    7320:	85f2                	mv	a1,t3
+    7322:	854a                	mv	a0,s2
+    7324:	2745                	jal	7ac4 <__mulsi3>
+    7326:	0102d613          	srli	a2,t0,0x10
+    732a:	94a2                	add	s1,s1,s0
+    732c:	9626                	add	a2,a2,s1
+    732e:	8e2a                	mv	t3,a0
+    7330:	00867563          	bgeu	a2,s0,733a <__muldf3+0x2fe>
+    7334:	66c1                	lui	a3,0x10
+    7336:	00d50e33          	add	t3,a0,a3
+    733a:	02c2                	slli	t0,t0,0x10
+    733c:	01061693          	slli	a3,a2,0x10
+    7340:	0102d293          	srli	t0,t0,0x10
+    7344:	971e                	add	a4,a4,t2
+    7346:	9696                	add	a3,a3,t0
+    7348:	01f685b3          	add	a1,a3,t6
+    734c:	00f737b3          	sltu	a5,a4,a5
+    7350:	97ae                	add	a5,a5,a1
+    7352:	00d5b6b3          	sltu	a3,a1,a3
+    7356:	00b7b5b3          	sltu	a1,a5,a1
+    735a:	8ecd                	or	a3,a3,a1
+    735c:	8241                	srli	a2,a2,0x10
+    735e:	96b2                	add	a3,a3,a2
+    7360:	01e70633          	add	a2,a4,t5
+    7364:	01d785b3          	add	a1,a5,t4
+    7368:	00e63733          	sltu	a4,a2,a4
+    736c:	972e                	add	a4,a4,a1
+    736e:	00f5b7b3          	sltu	a5,a1,a5
+    7372:	00b735b3          	sltu	a1,a4,a1
+    7376:	8fcd                	or	a5,a5,a1
+    7378:	00961593          	slli	a1,a2,0x9
+    737c:	97b6                	add	a5,a5,a3
+    737e:	0065e5b3          	or	a1,a1,t1
+    7382:	97f2                	add	a5,a5,t3
+    7384:	00b035b3          	snez	a1,a1
+    7388:	825d                	srli	a2,a2,0x17
+    738a:	07a6                	slli	a5,a5,0x9
+    738c:	01775413          	srli	s0,a4,0x17
+    7390:	8dd1                	or	a1,a1,a2
+    7392:	0726                	slli	a4,a4,0x9
+    7394:	8dd9                	or	a1,a1,a4
+    7396:	00779713          	slli	a4,a5,0x7
+    739a:	8c5d                	or	s0,s0,a5
+    739c:	08075263          	bgez	a4,7420 <__muldf3+0x3e4>
+    73a0:	0015d793          	srli	a5,a1,0x1
+    73a4:	8985                	andi	a1,a1,1
+    73a6:	8fcd                	or	a5,a5,a1
+    73a8:	01f41593          	slli	a1,s0,0x1f
+    73ac:	8ddd                	or	a1,a1,a5
+    73ae:	8005                	srli	s0,s0,0x1
+  FP_PACK_D (r, R);
+    73b0:	3ff88793          	addi	a5,a7,1023
+    73b4:	06f05863          	blez	a5,7424 <__muldf3+0x3e8>
+    73b8:	0075f713          	andi	a4,a1,7
+    73bc:	cf01                	beqz	a4,73d4 <__muldf3+0x398>
+    73be:	00f5f713          	andi	a4,a1,15
+    73c2:	4691                	li	a3,4
+    73c4:	00d70863          	beq	a4,a3,73d4 <__muldf3+0x398>
+    73c8:	00d58733          	add	a4,a1,a3
+    73cc:	00b736b3          	sltu	a3,a4,a1
+    73d0:	9436                	add	s0,s0,a3
+    73d2:	85ba                	mv	a1,a4
+    73d4:	00741713          	slli	a4,s0,0x7
+    73d8:	00075863          	bgez	a4,73e8 <__muldf3+0x3ac>
+    73dc:	ff0007b7          	lui	a5,0xff000
+    73e0:	17fd                	addi	a5,a5,-1 # feffffff <syscalls_cpp.cpp.cfa7c3ef+0xfefe841d>
+    73e2:	8c7d                	and	s0,s0,a5
+    73e4:	40088793          	addi	a5,a7,1024
+    73e8:	7fe00713          	li	a4,2046
+    73ec:	0cf74d63          	blt	a4,a5,74c6 <__muldf3+0x48a>
+    73f0:	01d41713          	slli	a4,s0,0x1d
+    73f4:	818d                	srli	a1,a1,0x3
+    73f6:	8f4d                	or	a4,a4,a1
+    73f8:	800d                	srli	s0,s0,0x3
+    73fa:	0432                	slli	s0,s0,0xc
+    73fc:	8031                	srli	s0,s0,0xc
+    73fe:	07d2                	slli	a5,a5,0x14
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    7400:	50b2                	lw	ra,44(sp)
+  FP_PACK_D (r, R);
+    7402:	8fc1                	or	a5,a5,s0
+}
+    7404:	5422                	lw	s0,40(sp)
+  FP_PACK_D (r, R);
+    7406:	087e                	slli	a6,a6,0x1f
+}
+    7408:	5492                	lw	s1,36(sp)
+    740a:	5902                	lw	s2,32(sp)
+    740c:	49f2                	lw	s3,28(sp)
+    740e:	4a62                	lw	s4,24(sp)
+    7410:	4ad2                	lw	s5,20(sp)
+    7412:	4b42                	lw	s6,16(sp)
+    7414:	4bb2                	lw	s7,12(sp)
+    7416:	853a                	mv	a0,a4
+    7418:	0107e5b3          	or	a1,a5,a6
+    741c:	6145                	addi	sp,sp,48
+    741e:	8082                	ret
+  FP_MUL_D (R, A, B);
+    7420:	88ce                	mv	a7,s3
+    7422:	b779                	j	73b0 <__muldf3+0x374>
+  FP_PACK_D (r, R);
+    7424:	c3b5                	beqz	a5,7488 <__muldf3+0x44c>
+    7426:	fc900713          	li	a4,-55
+    742a:	cce7c7e3          	blt	a5,a4,70f8 <__muldf3+0xbc>
+    742e:	5709                	li	a4,-30
+    7430:	04e7ce63          	blt	a5,a4,748c <__muldf3+0x450>
+    7434:	4705                	li	a4,1
+    7436:	8f1d                	sub	a4,a4,a5
+    7438:	41e88893          	addi	a7,a7,1054
+    743c:	011597b3          	sll	a5,a1,a7
+    7440:	00f037b3          	snez	a5,a5
+    7444:	011418b3          	sll	a7,s0,a7
+    7448:	00e5d6b3          	srl	a3,a1,a4
+    744c:	0117e7b3          	or	a5,a5,a7
+    7450:	8fd5                	or	a5,a5,a3
+    7452:	00e45433          	srl	s0,s0,a4
+    7456:	0077f713          	andi	a4,a5,7
+    745a:	cf01                	beqz	a4,7472 <__muldf3+0x436>
+    745c:	00f7f713          	andi	a4,a5,15
+    7460:	4691                	li	a3,4
+    7462:	00d70863          	beq	a4,a3,7472 <__muldf3+0x436>
+    7466:	00d78733          	add	a4,a5,a3
+    746a:	00f736b3          	sltu	a3,a4,a5
+    746e:	9436                	add	s0,s0,a3
+    7470:	87ba                	mv	a5,a4
+    7472:	00841713          	slli	a4,s0,0x8
+    7476:	04074d63          	bltz	a4,74d0 <__muldf3+0x494>
+    747a:	01d41713          	slli	a4,s0,0x1d
+    747e:	838d                	srli	a5,a5,0x3
+    7480:	8f5d                	or	a4,a4,a5
+    7482:	800d                	srli	s0,s0,0x3
+    7484:	4781                	li	a5,0
+    7486:	bf95                	j	73fa <__muldf3+0x3be>
+    7488:	4705                	li	a4,1
+    748a:	b77d                	j	7438 <__muldf3+0x3fc>
+    748c:	5605                	li	a2,-31
+    748e:	40f60733          	sub	a4,a2,a5
+    7492:	00e45733          	srl	a4,s0,a4
+    7496:	4681                	li	a3,0
+    7498:	00c78663          	beq	a5,a2,74a4 <__muldf3+0x468>
+    749c:	43e88893          	addi	a7,a7,1086
+    74a0:	011416b3          	sll	a3,s0,a7
+    74a4:	8dd5                	or	a1,a1,a3
+    74a6:	00b035b3          	snez	a1,a1
+    74aa:	00b767b3          	or	a5,a4,a1
+    74ae:	4401                	li	s0,0
+    74b0:	b75d                	j	7456 <__muldf3+0x41a>
+    74b2:	00080437          	lui	s0,0x80
+    74b6:	7ff00793          	li	a5,2047
+    74ba:	4801                	li	a6,0
+    74bc:	bf3d                	j	73fa <__muldf3+0x3be>
+    74be:	00080437          	lui	s0,0x80
+    74c2:	4701                	li	a4,0
+    74c4:	bfcd                	j	74b6 <__muldf3+0x47a>
+    74c6:	4401                	li	s0,0
+    74c8:	4701                	li	a4,0
+    74ca:	7ff00793          	li	a5,2047
+    74ce:	b735                	j	73fa <__muldf3+0x3be>
+    74d0:	4401                	li	s0,0
+    74d2:	4701                	li	a4,0
+    74d4:	4785                	li	a5,1
+    74d6:	b715                	j	73fa <__muldf3+0x3be>
+
+000074d8 <__subdf3>:
+  FP_DECL_D (B);
+  FP_DECL_D (R);
+  DFtype r;
+
+  FP_INIT_ROUNDMODE;
+  FP_UNPACK_SEMIRAW_D (A, a);
+    74d8:	00100837          	lui	a6,0x100
+    74dc:	187d                	addi	a6,a6,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+{
+    74de:	1101                	addi	sp,sp,-32
+  FP_UNPACK_SEMIRAW_D (A, a);
+    74e0:	00b877b3          	and	a5,a6,a1
+    74e4:	0145d713          	srli	a4,a1,0x14
+  FP_UNPACK_SEMIRAW_D (B, b);
+    74e8:	00d87833          	and	a6,a6,a3
+    74ec:	0146d893          	srli	a7,a3,0x14
+{
+    74f0:	ca26                	sw	s1,20(sp)
+  FP_UNPACK_SEMIRAW_D (A, a);
+    74f2:	078e                	slli	a5,a5,0x3
+    74f4:	7ff77493          	andi	s1,a4,2047
+    74f8:	01d55713          	srli	a4,a0,0x1d
+{
+    74fc:	c84a                	sw	s2,16(sp)
+  FP_UNPACK_SEMIRAW_D (A, a);
+    74fe:	8fd9                	or	a5,a5,a4
+    7500:	01f5d913          	srli	s2,a1,0x1f
+  FP_UNPACK_SEMIRAW_D (B, b);
+    7504:	01d65713          	srli	a4,a2,0x1d
+    7508:	080e                	slli	a6,a6,0x3
+{
+    750a:	ce06                	sw	ra,28(sp)
+    750c:	cc22                	sw	s0,24(sp)
+    750e:	c64e                	sw	s3,12(sp)
+  FP_UNPACK_SEMIRAW_D (B, b);
+    7510:	7ff8f893          	andi	a7,a7,2047
+  FP_SUB_D (R, A, B);
+    7514:	7ff00593          	li	a1,2047
+  FP_UNPACK_SEMIRAW_D (A, a);
+    7518:	050e                	slli	a0,a0,0x3
+  FP_UNPACK_SEMIRAW_D (B, b);
+    751a:	82fd                	srli	a3,a3,0x1f
+    751c:	01076733          	or	a4,a4,a6
+    7520:	060e                	slli	a2,a2,0x3
+  FP_SUB_D (R, A, B);
+    7522:	00b89563          	bne	a7,a1,752c <__subdf3+0x54>
+    7526:	00c765b3          	or	a1,a4,a2
+    752a:	e199                	bnez	a1,7530 <__subdf3+0x58>
+    752c:	0016c693          	xori	a3,a3,1
+    7530:	41148833          	sub	a6,s1,a7
+    7534:	7ff00593          	li	a1,2047
+    7538:	25269a63          	bne	a3,s2,778c <__subdf3+0x2b4>
+    753c:	0d005863          	blez	a6,760c <__subdf3+0x134>
+    7540:	02089463          	bnez	a7,7568 <__subdf3+0x90>
+    7544:	00c766b3          	or	a3,a4,a2
+    7548:	ce91                	beqz	a3,7564 <__subdf3+0x8c>
+    754a:	fff48813          	addi	a6,s1,-1 # 7fffff <syscalls_cpp.cpp.cfa7c3ef+0x7e841d>
+    754e:	00081963          	bnez	a6,7560 <__subdf3+0x88>
+    7552:	962a                	add	a2,a2,a0
+    7554:	97ba                	add	a5,a5,a4
+    7556:	00a63533          	sltu	a0,a2,a0
+    755a:	97aa                	add	a5,a5,a0
+    755c:	4485                	li	s1,1
+    755e:	a889                	j	75b0 <__subdf3+0xd8>
+    7560:	00b49963          	bne	s1,a1,7572 <__subdf3+0x9a>
+    7564:	862a                	mv	a2,a0
+    7566:	a241                	j	76e6 <__subdf3+0x20e>
+    7568:	feb48ee3          	beq	s1,a1,7564 <__subdf3+0x8c>
+    756c:	008006b7          	lui	a3,0x800
+    7570:	8f55                	or	a4,a4,a3
+    7572:	03800693          	li	a3,56
+    7576:	0906c663          	blt	a3,a6,7602 <__subdf3+0x12a>
+    757a:	46fd                	li	a3,31
+    757c:	02000893          	li	a7,32
+    7580:	0506ce63          	blt	a3,a6,75dc <__subdf3+0x104>
+    7584:	410888b3          	sub	a7,a7,a6
+    7588:	011716b3          	sll	a3,a4,a7
+    758c:	010655b3          	srl	a1,a2,a6
+    7590:	011618b3          	sll	a7,a2,a7
+    7594:	8ecd                	or	a3,a3,a1
+    7596:	011038b3          	snez	a7,a7
+    759a:	0116e6b3          	or	a3,a3,a7
+    759e:	01075833          	srl	a6,a4,a6
+    75a2:	00a68633          	add	a2,a3,a0
+    75a6:	983e                	add	a6,a6,a5
+    75a8:	00d636b3          	sltu	a3,a2,a3
+    75ac:	00d807b3          	add	a5,a6,a3
+    75b0:	00879713          	slli	a4,a5,0x8
+    75b4:	1a075063          	bgez	a4,7754 <__subdf3+0x27c>
+    75b8:	0485                	addi	s1,s1,1
+    75ba:	7ff00713          	li	a4,2047
+    75be:	4ae48b63          	beq	s1,a4,7a74 <__subdf3+0x59c>
+    75c2:	ff800737          	lui	a4,0xff800
+    75c6:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    75c8:	8ff9                	and	a5,a5,a4
+    75ca:	00165713          	srli	a4,a2,0x1
+    75ce:	8a05                	andi	a2,a2,1
+    75d0:	8f51                	or	a4,a4,a2
+    75d2:	01f79613          	slli	a2,a5,0x1f
+    75d6:	8e59                	or	a2,a2,a4
+    75d8:	8385                	srli	a5,a5,0x1
+    75da:	aaad                	j	7754 <__subdf3+0x27c>
+    75dc:	fe080693          	addi	a3,a6,-32
+    75e0:	00d756b3          	srl	a3,a4,a3
+    75e4:	4581                	li	a1,0
+    75e6:	01180863          	beq	a6,a7,75f6 <__subdf3+0x11e>
+    75ea:	04000593          	li	a1,64
+    75ee:	410585b3          	sub	a1,a1,a6
+    75f2:	00b715b3          	sll	a1,a4,a1
+    75f6:	8dd1                	or	a1,a1,a2
+    75f8:	00b035b3          	snez	a1,a1
+    75fc:	8ecd                	or	a3,a3,a1
+    75fe:	4801                	li	a6,0
+    7600:	b74d                	j	75a2 <__subdf3+0xca>
+    7602:	00c766b3          	or	a3,a4,a2
+    7606:	00d036b3          	snez	a3,a3
+    760a:	bfd5                	j	75fe <__subdf3+0x126>
+    760c:	0a080063          	beqz	a6,76ac <__subdf3+0x1d4>
+    7610:	409886b3          	sub	a3,a7,s1
+    7614:	ec91                	bnez	s1,7630 <__subdf3+0x158>
+    7616:	00a7e833          	or	a6,a5,a0
+    761a:	00080863          	beqz	a6,762a <__subdf3+0x152>
+    761e:	fff68813          	addi	a6,a3,-1 # 7fffff <syscalls_cpp.cpp.cfa7c3ef+0x7e841d>
+    7622:	f20808e3          	beqz	a6,7552 <__subdf3+0x7a>
+    7626:	00b69b63          	bne	a3,a1,763c <__subdf3+0x164>
+    762a:	87ba                	mv	a5,a4
+    762c:	84b6                	mv	s1,a3
+    762e:	a865                	j	76e6 <__subdf3+0x20e>
+    7630:	44b88663          	beq	a7,a1,7a7c <__subdf3+0x5a4>
+    7634:	008005b7          	lui	a1,0x800
+    7638:	8fcd                	or	a5,a5,a1
+    763a:	8836                	mv	a6,a3
+    763c:	03800693          	li	a3,56
+    7640:	0706c163          	blt	a3,a6,76a2 <__subdf3+0x1ca>
+    7644:	46fd                	li	a3,31
+    7646:	02000313          	li	t1,32
+    764a:	0306c963          	blt	a3,a6,767c <__subdf3+0x1a4>
+    764e:	41030333          	sub	t1,t1,a6
+    7652:	006796b3          	sll	a3,a5,t1
+    7656:	010555b3          	srl	a1,a0,a6
+    765a:	00651333          	sll	t1,a0,t1
+    765e:	8ecd                	or	a3,a3,a1
+    7660:	00603333          	snez	t1,t1
+    7664:	0066e6b3          	or	a3,a3,t1
+    7668:	0107d833          	srl	a6,a5,a6
+    766c:	9636                	add	a2,a2,a3
+    766e:	983a                	add	a6,a6,a4
+    7670:	00d636b3          	sltu	a3,a2,a3
+    7674:	00d807b3          	add	a5,a6,a3
+    7678:	84c6                	mv	s1,a7
+    767a:	bf1d                	j	75b0 <__subdf3+0xd8>
+    767c:	fe080693          	addi	a3,a6,-32
+    7680:	00d7d6b3          	srl	a3,a5,a3
+    7684:	4581                	li	a1,0
+    7686:	00680863          	beq	a6,t1,7696 <__subdf3+0x1be>
+    768a:	04000593          	li	a1,64
+    768e:	410585b3          	sub	a1,a1,a6
+    7692:	00b795b3          	sll	a1,a5,a1
+    7696:	8dc9                	or	a1,a1,a0
+    7698:	00b035b3          	snez	a1,a1
+    769c:	8ecd                	or	a3,a3,a1
+    769e:	4801                	li	a6,0
+    76a0:	b7f1                	j	766c <__subdf3+0x194>
+    76a2:	00a7e6b3          	or	a3,a5,a0
+    76a6:	00d036b3          	snez	a3,a3
+    76aa:	bfd5                	j	769e <__subdf3+0x1c6>
+    76ac:	00148693          	addi	a3,s1,1
+    76b0:	7fe6f813          	andi	a6,a3,2046
+    76b4:	08081363          	bnez	a6,773a <__subdf3+0x262>
+    76b8:	00a7e6b3          	or	a3,a5,a0
+    76bc:	e8a5                	bnez	s1,772c <__subdf3+0x254>
+    76be:	3a068363          	beqz	a3,7a64 <__subdf3+0x58c>
+    76c2:	00c766b3          	or	a3,a4,a2
+    76c6:	3a068163          	beqz	a3,7a68 <__subdf3+0x590>
+    76ca:	962a                	add	a2,a2,a0
+    76cc:	97ba                	add	a5,a5,a4
+    76ce:	00a63533          	sltu	a0,a2,a0
+    76d2:	97aa                	add	a5,a5,a0
+    76d4:	00879713          	slli	a4,a5,0x8
+    76d8:	28075363          	bgez	a4,795e <__subdf3+0x486>
+    76dc:	ff800737          	lui	a4,0xff800
+    76e0:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    76e2:	8ff9                	and	a5,a5,a4
+    76e4:	4485                	li	s1,1
+  FP_PACK_SEMIRAW_D (r, R);
+    76e6:	01d79693          	slli	a3,a5,0x1d
+    76ea:	820d                	srli	a2,a2,0x3
+    76ec:	7ff00713          	li	a4,2047
+    76f0:	8ed1                	or	a3,a3,a2
+    76f2:	838d                	srli	a5,a5,0x3
+    76f4:	00e49963          	bne	s1,a4,7706 <__subdf3+0x22e>
+    76f8:	8edd                	or	a3,a3,a5
+    76fa:	4781                	li	a5,0
+    76fc:	c689                	beqz	a3,7706 <__subdf3+0x22e>
+    76fe:	000807b7          	lui	a5,0x80
+    7702:	4681                	li	a3,0
+    7704:	4901                	li	s2,0
+    7706:	7ff4f713          	andi	a4,s1,2047
+    770a:	07b2                	slli	a5,a5,0xc
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    770c:	40f2                	lw	ra,28(sp)
+    770e:	4462                	lw	s0,24(sp)
+  FP_PACK_SEMIRAW_D (r, R);
+    7710:	83b1                	srli	a5,a5,0xc
+    7712:	0752                	slli	a4,a4,0x14
+    7714:	01f91593          	slli	a1,s2,0x1f
+    7718:	8f5d                	or	a4,a4,a5
+    771a:	00b767b3          	or	a5,a4,a1
+}
+    771e:	44d2                	lw	s1,20(sp)
+    7720:	4942                	lw	s2,16(sp)
+    7722:	49b2                	lw	s3,12(sp)
+    7724:	8536                	mv	a0,a3
+    7726:	85be                	mv	a1,a5
+    7728:	6105                	addi	sp,sp,32
+    772a:	8082                	ret
+  FP_SUB_D (R, A, B);
+    772c:	34068063          	beqz	a3,7a6c <__subdf3+0x594>
+    7730:	8f51                	or	a4,a4,a2
+    7732:	24071863          	bnez	a4,7982 <__subdf3+0x4aa>
+    7736:	862a                	mv	a2,a0
+    7738:	ae1d                	j	7a6e <__subdf3+0x596>
+    773a:	32b68c63          	beq	a3,a1,7a72 <__subdf3+0x59a>
+    773e:	962a                	add	a2,a2,a0
+    7740:	97ba                	add	a5,a5,a4
+    7742:	00a63533          	sltu	a0,a2,a0
+    7746:	97aa                	add	a5,a5,a0
+    7748:	01f79713          	slli	a4,a5,0x1f
+    774c:	8205                	srli	a2,a2,0x1
+    774e:	8e59                	or	a2,a2,a4
+    7750:	8385                	srli	a5,a5,0x1
+    7752:	84b6                	mv	s1,a3
+  FP_PACK_SEMIRAW_D (r, R);
+    7754:	00767713          	andi	a4,a2,7
+    7758:	cf01                	beqz	a4,7770 <__subdf3+0x298>
+    775a:	00f67713          	andi	a4,a2,15
+    775e:	4691                	li	a3,4
+    7760:	00d70863          	beq	a4,a3,7770 <__subdf3+0x298>
+    7764:	00d60733          	add	a4,a2,a3
+    7768:	00c736b3          	sltu	a3,a4,a2
+    776c:	97b6                	add	a5,a5,a3
+    776e:	863a                	mv	a2,a4
+    7770:	00879713          	slli	a4,a5,0x8
+    7774:	f60759e3          	bgez	a4,76e6 <__subdf3+0x20e>
+    7778:	0485                	addi	s1,s1,1
+    777a:	7ff00713          	li	a4,2047
+    777e:	2ee48b63          	beq	s1,a4,7a74 <__subdf3+0x59c>
+    7782:	ff800737          	lui	a4,0xff800
+    7786:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    7788:	8ff9                	and	a5,a5,a4
+    778a:	bfb1                	j	76e6 <__subdf3+0x20e>
+  FP_SUB_D (R, A, B);
+    778c:	0b005e63          	blez	a6,7848 <__subdf3+0x370>
+    7790:	06089e63          	bnez	a7,780c <__subdf3+0x334>
+    7794:	00c766b3          	or	a3,a4,a2
+    7798:	dc0686e3          	beqz	a3,7564 <__subdf3+0x8c>
+    779c:	fff48813          	addi	a6,s1,-1
+    77a0:	00081a63          	bnez	a6,77b4 <__subdf3+0x2dc>
+    77a4:	40c50633          	sub	a2,a0,a2
+    77a8:	8f99                	sub	a5,a5,a4
+    77aa:	00c53533          	sltu	a0,a0,a2
+    77ae:	8f89                	sub	a5,a5,a0
+    77b0:	4485                	li	s1,1
+    77b2:	a099                	j	77f8 <__subdf3+0x320>
+    77b4:	dab488e3          	beq	s1,a1,7564 <__subdf3+0x8c>
+    77b8:	03800693          	li	a3,56
+    77bc:	0906c163          	blt	a3,a6,783e <__subdf3+0x366>
+    77c0:	46fd                	li	a3,31
+    77c2:	02000893          	li	a7,32
+    77c6:	0506c963          	blt	a3,a6,7818 <__subdf3+0x340>
+    77ca:	410888b3          	sub	a7,a7,a6
+    77ce:	011716b3          	sll	a3,a4,a7
+    77d2:	010655b3          	srl	a1,a2,a6
+    77d6:	011618b3          	sll	a7,a2,a7
+    77da:	8ecd                	or	a3,a3,a1
+    77dc:	011038b3          	snez	a7,a7
+    77e0:	0116e6b3          	or	a3,a3,a7
+    77e4:	01075833          	srl	a6,a4,a6
+    77e8:	40d50633          	sub	a2,a0,a3
+    77ec:	41078833          	sub	a6,a5,a6
+    77f0:	00c53533          	sltu	a0,a0,a2
+    77f4:	40a807b3          	sub	a5,a6,a0
+    77f8:	00879713          	slli	a4,a5,0x8
+    77fc:	f4075ce3          	bgez	a4,7754 <__subdf3+0x27c>
+    7800:	00800437          	lui	s0,0x800
+    7804:	147d                	addi	s0,s0,-1 # 7fffff <syscalls_cpp.cpp.cfa7c3ef+0x7e841d>
+    7806:	8c7d                	and	s0,s0,a5
+    7808:	89b2                	mv	s3,a2
+    780a:	aa4d                	j	79bc <__subdf3+0x4e4>
+    780c:	d4b48ce3          	beq	s1,a1,7564 <__subdf3+0x8c>
+    7810:	008006b7          	lui	a3,0x800
+    7814:	8f55                	or	a4,a4,a3
+    7816:	b74d                	j	77b8 <__subdf3+0x2e0>
+    7818:	fe080693          	addi	a3,a6,-32
+    781c:	00d756b3          	srl	a3,a4,a3
+    7820:	4581                	li	a1,0
+    7822:	01180863          	beq	a6,a7,7832 <__subdf3+0x35a>
+    7826:	04000593          	li	a1,64
+    782a:	410585b3          	sub	a1,a1,a6
+    782e:	00b715b3          	sll	a1,a4,a1
+    7832:	8dd1                	or	a1,a1,a2
+    7834:	00b035b3          	snez	a1,a1
+    7838:	8ecd                	or	a3,a3,a1
+    783a:	4801                	li	a6,0
+    783c:	b775                	j	77e8 <__subdf3+0x310>
+    783e:	00c766b3          	or	a3,a4,a2
+    7842:	00d036b3          	snez	a3,a3
+    7846:	bfd5                	j	783a <__subdf3+0x362>
+    7848:	0c080263          	beqz	a6,790c <__subdf3+0x434>
+    784c:	40988333          	sub	t1,a7,s1
+    7850:	e88d                	bnez	s1,7882 <__subdf3+0x3aa>
+    7852:	00a7e833          	or	a6,a5,a0
+    7856:	02080263          	beqz	a6,787a <__subdf3+0x3a2>
+    785a:	fff30813          	addi	a6,t1,-1
+    785e:	00081c63          	bnez	a6,7876 <__subdf3+0x39e>
+    7862:	40a60533          	sub	a0,a2,a0
+    7866:	00a635b3          	sltu	a1,a2,a0
+    786a:	40f707b3          	sub	a5,a4,a5
+    786e:	862a                	mv	a2,a0
+    7870:	8f8d                	sub	a5,a5,a1
+    7872:	8936                	mv	s2,a3
+    7874:	bf35                	j	77b0 <__subdf3+0x2d8>
+    7876:	00b31c63          	bne	t1,a1,788e <__subdf3+0x3b6>
+    787a:	8936                	mv	s2,a3
+    787c:	87ba                	mv	a5,a4
+    787e:	849a                	mv	s1,t1
+    7880:	b59d                	j	76e6 <__subdf3+0x20e>
+    7882:	1eb88c63          	beq	a7,a1,7a7a <__subdf3+0x5a2>
+    7886:	008005b7          	lui	a1,0x800
+    788a:	8fcd                	or	a5,a5,a1
+    788c:	881a                	mv	a6,t1
+    788e:	03800593          	li	a1,56
+    7892:	0705c863          	blt	a1,a6,7902 <__subdf3+0x42a>
+    7896:	45fd                	li	a1,31
+    7898:	02000e13          	li	t3,32
+    789c:	0305ce63          	blt	a1,a6,78d8 <__subdf3+0x400>
+    78a0:	410e0e33          	sub	t3,t3,a6
+    78a4:	01c795b3          	sll	a1,a5,t3
+    78a8:	01055333          	srl	t1,a0,a6
+    78ac:	01c51e33          	sll	t3,a0,t3
+    78b0:	0065e5b3          	or	a1,a1,t1
+    78b4:	01c03e33          	snez	t3,t3
+    78b8:	01c5e5b3          	or	a1,a1,t3
+    78bc:	0107d833          	srl	a6,a5,a6
+    78c0:	40b605b3          	sub	a1,a2,a1
+    78c4:	00b637b3          	sltu	a5,a2,a1
+    78c8:	41070833          	sub	a6,a4,a6
+    78cc:	862e                	mv	a2,a1
+    78ce:	40f807b3          	sub	a5,a6,a5
+    78d2:	84c6                	mv	s1,a7
+    78d4:	8936                	mv	s2,a3
+    78d6:	b70d                	j	77f8 <__subdf3+0x320>
+    78d8:	fe080593          	addi	a1,a6,-32
+    78dc:	00b7d5b3          	srl	a1,a5,a1
+    78e0:	4301                	li	t1,0
+    78e2:	01c80863          	beq	a6,t3,78f2 <__subdf3+0x41a>
+    78e6:	04000313          	li	t1,64
+    78ea:	41030333          	sub	t1,t1,a6
+    78ee:	00679333          	sll	t1,a5,t1
+    78f2:	00a36333          	or	t1,t1,a0
+    78f6:	00603333          	snez	t1,t1
+    78fa:	0065e5b3          	or	a1,a1,t1
+    78fe:	4801                	li	a6,0
+    7900:	b7c1                	j	78c0 <__subdf3+0x3e8>
+    7902:	00a7e5b3          	or	a1,a5,a0
+    7906:	00b035b3          	snez	a1,a1
+    790a:	bfd5                	j	78fe <__subdf3+0x426>
+    790c:	00148813          	addi	a6,s1,1
+    7910:	7fe87813          	andi	a6,a6,2046
+    7914:	06081f63          	bnez	a6,7992 <__subdf3+0x4ba>
+    7918:	00c76833          	or	a6,a4,a2
+    791c:	00a7e8b3          	or	a7,a5,a0
+    7920:	eca1                	bnez	s1,7978 <__subdf3+0x4a0>
+    7922:	00089763          	bnez	a7,7930 <__subdf3+0x458>
+    7926:	87ba                	mv	a5,a4
+    7928:	02081a63          	bnez	a6,795c <__subdf3+0x484>
+    792c:	4901                	li	s2,0
+    792e:	a299                	j	7a74 <__subdf3+0x59c>
+    7930:	12080c63          	beqz	a6,7a68 <__subdf3+0x590>
+    7934:	40c50833          	sub	a6,a0,a2
+    7938:	010538b3          	sltu	a7,a0,a6
+    793c:	40e785b3          	sub	a1,a5,a4
+    7940:	411585b3          	sub	a1,a1,a7
+    7944:	00859893          	slli	a7,a1,0x8
+    7948:	0208d163          	bgez	a7,796a <__subdf3+0x492>
+    794c:	40a60533          	sub	a0,a2,a0
+    7950:	00a635b3          	sltu	a1,a2,a0
+    7954:	40f707b3          	sub	a5,a4,a5
+    7958:	862a                	mv	a2,a0
+    795a:	8f8d                	sub	a5,a5,a1
+    795c:	8936                	mv	s2,a3
+  FP_PACK_SEMIRAW_D (r, R);
+    795e:	00f66733          	or	a4,a2,a5
+    7962:	12070363          	beqz	a4,7a88 <__subdf3+0x5b0>
+    7966:	4481                	li	s1,0
+    7968:	b3f5                	j	7754 <__subdf3+0x27c>
+  FP_SUB_D (R, A, B);
+    796a:	00b86633          	or	a2,a6,a1
+    796e:	10060a63          	beqz	a2,7a82 <__subdf3+0x5aa>
+    7972:	87ae                	mv	a5,a1
+    7974:	8642                	mv	a2,a6
+    7976:	b7e5                	j	795e <__subdf3+0x486>
+    7978:	00089a63          	bnez	a7,798c <__subdf3+0x4b4>
+    797c:	8936                	mv	s2,a3
+    797e:	0e081763          	bnez	a6,7a6c <__subdf3+0x594>
+    7982:	4901                	li	s2,0
+    7984:	004007b7          	lui	a5,0x400
+    7988:	4601                	li	a2,0
+    798a:	a0d5                	j	7a6e <__subdf3+0x596>
+    798c:	da0805e3          	beqz	a6,7736 <__subdf3+0x25e>
+    7990:	bfcd                	j	7982 <__subdf3+0x4aa>
+    7992:	40c505b3          	sub	a1,a0,a2
+    7996:	00b53833          	sltu	a6,a0,a1
+    799a:	40e78433          	sub	s0,a5,a4
+    799e:	41040433          	sub	s0,s0,a6
+    79a2:	00841813          	slli	a6,s0,0x8
+    79a6:	89ae                	mv	s3,a1
+    79a8:	06085263          	bgez	a6,7a0c <__subdf3+0x534>
+    79ac:	40a609b3          	sub	s3,a2,a0
+    79b0:	40f70433          	sub	s0,a4,a5
+    79b4:	01363633          	sltu	a2,a2,s3
+    79b8:	8c11                	sub	s0,s0,a2
+    79ba:	8936                	mv	s2,a3
+    79bc:	cc39                	beqz	s0,7a1a <__subdf3+0x542>
+    79be:	8522                	mv	a0,s0
+    79c0:	2a59                	jal	7b56 <__clzsi2>
+    79c2:	ff850713          	addi	a4,a0,-8
+    79c6:	02000793          	li	a5,32
+    79ca:	8f99                	sub	a5,a5,a4
+    79cc:	00e41433          	sll	s0,s0,a4
+    79d0:	00f9d7b3          	srl	a5,s3,a5
+    79d4:	8fc1                	or	a5,a5,s0
+    79d6:	00e99633          	sll	a2,s3,a4
+    79da:	06974f63          	blt	a4,s1,7a58 <__subdf3+0x580>
+    79de:	8f05                	sub	a4,a4,s1
+    79e0:	00170513          	addi	a0,a4,1
+    79e4:	46fd                	li	a3,31
+    79e6:	02000593          	li	a1,32
+    79ea:	04a6c563          	blt	a3,a0,7a34 <__subdf3+0x55c>
+    79ee:	8d89                	sub	a1,a1,a0
+    79f0:	00b79733          	sll	a4,a5,a1
+    79f4:	00a656b3          	srl	a3,a2,a0
+    79f8:	00b615b3          	sll	a1,a2,a1
+    79fc:	8f55                	or	a4,a4,a3
+    79fe:	00b035b3          	snez	a1,a1
+    7a02:	00b76633          	or	a2,a4,a1
+    7a06:	00a7d7b3          	srl	a5,a5,a0
+    7a0a:	bf91                	j	795e <__subdf3+0x486>
+    7a0c:	0085e633          	or	a2,a1,s0
+    7a10:	f655                	bnez	a2,79bc <__subdf3+0x4e4>
+    7a12:	4901                	li	s2,0
+    7a14:	4781                	li	a5,0
+    7a16:	4481                	li	s1,0
+    7a18:	b1f9                	j	76e6 <__subdf3+0x20e>
+    7a1a:	854e                	mv	a0,s3
+    7a1c:	2a2d                	jal	7b56 <__clzsi2>
+    7a1e:	01850713          	addi	a4,a0,24
+    7a22:	47fd                	li	a5,31
+    7a24:	fae7d1e3          	bge	a5,a4,79c6 <__subdf3+0x4ee>
+    7a28:	ff850793          	addi	a5,a0,-8
+    7a2c:	00f997b3          	sll	a5,s3,a5
+    7a30:	4601                	li	a2,0
+    7a32:	b765                	j	79da <__subdf3+0x502>
+    7a34:	1705                	addi	a4,a4,-31
+    7a36:	00e7d733          	srl	a4,a5,a4
+    7a3a:	4681                	li	a3,0
+    7a3c:	00b50763          	beq	a0,a1,7a4a <__subdf3+0x572>
+    7a40:	04000693          	li	a3,64
+    7a44:	8e89                	sub	a3,a3,a0
+    7a46:	00d796b3          	sll	a3,a5,a3
+    7a4a:	8ed1                	or	a3,a3,a2
+    7a4c:	00d036b3          	snez	a3,a3
+    7a50:	00d76633          	or	a2,a4,a3
+    7a54:	4781                	li	a5,0
+    7a56:	b721                	j	795e <__subdf3+0x486>
+    7a58:	8c99                	sub	s1,s1,a4
+    7a5a:	ff800737          	lui	a4,0xff800
+    7a5e:	177d                	addi	a4,a4,-1 # ff7fffff <syscalls_cpp.cpp.cfa7c3ef+0xff7e841d>
+    7a60:	8ff9                	and	a5,a5,a4
+    7a62:	b9cd                	j	7754 <__subdf3+0x27c>
+    7a64:	87ba                	mv	a5,a4
+    7a66:	bde5                	j	795e <__subdf3+0x486>
+    7a68:	862a                	mv	a2,a0
+    7a6a:	bdd5                	j	795e <__subdf3+0x486>
+    7a6c:	87ba                	mv	a5,a4
+    7a6e:	84ae                	mv	s1,a1
+    7a70:	b99d                	j	76e6 <__subdf3+0x20e>
+    7a72:	84b6                	mv	s1,a3
+    7a74:	4781                	li	a5,0
+    7a76:	4601                	li	a2,0
+    7a78:	b1bd                	j	76e6 <__subdf3+0x20e>
+    7a7a:	8936                	mv	s2,a3
+    7a7c:	87ba                	mv	a5,a4
+    7a7e:	84c6                	mv	s1,a7
+    7a80:	b19d                	j	76e6 <__subdf3+0x20e>
+    7a82:	4901                	li	s2,0
+    7a84:	4781                	li	a5,0
+    7a86:	b185                	j	76e6 <__subdf3+0x20e>
+    7a88:	4781                	li	a5,0
+    7a8a:	4601                	li	a2,0
+    7a8c:	b769                	j	7a16 <__subdf3+0x53e>
+
+00007a8e <__unorddf2>:
+  FP_DECL_D (A);
+  FP_DECL_D (B);
+  CMPtype r;
+
+  FP_INIT_EXCEPTIONS;
+  FP_UNPACK_RAW_D (A, a);
+    7a8e:	001007b7          	lui	a5,0x100
+    7a92:	17fd                	addi	a5,a5,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+    7a94:	00b7f733          	and	a4,a5,a1
+    7a98:	81d1                	srli	a1,a1,0x14
+  FP_UNPACK_RAW_D (B, b);
+    7a9a:	8ff5                	and	a5,a5,a3
+  FP_UNPACK_RAW_D (A, a);
+    7a9c:	7ff5f593          	andi	a1,a1,2047
+  FP_UNPACK_RAW_D (B, b);
+    7aa0:	82d1                	srli	a3,a3,0x14
+  FP_CMP_UNORD_D (r, A, B, 1);
+    7aa2:	7ff00813          	li	a6,2047
+  FP_UNPACK_RAW_D (B, b);
+    7aa6:	7ff6f693          	andi	a3,a3,2047
+  FP_CMP_UNORD_D (r, A, B, 1);
+    7aaa:	01059563          	bne	a1,a6,7ab4 <__unorddf2+0x26>
+    7aae:	8f49                	or	a4,a4,a0
+    7ab0:	4505                	li	a0,1
+    7ab2:	e719                	bnez	a4,7ac0 <__unorddf2+0x32>
+    7ab4:	4501                	li	a0,0
+    7ab6:	01069563          	bne	a3,a6,7ac0 <__unorddf2+0x32>
+    7aba:	8fd1                	or	a5,a5,a2
+    7abc:	00f03533          	snez	a0,a5
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    7ac0:	8082                	ret
+	...
+
+00007ac4 <__mulsi3>:
+/* Our RV64 64-bit routine is equivalent to our RV32 32-bit routine.  */
+# define __muldi3 __mulsi3
+#endif
+
+FUNC_BEGIN (__muldi3)
+  mv     a2, a0
+    7ac4:	862a                	mv	a2,a0
+  li     a0, 0
+    7ac6:	4501                	li	a0,0
+.L1:
+  andi   a3, a1, 1
+    7ac8:	0015f693          	andi	a3,a1,1
+  beqz   a3, .L2
+    7acc:	c291                	beqz	a3,7ad0 <__mulsi3+0xc>
+  add    a0, a0, a2
+    7ace:	9532                	add	a0,a0,a2
+.L2:
+  srli   a1, a1, 1
+    7ad0:	8185                	srli	a1,a1,0x1
+  slli   a2, a2, 1
+    7ad2:	0606                	slli	a2,a2,0x1
+  bnez   a1, .L1
+    7ad4:	f9f5                	bnez	a1,7ac8 <__mulsi3+0x4>
+  ret
+    7ad6:	8082                	ret
+
+00007ad8 <__divsi3>:
+  li    t0, -1
+  beq   a1, t0, .L20
+#endif
+
+FUNC_BEGIN (__divdi3)
+  bltz  a0, .L10
+    7ad8:	02054e63          	bltz	a0,7b14 <__umodsi3+0x8>
+  bltz  a1, .L11
+    7adc:	0405c363          	bltz	a1,7b22 <__umodsi3+0x16>
+
+00007ae0 <__hidden___udivsi3>:
+  /* Since the quotient is positive, fall into __udivdi3.  */
+
+FUNC_BEGIN (__udivdi3)
+  mv    a2, a1
+    7ae0:	862e                	mv	a2,a1
+  mv    a1, a0
+    7ae2:	85aa                	mv	a1,a0
+  li    a0, -1
+    7ae4:	557d                	li	a0,-1
+  beqz  a2, .L5
+    7ae6:	c215                	beqz	a2,7b0a <__hidden___udivsi3+0x2a>
+  li    a3, 1
+    7ae8:	4685                	li	a3,1
+  bgeu  a2, a1, .L2
+    7aea:	00b67863          	bgeu	a2,a1,7afa <__hidden___udivsi3+0x1a>
+.L1:
+  blez  a2, .L2
+    7aee:	00c05663          	blez	a2,7afa <__hidden___udivsi3+0x1a>
+  slli  a2, a2, 1
+    7af2:	0606                	slli	a2,a2,0x1
+  slli  a3, a3, 1
+    7af4:	0686                	slli	a3,a3,0x1
+  bgtu  a1, a2, .L1
+    7af6:	feb66ce3          	bltu	a2,a1,7aee <__hidden___udivsi3+0xe>
+.L2:
+  li    a0, 0
+    7afa:	4501                	li	a0,0
+.L3:
+  bltu  a1, a2, .L4
+    7afc:	00c5e463          	bltu	a1,a2,7b04 <__hidden___udivsi3+0x24>
+  sub   a1, a1, a2
+    7b00:	8d91                	sub	a1,a1,a2
+  or    a0, a0, a3
+    7b02:	8d55                	or	a0,a0,a3
+.L4:
+  srli  a3, a3, 1
+    7b04:	8285                	srli	a3,a3,0x1
+  srli  a2, a2, 1
+    7b06:	8205                	srli	a2,a2,0x1
+  bnez  a3, .L3
+    7b08:	faf5                	bnez	a3,7afc <__hidden___udivsi3+0x1c>
+.L5:
+  ret
+    7b0a:	8082                	ret
+
+00007b0c <__umodsi3>:
+FUNC_END (__udivdi3)
+HIDDEN_DEF (__udivdi3)
+
+FUNC_BEGIN (__umoddi3)
+  /* Call __udivdi3(a0, a1), then return the remainder, which is in a1.  */
+  move  t0, ra
+    7b0c:	8286                	mv	t0,ra
+  jal   HIDDEN_JUMPTARGET(__udivdi3)
+    7b0e:	3fc9                	jal	7ae0 <__hidden___udivsi3>
+  move  a0, a1
+    7b10:	852e                	mv	a0,a1
+  jr    t0
+    7b12:	8282                	jr	t0
+FUNC_END (__umoddi3)
+
+  /* Handle negative arguments to __divdi3.  */
+.L10:
+  neg   a0, a0
+    7b14:	40a00533          	neg	a0,a0
+  /* Zero is handled as a negative so that the result will not be inverted.  */
+  bgtz  a1, .L12     /* Compute __udivdi3(-a0, a1), then negate the result.  */
+    7b18:	00b04763          	bgtz	a1,7b26 <__umodsi3+0x1a>
+
+  neg   a1, a1
+    7b1c:	40b005b3          	neg	a1,a1
+  j     HIDDEN_JUMPTARGET(__udivdi3)     /* Compute __udivdi3(-a0, -a1).  */
+    7b20:	b7c1                	j	7ae0 <__hidden___udivsi3>
+.L11:                /* Compute __udivdi3(a0, -a1), then negate the result.  */
+  neg   a1, a1
+    7b22:	40b005b3          	neg	a1,a1
+.L12:
+  move  t0, ra
+    7b26:	8286                	mv	t0,ra
+  jal   HIDDEN_JUMPTARGET(__udivdi3)
+    7b28:	3f65                	jal	7ae0 <__hidden___udivsi3>
+  neg   a0, a0
+    7b2a:	40a00533          	neg	a0,a0
+  jr    t0
+    7b2e:	8282                	jr	t0
+
+00007b30 <__modsi3>:
+FUNC_END (__divdi3)
+
+FUNC_BEGIN (__moddi3)
+  move   t0, ra
+    7b30:	8286                	mv	t0,ra
+  bltz   a1, .L31
+    7b32:	0005c763          	bltz	a1,7b40 <__modsi3+0x10>
+  bltz   a0, .L32
+    7b36:	00054963          	bltz	a0,7b48 <__modsi3+0x18>
+.L30:
+  jal    HIDDEN_JUMPTARGET(__udivdi3)    /* The dividend is not negative.  */
+    7b3a:	375d                	jal	7ae0 <__hidden___udivsi3>
+  move   a0, a1
+    7b3c:	852e                	mv	a0,a1
+  jr     t0
+    7b3e:	8282                	jr	t0
+.L31:
+  neg    a1, a1
+    7b40:	40b005b3          	neg	a1,a1
+  bgez   a0, .L30
+    7b44:	fe055be3          	bgez	a0,7b3a <__modsi3+0xa>
+.L32:
+  neg    a0, a0
+    7b48:	40a00533          	neg	a0,a0
+  jal    HIDDEN_JUMPTARGET(__udivdi3)    /* The dividend is hella negative.  */
+    7b4c:	3f51                	jal	7ae0 <__hidden___udivsi3>
+  neg    a0, a1
+    7b4e:	40b00533          	neg	a0,a1
+  jr     t0
+    7b52:	8282                	jr	t0
+    7b54:	0001                	nop
+
+00007b56 <__clzsi2>:
+int
+__clzSI2 (UWtype x)
+{
+  Wtype ret;
+
+  count_leading_zeros (ret, x);
+    7b56:	67c1                	lui	a5,0x10
+    7b58:	02f57563          	bgeu	a0,a5,7b82 <__clzsi2+0x2c>
+    7b5c:	10053793          	sltiu	a5,a0,256
+    7b60:	0017b793          	seqz	a5,a5
+    7b64:	078e                	slli	a5,a5,0x3
+    7b66:	6729                	lui	a4,0xa
+    7b68:	00f55533          	srl	a0,a0,a5
+    7b6c:	7a070713          	addi	a4,a4,1952 # a7a0 <__clz_tab>
+    7b70:	972a                	add	a4,a4,a0
+    7b72:	00074503          	lbu	a0,0(a4)
+    7b76:	02000693          	li	a3,32
+    7b7a:	8e9d                	sub	a3,a3,a5
+
+  return ret;
+}
+    7b7c:	40a68533          	sub	a0,a3,a0
+    7b80:	8082                	ret
+  count_leading_zeros (ret, x);
+    7b82:	01000737          	lui	a4,0x1000
+    7b86:	47e1                	li	a5,24
+    7b88:	fce57fe3          	bgeu	a0,a4,7b66 <__clzsi2+0x10>
+    7b8c:	47c1                	li	a5,16
+    7b8e:	bfe1                	j	7b66 <__clzsi2+0x10>
+
+00007b90 <__ledf2>:
+  FP_DECL_D (A);
+  FP_DECL_D (B);
+  CMPtype r;
+
+  FP_INIT_EXCEPTIONS;
+  FP_UNPACK_RAW_D (A, a);
+    7b90:	0145d893          	srli	a7,a1,0x14
+    7b94:	00100737          	lui	a4,0x100
+    7b98:	177d                	addi	a4,a4,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+  FP_UNPACK_RAW_D (B, b);
+    7b9a:	0146d813          	srli	a6,a3,0x14
+  FP_UNPACK_RAW_D (A, a);
+    7b9e:	7ff8f893          	andi	a7,a7,2047
+  FP_CMP_D (r, A, B, 2, 2);
+    7ba2:	7ff00793          	li	a5,2047
+  FP_UNPACK_RAW_D (A, a);
+    7ba6:	00b77333          	and	t1,a4,a1
+  FP_UNPACK_RAW_D (B, b);
+    7baa:	7ff87813          	andi	a6,a6,2047
+    7bae:	8f75                	and	a4,a4,a3
+  FP_UNPACK_RAW_D (A, a);
+    7bb0:	81fd                	srli	a1,a1,0x1f
+  FP_UNPACK_RAW_D (B, b);
+    7bb2:	82fd                	srli	a3,a3,0x1f
+  FP_CMP_D (r, A, B, 2, 2);
+    7bb4:	00f88d63          	beq	a7,a5,7bce <__ledf2+0x3e>
+    7bb8:	7ff00e13          	li	t3,2047
+  FP_UNPACK_RAW_D (B, b);
+    7bbc:	87c2                	mv	a5,a6
+  FP_CMP_D (r, A, B, 2, 2);
+    7bbe:	01c81f63          	bne	a6,t3,7bdc <__ledf2+0x4c>
+    7bc2:	00c76e33          	or	t3,a4,a2
+    7bc6:	000e0b63          	beqz	t3,7bdc <__ledf2+0x4c>
+    7bca:	4789                	li	a5,2
+    7bcc:	a031                	j	7bd8 <__ledf2+0x48>
+    7bce:	00a36e33          	or	t3,t1,a0
+    7bd2:	4789                	li	a5,2
+    7bd4:	fe0e02e3          	beqz	t3,7bb8 <__ledf2+0x28>
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    7bd8:	853e                	mv	a0,a5
+    7bda:	8082                	ret
+  FP_CMP_D (r, A, B, 2, 2);
+    7bdc:	4e01                	li	t3,0
+    7bde:	00089663          	bnez	a7,7bea <__ledf2+0x5a>
+    7be2:	00a36e33          	or	t3,t1,a0
+    7be6:	001e3e13          	seqz	t3,t3
+    7bea:	04081363          	bnez	a6,7c30 <__ledf2+0xa0>
+    7bee:	00c76eb3          	or	t4,a4,a2
+    7bf2:	000e0863          	beqz	t3,7c02 <__ledf2+0x72>
+    7bf6:	fe0e81e3          	beqz	t4,7bd8 <__ledf2+0x48>
+    7bfa:	00169793          	slli	a5,a3,0x1
+    7bfe:	17fd                	addi	a5,a5,-1 # ffff <i2c.c.71b25690+0xb73>
+    7c00:	bfe1                	j	7bd8 <__ledf2+0x48>
+    7c02:	020e9963          	bnez	t4,7c34 <__ledf2+0xa4>
+    7c06:	40b005b3          	neg	a1,a1
+    7c0a:	0015e793          	ori	a5,a1,1
+    7c0e:	b7e9                	j	7bd8 <__ledf2+0x48>
+    7c10:	ff08c5e3          	blt	a7,a6,7bfa <__ledf2+0x6a>
+    7c14:	fe6769e3          	bltu	a4,t1,7c06 <__ledf2+0x76>
+    7c18:	00a67463          	bgeu	a2,a0,7c20 <__ledf2+0x90>
+    7c1c:	fee305e3          	beq	t1,a4,7c06 <__ledf2+0x76>
+    7c20:	00c56563          	bltu	a0,a2,7c2a <__ledf2+0x9a>
+    7c24:	4781                	li	a5,0
+    7c26:	fae379e3          	bgeu	t1,a4,7bd8 <__ledf2+0x48>
+    7c2a:	00159793          	slli	a5,a1,0x1
+    7c2e:	bfc1                	j	7bfe <__ledf2+0x6e>
+    7c30:	fc0e15e3          	bnez	t3,7bfa <__ledf2+0x6a>
+    7c34:	fcb699e3          	bne	a3,a1,7c06 <__ledf2+0x76>
+    7c38:	fd185ce3          	bge	a6,a7,7c10 <__ledf2+0x80>
+    7c3c:	40d006b3          	neg	a3,a3
+    7c40:	0016e793          	ori	a5,a3,1
+    7c44:	bf51                	j	7bd8 <__ledf2+0x48>
+
+00007c46 <__fixdfsi>:
+  FP_DECL_EX;
+  FP_DECL_D (A);
+  USItype r;
+
+  FP_INIT_EXCEPTIONS;
+  FP_UNPACK_RAW_D (A, a);
+    7c46:	0145d713          	srli	a4,a1,0x14
+    7c4a:	001006b7          	lui	a3,0x100
+    7c4e:	fff68793          	addi	a5,a3,-1 # fffff <syscalls_cpp.cpp.cfa7c3ef+0xe841d>
+    7c52:	7ff77713          	andi	a4,a4,2047
+  FP_TO_INT_D (r, A, SI_BITS, 1);
+    7c56:	3fe00613          	li	a2,1022
+  FP_UNPACK_RAW_D (A, a);
+    7c5a:	8fed                	and	a5,a5,a1
+    7c5c:	81fd                	srli	a1,a1,0x1f
+  FP_TO_INT_D (r, A, SI_BITS, 1);
+    7c5e:	04e65363          	bge	a2,a4,7ca4 <__fixdfsi+0x5e>
+    7c62:	41d00613          	li	a2,1053
+    7c66:	00e65763          	bge	a2,a4,7c74 <__fixdfsi+0x2e>
+    7c6a:	80000537          	lui	a0,0x80000
+    7c6e:	157d                	addi	a0,a0,-1 # 7fffffff <syscalls_cpp.cpp.cfa7c3ef+0x7ffe841d>
+    7c70:	952e                	add	a0,a0,a1
+    7c72:	8082                	ret
+    7c74:	8fd5                	or	a5,a5,a3
+    7c76:	41300693          	li	a3,1043
+    7c7a:	02e6d163          	bge	a3,a4,7c9c <__fixdfsi+0x56>
+    7c7e:	bed70693          	addi	a3,a4,-1043
+    7c82:	00d797b3          	sll	a5,a5,a3
+    7c86:	43300693          	li	a3,1075
+    7c8a:	40e68733          	sub	a4,a3,a4
+    7c8e:	00e55533          	srl	a0,a0,a4
+    7c92:	8d5d                	or	a0,a0,a5
+    7c94:	c989                	beqz	a1,7ca6 <__fixdfsi+0x60>
+    7c96:	40a00533          	neg	a0,a0
+    7c9a:	8082                	ret
+    7c9c:	8e99                	sub	a3,a3,a4
+    7c9e:	00d7d533          	srl	a0,a5,a3
+    7ca2:	bfcd                	j	7c94 <__fixdfsi+0x4e>
+    7ca4:	4501                	li	a0,0
+  FP_HANDLE_EXCEPTIONS;
+
+  return r;
+}
+    7ca6:	8082                	ret
+
+00007ca8 <__floatunsidf>:
+#include "soft-fp.h"
+#include "double.h"
+
+DFtype
+__floatunsidf (USItype i)
+{
+    7ca8:	1141                	addi	sp,sp,-16
+    7caa:	c422                	sw	s0,8(sp)
+    7cac:	c606                	sw	ra,12(sp)
+    7cae:	842a                	mv	s0,a0
+  FP_DECL_D (A);
+  DFtype a;
+
+  FP_FROM_INT_D (A, i, SI_BITS, USItype);
+    7cb0:	cd15                	beqz	a0,7cec <__floatunsidf+0x44>
+    7cb2:	3555                	jal	7b56 <__clzsi2>
+    7cb4:	41e00713          	li	a4,1054
+    7cb8:	47a9                	li	a5,10
+    7cba:	8f09                	sub	a4,a4,a0
+    7cbc:	02a7c363          	blt	a5,a0,7ce2 <__floatunsidf+0x3a>
+    7cc0:	47ad                	li	a5,11
+    7cc2:	8f89                	sub	a5,a5,a0
+    7cc4:	0555                	addi	a0,a0,21
+    7cc6:	00f457b3          	srl	a5,s0,a5
+    7cca:	00a41433          	sll	s0,s0,a0
+  FP_PACK_RAW_D (a, A);
+
+  return a;
+}
+    7cce:	40b2                	lw	ra,12(sp)
+    7cd0:	8522                	mv	a0,s0
+    7cd2:	4422                	lw	s0,8(sp)
+  FP_PACK_RAW_D (a, A);
+    7cd4:	07b2                	slli	a5,a5,0xc
+    7cd6:	0752                	slli	a4,a4,0x14
+    7cd8:	83b1                	srli	a5,a5,0xc
+}
+    7cda:	00f765b3          	or	a1,a4,a5
+    7cde:	0141                	addi	sp,sp,16
+    7ce0:	8082                	ret
+  FP_FROM_INT_D (A, i, SI_BITS, USItype);
+    7ce2:	1555                	addi	a0,a0,-11
+    7ce4:	00a417b3          	sll	a5,s0,a0
+    7ce8:	4401                	li	s0,0
+    7cea:	b7d5                	j	7cce <__floatunsidf+0x26>
+    7cec:	4781                	li	a5,0
+    7cee:	4701                	li	a4,0
+    7cf0:	bff9                	j	7cce <__floatunsidf+0x26>
+
+00007cf2 <assign_LE_values>:
+typeInf in3_buf[3];
+typeInf in4_buf[6];
+
+/* Assign input buffers for seed and point global in1..in4 pointers at them */
+static void assign_LE_values(int seed)
+{
+    7cf2:	1101                	addi	sp,sp,-32
+    7cf4:	ce06                	sw	ra,28(sp)
+    7cf6:	cc22                	sw	s0,24(sp)
+    7cf8:	1000                	addi	s0,sp,32
+    7cfa:	fea42623          	sw	a0,-20(s0)
+    in1_buf[0] = dataSourcesLE_0[seed];
+    7cfe:	67ad                	lui	a5,0xb
+    7d00:	8a078713          	addi	a4,a5,-1888 # a8a0 <dataSourcesLE_0>
+    7d04:	fec42783          	lw	a5,-20(s0)
+    7d08:	078a                	slli	a5,a5,0x2
+    7d0a:	97ba                	add	a5,a5,a4
+    7d0c:	4398                	lw	a4,0(a5)
+    7d0e:	c6418793          	addi	a5,gp,-924 # b9e8 <in1_buf>
+    7d12:	c398                	sw	a4,0(a5)
+    in1_buf[1] = dataSourcesLE_1[seed];
+    7d14:	67ad                	lui	a5,0xb
+    7d16:	a3078713          	addi	a4,a5,-1488 # aa30 <dataSourcesLE_1>
+    7d1a:	fec42783          	lw	a5,-20(s0)
+    7d1e:	078a                	slli	a5,a5,0x2
+    7d20:	97ba                	add	a5,a5,a4
+    7d22:	4398                	lw	a4,0(a5)
+    7d24:	c6418793          	addi	a5,gp,-924 # b9e8 <in1_buf>
+    7d28:	c3d8                	sw	a4,4(a5)
+    in1_buf[2] = dataSourcesLE_2[seed];
+    7d2a:	67ad                	lui	a5,0xb
+    7d2c:	bc078713          	addi	a4,a5,-1088 # abc0 <dataSourcesLE_2>
+    7d30:	fec42783          	lw	a5,-20(s0)
+    7d34:	078a                	slli	a5,a5,0x2
+    7d36:	97ba                	add	a5,a5,a4
+    7d38:	4398                	lw	a4,0(a5)
+    7d3a:	c6418793          	addi	a5,gp,-924 # b9e8 <in1_buf>
+    7d3e:	c798                	sw	a4,8(a5)
+
+    in2_buf[0] = dataSourcesLE_3[0];
+    7d40:	4701                	li	a4,0
+    7d42:	c7018793          	addi	a5,gp,-912 # b9f4 <in2_buf>
+    7d46:	c398                	sw	a4,0(a5)
+    in2_buf[1] = dataSourcesLE_4[0];
+    7d48:	015a0737          	lui	a4,0x15a0
+    7d4c:	c7018793          	addi	a5,gp,-912 # b9f4 <in2_buf>
+    7d50:	c3d8                	sw	a4,4(a5)
+    in2_buf[2] = dataSourcesLE_5[0];
+    7d52:	010b0737          	lui	a4,0x10b0
+    7d56:	c7018793          	addi	a5,gp,-912 # b9f4 <in2_buf>
+    7d5a:	c798                	sw	a4,8(a5)
+
+    in3_buf[0] = dataSourcesLE_6[seed];
+    7d5c:	67ad                	lui	a5,0xb
+    7d5e:	d5078713          	addi	a4,a5,-688 # ad50 <dataSourcesLE_6>
+    7d62:	fec42783          	lw	a5,-20(s0)
+    7d66:	078a                	slli	a5,a5,0x2
+    7d68:	97ba                	add	a5,a5,a4
+    7d6a:	4398                	lw	a4,0(a5)
+    7d6c:	c7c18793          	addi	a5,gp,-900 # ba00 <in3_buf>
+    7d70:	c398                	sw	a4,0(a5)
+    in3_buf[1] = dataSourcesLE_7[seed];
+    7d72:	67ad                	lui	a5,0xb
+    7d74:	ee078713          	addi	a4,a5,-288 # aee0 <dataSourcesLE_7>
+    7d78:	fec42783          	lw	a5,-20(s0)
+    7d7c:	078a                	slli	a5,a5,0x2
+    7d7e:	97ba                	add	a5,a5,a4
+    7d80:	4398                	lw	a4,0(a5)
+    7d82:	c7c18793          	addi	a5,gp,-900 # ba00 <in3_buf>
+    7d86:	c3d8                	sw	a4,4(a5)
+    in3_buf[2] = dataSourcesLE_8[seed];
+    7d88:	67ad                	lui	a5,0xb
+    7d8a:	07078713          	addi	a4,a5,112 # b070 <dataSourcesLE_8>
+    7d8e:	fec42783          	lw	a5,-20(s0)
+    7d92:	078a                	slli	a5,a5,0x2
+    7d94:	97ba                	add	a5,a5,a4
+    7d96:	4398                	lw	a4,0(a5)
+    7d98:	c7c18793          	addi	a5,gp,-900 # ba00 <in3_buf>
+    7d9c:	c798                	sw	a4,8(a5)
+
+    in4_buf[0] = dataSourcesLE_9[0];
+    7d9e:	08000737          	lui	a4,0x8000
+    7da2:	c8818793          	addi	a5,gp,-888 # ba0c <in4_buf>
+    7da6:	c398                	sw	a4,0(a5)
+    in4_buf[1] = dataSourcesLE_10[0];
+    7da8:	08000737          	lui	a4,0x8000
+    7dac:	c8818793          	addi	a5,gp,-888 # ba0c <in4_buf>
+    7db0:	c3d8                	sw	a4,4(a5)
+    in4_buf[2] = dataSourcesLE_11[0];
+    7db2:	08000737          	lui	a4,0x8000
+    7db6:	c8818793          	addi	a5,gp,-888 # ba0c <in4_buf>
+    7dba:	c798                	sw	a4,8(a5)
+    in4_buf[3] = dataSourcesLE_12[0];
+    7dbc:	08000737          	lui	a4,0x8000
+    7dc0:	c8818793          	addi	a5,gp,-888 # ba0c <in4_buf>
+    7dc4:	c7d8                	sw	a4,12(a5)
+    in4_buf[4] = dataSourcesLE_13[0];
+    7dc6:	02000737          	lui	a4,0x2000
+    7dca:	c8818793          	addi	a5,gp,-888 # ba0c <in4_buf>
+    7dce:	cb98                	sw	a4,16(a5)
+    in4_buf[5] = dataSourcesLE_14[0];
+    7dd0:	01000737          	lui	a4,0x1000
+    7dd4:	c8818793          	addi	a5,gp,-888 # ba0c <in4_buf>
+    7dd8:	cbd8                	sw	a4,20(a5)
+
+    in1 = in1_buf;
+    7dda:	c6418713          	addi	a4,gp,-924 # b9e8 <in1_buf>
+    7dde:	96e1a023          	sw	a4,-1696(gp) # b6e4 <in1>
+    in2 = in2_buf;
+    7de2:	c7018713          	addi	a4,gp,-912 # b9f4 <in2_buf>
+    7de6:	96e1a223          	sw	a4,-1692(gp) # b6e8 <in2>
+    in3 = in3_buf;
+    7dea:	c7c18713          	addi	a4,gp,-900 # ba00 <in3_buf>
+    7dee:	96e1a423          	sw	a4,-1688(gp) # b6ec <in3>
+    in4 = in4_buf;
+    7df2:	c8818713          	addi	a4,gp,-888 # ba0c <in4_buf>
+    7df6:	96e1a623          	sw	a4,-1684(gp) # b6f0 <in4>
+}
+    7dfa:	0001                	nop
+    7dfc:	40f2                	lw	ra,28(sp)
+    7dfe:	4462                	lw	s0,24(sp)
+    7e00:	6105                	addi	sp,sp,32
+    7e02:	8082                	ret
+
+00007e04 <welford_add>:
+    double mean;
+    double M2;
+} Welford;
+
+static void welford_add(Welford *s, double x)
+{
+    7e04:	7179                	addi	sp,sp,-48
+    7e06:	d606                	sw	ra,44(sp)
+    7e08:	d422                	sw	s0,40(sp)
+    7e0a:	d24a                	sw	s2,36(sp)
+    7e0c:	d04e                	sw	s3,32(sp)
+    7e0e:	1800                	addi	s0,sp,48
+    7e10:	fca42e23          	sw	a0,-36(s0)
+    7e14:	fcb42823          	sw	a1,-48(s0)
+    7e18:	fcc42a23          	sw	a2,-44(s0)
+    s->count++;
+    7e1c:	fdc42783          	lw	a5,-36(s0)
+    7e20:	439c                	lw	a5,0(a5)
+    7e22:	00178713          	addi	a4,a5,1
+    7e26:	fdc42783          	lw	a5,-36(s0)
+    7e2a:	c398                	sw	a4,0(a5)
+    double delta = x - s->mean;
+    7e2c:	fdc42783          	lw	a5,-36(s0)
+    7e30:	4798                	lw	a4,8(a5)
+    7e32:	47dc                	lw	a5,12(a5)
+    7e34:	863a                	mv	a2,a4
+    7e36:	86be                	mv	a3,a5
+    7e38:	fd042503          	lw	a0,-48(s0)
+    7e3c:	fd442583          	lw	a1,-44(s0)
+    7e40:	e98ff0ef          	jal	74d8 <__subdf3>
+    7e44:	872a                	mv	a4,a0
+    7e46:	87ae                	mv	a5,a1
+    7e48:	fee42423          	sw	a4,-24(s0)
+    7e4c:	fef42623          	sw	a5,-20(s0)
+    s->mean += delta / s->count;
+    7e50:	fdc42783          	lw	a5,-36(s0)
+    7e54:	0087a903          	lw	s2,8(a5)
+    7e58:	00c7a983          	lw	s3,12(a5)
+    7e5c:	fdc42783          	lw	a5,-36(s0)
+    7e60:	439c                	lw	a5,0(a5)
+    7e62:	853e                	mv	a0,a5
+    7e64:	3591                	jal	7ca8 <__floatunsidf>
+    7e66:	872a                	mv	a4,a0
+    7e68:	87ae                	mv	a5,a1
+    7e6a:	863a                	mv	a2,a4
+    7e6c:	86be                	mv	a3,a5
+    7e6e:	fe842503          	lw	a0,-24(s0)
+    7e72:	fec42583          	lw	a1,-20(s0)
+    7e76:	b69fe0ef          	jal	69de <__divdf3>
+    7e7a:	872a                	mv	a4,a0
+    7e7c:	87ae                	mv	a5,a1
+    7e7e:	863a                	mv	a2,a4
+    7e80:	86be                	mv	a3,a5
+    7e82:	854a                	mv	a0,s2
+    7e84:	85ce                	mv	a1,s3
+    7e86:	dcafe0ef          	jal	6450 <__adddf3>
+    7e8a:	872a                	mv	a4,a0
+    7e8c:	87ae                	mv	a5,a1
+    7e8e:	fdc42683          	lw	a3,-36(s0)
+    7e92:	c698                	sw	a4,8(a3)
+    7e94:	c6dc                	sw	a5,12(a3)
+    double delta2 = x - s->mean;
+    7e96:	fdc42783          	lw	a5,-36(s0)
+    7e9a:	4798                	lw	a4,8(a5)
+    7e9c:	47dc                	lw	a5,12(a5)
+    7e9e:	863a                	mv	a2,a4
+    7ea0:	86be                	mv	a3,a5
+    7ea2:	fd042503          	lw	a0,-48(s0)
+    7ea6:	fd442583          	lw	a1,-44(s0)
+    7eaa:	e2eff0ef          	jal	74d8 <__subdf3>
+    7eae:	872a                	mv	a4,a0
+    7eb0:	87ae                	mv	a5,a1
+    7eb2:	fee42023          	sw	a4,-32(s0)
+    7eb6:	fef42223          	sw	a5,-28(s0)
+    s->M2 += delta * delta2;
+    7eba:	fdc42783          	lw	a5,-36(s0)
+    7ebe:	0107a903          	lw	s2,16(a5)
+    7ec2:	0147a983          	lw	s3,20(a5)
+    7ec6:	fe042603          	lw	a2,-32(s0)
+    7eca:	fe442683          	lw	a3,-28(s0)
+    7ece:	fe842503          	lw	a0,-24(s0)
+    7ed2:	fec42583          	lw	a1,-20(s0)
+    7ed6:	966ff0ef          	jal	703c <__muldf3>
+    7eda:	872a                	mv	a4,a0
+    7edc:	87ae                	mv	a5,a1
+    7ede:	863a                	mv	a2,a4
+    7ee0:	86be                	mv	a3,a5
+    7ee2:	854a                	mv	a0,s2
+    7ee4:	85ce                	mv	a1,s3
+    7ee6:	d6afe0ef          	jal	6450 <__adddf3>
+    7eea:	872a                	mv	a4,a0
+    7eec:	87ae                	mv	a5,a1
+    7eee:	fdc42683          	lw	a3,-36(s0)
+    7ef2:	ca98                	sw	a4,16(a3)
+    7ef4:	cadc                	sw	a5,20(a3)
+}
+    7ef6:	0001                	nop
+    7ef8:	50b2                	lw	ra,44(sp)
+    7efa:	5422                	lw	s0,40(sp)
+    7efc:	5912                	lw	s2,36(sp)
+    7efe:	5982                	lw	s3,32(sp)
+    7f00:	6145                	addi	sp,sp,48
+    7f02:	8082                	ret
+
+00007f04 <main>:
+
+int main(void)
+{
+    7f04:	714d                	addi	sp,sp,-336
+    7f06:	14112623          	sw	ra,332(sp)
+    7f0a:	14812423          	sw	s0,328(sp)
+    7f0e:	14912223          	sw	s1,324(sp)
+    7f12:	15212023          	sw	s2,320(sp)
+    7f16:	13312e23          	sw	s3,316(sp)
+    7f1a:	0a80                	addi	s0,sp,336
+    /* Prepare CSR cycle counter */
+    CSR_CLEAR_BITS(CSR_REG_MCOUNTINHIBIT, 0x1); // enable cycle counting
+    7f1c:	4785                	li	a5,1
+    7f1e:	3207b073          	csrc	mcountinhibit,a5
+
+    /* Arrays sized by NB_CLASSES (extern from LE_states.h) */
+    Welford accumulators[NB_CLASSES];
+
+    for (int c = 0; c < NB_CLASSES; ++c) {
+    7f22:	fc042e23          	sw	zero,-36(s0)
+    7f26:	a881                	j	7f76 <main+0x72>
+        accumulators[c].count = 0;
+    7f28:	fdc42703          	lw	a4,-36(s0)
+    7f2c:	87ba                	mv	a5,a4
+    7f2e:	0786                	slli	a5,a5,0x1
+    7f30:	97ba                	add	a5,a5,a4
+    7f32:	078e                	slli	a5,a5,0x3
+    7f34:	1781                	addi	a5,a5,-32
+    7f36:	97a2                	add	a5,a5,s0
+    7f38:	ee07a023          	sw	zero,-288(a5)
+        accumulators[c].mean = 0.0;
+    7f3c:	fdc42703          	lw	a4,-36(s0)
+    7f40:	87ba                	mv	a5,a4
+    7f42:	0786                	slli	a5,a5,0x1
+    7f44:	97ba                	add	a5,a5,a4
+    7f46:	078e                	slli	a5,a5,0x3
+    7f48:	1781                	addi	a5,a5,-32
+    7f4a:	97a2                	add	a5,a5,s0
+    7f4c:	ee07a423          	sw	zero,-280(a5)
+    7f50:	ee07a623          	sw	zero,-276(a5)
+        accumulators[c].M2 = 0.0;
+    7f54:	fdc42703          	lw	a4,-36(s0)
+    7f58:	87ba                	mv	a5,a4
+    7f5a:	0786                	slli	a5,a5,0x1
+    7f5c:	97ba                	add	a5,a5,a4
+    7f5e:	078e                	slli	a5,a5,0x3
+    7f60:	1781                	addi	a5,a5,-32
+    7f62:	97a2                	add	a5,a5,s0
+    7f64:	ee07a823          	sw	zero,-272(a5)
+    7f68:	ee07aa23          	sw	zero,-268(a5)
+    for (int c = 0; c < NB_CLASSES; ++c) {
+    7f6c:	fdc42783          	lw	a5,-36(s0)
+    7f70:	0785                	addi	a5,a5,1
+    7f72:	fcf42e23          	sw	a5,-36(s0)
+    7f76:	fdc42703          	lw	a4,-36(s0)
+    7f7a:	47a5                	li	a5,9
+    7f7c:	fae7d6e3          	bge	a5,a4,7f28 <main+0x24>
+    }
+
+    /* Temporary variables */
+    uint32_t total_cycles = 0;
+    7f80:	ea042e23          	sw	zero,-324(s0)
+    typeInf actionID = -1;
+    7f84:	57fd                	li	a5,-1
+    7f86:	eaf42c23          	sw	a5,-328(s0)
+
+    for (int seed = 0; seed < NB_SEED; ++seed)
+    7f8a:	fc042c23          	sw	zero,-40(s0)
+    7f8e:	a0d1                	j	8052 <main+0x14e>
+    {
+        assign_LE_values(seed);
+    7f90:	fd842503          	lw	a0,-40(s0)
+    7f94:	3bb9                	jal	7cf2 <assign_LE_values>
+
+        /* reset MCYCLE */
+        CSR_WRITE(CSR_REG_MCYCLE, 0);
+    7f96:	4781                	li	a5,0
+    7f98:	b0079073          	csrw	mcycle,a5
+
+        /* run inference NB_ACTIONS_INF times */
+        for (uint32_t j = 0; j < NB_ACTIONS_INF; ++j)
+    7f9c:	fc042a23          	sw	zero,-44(s0)
+    7fa0:	a01d                	j	7fc6 <main+0xc2>
+        {
+            inferenceTPG(&actionID, in1, in2, in3, in4);
+    7fa2:	9601a583          	lw	a1,-1696(gp) # b6e4 <in1>
+    7fa6:	9641a603          	lw	a2,-1692(gp) # b6e8 <in2>
+    7faa:	9681a683          	lw	a3,-1688(gp) # b6ec <in3>
+    7fae:	96c1a703          	lw	a4,-1684(gp) # b6f0 <in4>
+    7fb2:	eb840793          	addi	a5,s0,-328
+    7fb6:	853e                	mv	a0,a5
+    7fb8:	9d3fa0ef          	jal	298a <inferenceTPG>
+        for (uint32_t j = 0; j < NB_ACTIONS_INF; ++j)
+    7fbc:	fd442783          	lw	a5,-44(s0)
+    7fc0:	0785                	addi	a5,a5,1
+    7fc2:	fcf42a23          	sw	a5,-44(s0)
+    7fc6:	fd442703          	lw	a4,-44(s0)
+    7fca:	47a5                	li	a5,9
+    7fcc:	fce7fbe3          	bgeu	a5,a4,7fa2 <main+0x9e>
+        }
+
+        /* read cycles (64-bit if available in CSR_READ) */
+        CSR_READ(CSR_REG_MCYCLE, &total_cycles);
+    7fd0:	b00027f3          	csrr	a5,mcycle
+    7fd4:	eaf42e23          	sw	a5,-324(s0)
+
+        // each graph traversal/class is done NB_ACTIONS_INF times 
+        uint32_t cycles_avg = total_cycles / NB_ACTIONS_INF;
+    7fd8:	ebc42783          	lw	a5,-324(s0)
+    7fdc:	45a9                	li	a1,10
+    7fde:	853e                	mv	a0,a5
+    7fe0:	3601                	jal	7ae0 <__hidden___udivsi3>
+    7fe2:	87aa                	mv	a5,a0
+    7fe4:	faf42a23          	sw	a5,-76(s0)
+
+        //PRINTF("cycles_avg; %d\n", total_cycles);
+
+        int cls = ids_graph_traversals[seed];
+    7fe8:	67ad                	lui	a5,0xb
+    7fea:	39078713          	addi	a4,a5,912 # b390 <ids_graph_traversals>
+    7fee:	fd842783          	lw	a5,-40(s0)
+    7ff2:	078a                	slli	a5,a5,0x2
+    7ff4:	97ba                	add	a5,a5,a4
+    7ff6:	439c                	lw	a5,0(a5)
+    7ff8:	faf42823          	sw	a5,-80(s0)
+        if (cls < 0 || cls >= NB_CLASSES) {
+    7ffc:	fb042783          	lw	a5,-80(s0)
+    8000:	0007c763          	bltz	a5,800e <main+0x10a>
+    8004:	fb042703          	lw	a4,-80(s0)
+    8008:	47a5                	li	a5,9
+    800a:	00e7dc63          	bge	a5,a4,8022 <main+0x11e>
+            PRINTF("Seed %d has invalid class %d\n", seed, cls);
+    800e:	fb042603          	lw	a2,-80(s0)
+    8012:	fd842583          	lw	a1,-40(s0)
+    8016:	67ad                	lui	a5,0xb
+    8018:	52078513          	addi	a0,a5,1312 # b520 <ids_graph_traversals+0x190>
+    801c:	831fd0ef          	jal	584c <iprintf>
+            continue;
+    8020:	a025                	j	8048 <main+0x144>
+        }
+
+        welford_add(&accumulators[cls], cycles_avg);
+    8022:	ec040693          	addi	a3,s0,-320
+    8026:	fb042703          	lw	a4,-80(s0)
+    802a:	87ba                	mv	a5,a4
+    802c:	0786                	slli	a5,a5,0x1
+    802e:	97ba                	add	a5,a5,a4
+    8030:	078e                	slli	a5,a5,0x3
+    8032:	00f684b3          	add	s1,a3,a5
+    8036:	fb442503          	lw	a0,-76(s0)
+    803a:	31bd                	jal	7ca8 <__floatunsidf>
+    803c:	872a                	mv	a4,a0
+    803e:	87ae                	mv	a5,a1
+    8040:	85ba                	mv	a1,a4
+    8042:	863e                	mv	a2,a5
+    8044:	8526                	mv	a0,s1
+    8046:	3b7d                	jal	7e04 <welford_add>
+    for (int seed = 0; seed < NB_SEED; ++seed)
+    8048:	fd842783          	lw	a5,-40(s0)
+    804c:	0785                	addi	a5,a5,1
+    804e:	fcf42c23          	sw	a5,-40(s0)
+    8052:	fd842703          	lw	a4,-40(s0)
+    8056:	06300793          	li	a5,99
+    805a:	f2e7dbe3          	bge	a5,a4,7f90 <main+0x8c>
+    }
+
+    /* Print per-class statistics */
+    PRINTF("Class,Count,AvgCyclesPerClass,StddevCyclesPerClass\n");
+    805e:	67ad                	lui	a5,0xb
+    8060:	54078513          	addi	a0,a5,1344 # b540 <ids_graph_traversals+0x1b0>
+    8064:	8adfd0ef          	jal	5910 <puts>
+    for (int c = 0; c < NB_CLASSES; ++c)
+    8068:	fc042823          	sw	zero,-48(s0)
+    806c:	a235                	j	8198 <main+0x294>
+    {
+        if (accumulators[c].count == 0) continue;
+    806e:	fd042703          	lw	a4,-48(s0)
+    8072:	87ba                	mv	a5,a4
+    8074:	0786                	slli	a5,a5,0x1
+    8076:	97ba                	add	a5,a5,a4
+    8078:	078e                	slli	a5,a5,0x3
+    807a:	1781                	addi	a5,a5,-32
+    807c:	97a2                	add	a5,a5,s0
+    807e:	ee07a783          	lw	a5,-288(a5)
+    8082:	10078563          	beqz	a5,818c <main+0x288>
+        double mean = accumulators[c].mean;
+    8086:	fd042703          	lw	a4,-48(s0)
+    808a:	87ba                	mv	a5,a4
+    808c:	0786                	slli	a5,a5,0x1
+    808e:	97ba                	add	a5,a5,a4
+    8090:	078e                	slli	a5,a5,0x3
+    8092:	1781                	addi	a5,a5,-32
+    8094:	97a2                	add	a5,a5,s0
+    8096:	ee87a703          	lw	a4,-280(a5)
+    809a:	eec7a783          	lw	a5,-276(a5)
+    809e:	fae42c23          	sw	a4,-72(s0)
+    80a2:	faf42e23          	sw	a5,-68(s0)
+        double variance = (accumulators[c].count > 1) ? (accumulators[c].M2 / (accumulators[c].count)) : 0.0;
+    80a6:	fd042703          	lw	a4,-48(s0)
+    80aa:	87ba                	mv	a5,a4
+    80ac:	0786                	slli	a5,a5,0x1
+    80ae:	97ba                	add	a5,a5,a4
+    80b0:	078e                	slli	a5,a5,0x3
+    80b2:	1781                	addi	a5,a5,-32
+    80b4:	97a2                	add	a5,a5,s0
+    80b6:	ee07a703          	lw	a4,-288(a5)
+    80ba:	4785                	li	a5,1
+    80bc:	04e7f963          	bgeu	a5,a4,810e <main+0x20a>
+    80c0:	fd042703          	lw	a4,-48(s0)
+    80c4:	87ba                	mv	a5,a4
+    80c6:	0786                	slli	a5,a5,0x1
+    80c8:	97ba                	add	a5,a5,a4
+    80ca:	078e                	slli	a5,a5,0x3
+    80cc:	1781                	addi	a5,a5,-32
+    80ce:	97a2                	add	a5,a5,s0
+    80d0:	ef07a903          	lw	s2,-272(a5)
+    80d4:	ef47a983          	lw	s3,-268(a5)
+    80d8:	fd042703          	lw	a4,-48(s0)
+    80dc:	87ba                	mv	a5,a4
+    80de:	0786                	slli	a5,a5,0x1
+    80e0:	97ba                	add	a5,a5,a4
+    80e2:	078e                	slli	a5,a5,0x3
+    80e4:	1781                	addi	a5,a5,-32
+    80e6:	97a2                	add	a5,a5,s0
+    80e8:	ee07a783          	lw	a5,-288(a5)
+    80ec:	853e                	mv	a0,a5
+    80ee:	3e6d                	jal	7ca8 <__floatunsidf>
+    80f0:	872a                	mv	a4,a0
+    80f2:	87ae                	mv	a5,a1
+    80f4:	863a                	mv	a2,a4
+    80f6:	86be                	mv	a3,a5
+    80f8:	854a                	mv	a0,s2
+    80fa:	85ce                	mv	a1,s3
+    80fc:	8e3fe0ef          	jal	69de <__divdf3>
+    8100:	872a                	mv	a4,a0
+    8102:	87ae                	mv	a5,a1
+    8104:	fce42423          	sw	a4,-56(s0)
+    8108:	fcf42623          	sw	a5,-52(s0)
+    810c:	a029                	j	8116 <main+0x212>
+    810e:	fc042423          	sw	zero,-56(s0)
+    8112:	fc042623          	sw	zero,-52(s0)
+        double stddev = (variance > 0.0) ? sqrt(variance) : 0.0;
+    8116:	4601                	li	a2,0
+    8118:	4681                	li	a3,0
+    811a:	fc842503          	lw	a0,-56(s0)
+    811e:	fcc42583          	lw	a1,-52(s0)
+    8122:	e65fe0ef          	jal	6f86 <__gedf2>
+    8126:	87aa                	mv	a5,a0
+    8128:	00f05d63          	blez	a5,8142 <main+0x23e>
+    812c:	fc842503          	lw	a0,-56(s0)
+    8130:	fcc42583          	lw	a1,-52(s0)
+    8134:	8ccfe0ef          	jal	6200 <sqrt>
+    8138:	fca42023          	sw	a0,-64(s0)
+    813c:	fcb42223          	sw	a1,-60(s0)
+    8140:	a029                	j	814a <main+0x246>
+    8142:	fc042023          	sw	zero,-64(s0)
+    8146:	fc042223          	sw	zero,-60(s0)
+        PRINTF("%d,%u,%d,%d\n", c, accumulators[c].count, (int) mean, (int) stddev);
+    814a:	fd042703          	lw	a4,-48(s0)
+    814e:	87ba                	mv	a5,a4
+    8150:	0786                	slli	a5,a5,0x1
+    8152:	97ba                	add	a5,a5,a4
+    8154:	078e                	slli	a5,a5,0x3
+    8156:	1781                	addi	a5,a5,-32
+    8158:	97a2                	add	a5,a5,s0
+    815a:	ee07a483          	lw	s1,-288(a5)
+    815e:	fb842503          	lw	a0,-72(s0)
+    8162:	fbc42583          	lw	a1,-68(s0)
+    8166:	34c5                	jal	7c46 <__fixdfsi>
+    8168:	892a                	mv	s2,a0
+    816a:	fc042503          	lw	a0,-64(s0)
+    816e:	fc442583          	lw	a1,-60(s0)
+    8172:	3cd1                	jal	7c46 <__fixdfsi>
+    8174:	87aa                	mv	a5,a0
+    8176:	873e                	mv	a4,a5
+    8178:	86ca                	mv	a3,s2
+    817a:	8626                	mv	a2,s1
+    817c:	fd042583          	lw	a1,-48(s0)
+    8180:	67ad                	lui	a5,0xb
+    8182:	57478513          	addi	a0,a5,1396 # b574 <ids_graph_traversals+0x1e4>
+    8186:	ec6fd0ef          	jal	584c <iprintf>
+    818a:	a011                	j	818e <main+0x28a>
+        if (accumulators[c].count == 0) continue;
+    818c:	0001                	nop
+    for (int c = 0; c < NB_CLASSES; ++c)
+    818e:	fd042783          	lw	a5,-48(s0)
+    8192:	0785                	addi	a5,a5,1
+    8194:	fcf42823          	sw	a5,-48(s0)
+    8198:	fd042703          	lw	a4,-48(s0)
+    819c:	47a5                	li	a5,9
+    819e:	ece7d8e3          	bge	a5,a4,806e <main+0x16a>
+    }
+
+    return 0;
+    81a2:	4781                	li	a5,0
+}
+    81a4:	853e                	mv	a0,a5
+    81a6:	14c12083          	lw	ra,332(sp)
+    81aa:	14812403          	lw	s0,328(sp)
+    81ae:	14412483          	lw	s1,324(sp)
+    81b2:	14012903          	lw	s2,320(sp)
+    81b6:	13c12983          	lw	s3,316(sp)
+    81ba:	6171                	addi	sp,sp,336
+    81bc:	8082                	ret
