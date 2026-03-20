@@ -59,4 +59,8 @@ echo "make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_PREFIX=$COMPILER_P
 
 make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_PREFIX=$COMPILER_PREFIX COMPILER_FLAGS="-DUSE_$DTYPE" VERBOSE=1
 
+cp sw/build/main.elf sw/applications/"$APP"/main.elf
+cp sw/build/main.S sw/applications/"$APP"/main.S
+
 "$COMPILER"/bin/"$COMPILER_PREFIX"elf-objdump -d sw/build/main.elf > sw/build/disassembly.txt
+cp sw/build/disassembly.txt sw/applications/"$APP"/disassembly.txt

@@ -72,3 +72,8 @@ flow/OpenROAD-flow-scripts
 .vscode
 .continue
 private/
+
+# riscv-microarchitectures local configuration files
+experimentations/microarchitectures/fpga_implementations/*
+experimentations/microarchitectures/simulators/*
+experimentations/simulations/*
