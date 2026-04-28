@@ -56,7 +56,8 @@ inline __attribute__((always_inline)) fixedpt P4(const fixedpt * restrict in1, c
 	{
 		fixedpt op0 = reg[4];
 		fixedpt op1 = in3[1];
-		reg[0] = (op0 > op1) ? op0 : op1;
+		//reg[0] = (op0 > op1) ? op0 : op1;
+		reg[0] = reg[4] - in3[1]; 
 	}
 	return reg[0];
 }

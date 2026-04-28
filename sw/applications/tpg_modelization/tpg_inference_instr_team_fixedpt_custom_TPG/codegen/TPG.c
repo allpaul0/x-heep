@@ -8,10 +8,7 @@
 #include "TPG_program.h"
 #include "TPG.h"
 
-/* Number of inference iterations to check for variations */
-#ifndef NB_MEASURE
-#define NB_MEASURE 10
-#endif
+//#define BB(name) __asm__ volatile(#name ":")
 
 int bestProgram(fixedpt *results, int nb) {
 	int bestProgram = 0;
@@ -38,6 +35,9 @@ enum vertices T0_func(const fixedpt * restrict in1,
                       const fixedpt * restrict in4,
 					  uint32_t * total_cycles)
 {
+	//BB(T0_entry);
+	const enum vertices next[6] = { A1, A2, A3, A4, A5, A6 };
+	fixedpt scores[6];
 
 	/* Prepare CSR cycle counter */
     CSR_CLEAR_BITS(CSR_REG_MCOUNTINHIBIT, 0x1); // enable cycle counting
@@ -45,13 +45,8 @@ enum vertices T0_func(const fixedpt * restrict in1,
 	/* reset MCYCLE */
 	CSR_WRITE(CSR_REG_MCYCLE, 0);
 
-	//  /* run code NB_MEASURE times */
-	// for (uint32_t j = 0; j < NB_MEASURE; ++j)
-	// {
-	// }
+	__asm__ volatile("T0_begin:");
 
-	const enum vertices next[6] = { A1, A2, A3, A4, A5, A6 };
-	fixedpt scores[6];
 	scores[0] = P0(in1, in2, in3, in4);
 	scores[1] = P1(in1, in2, in3, in4);
 	scores[2] = P2(in1, in2, in3, in4);
@@ -59,11 +54,10 @@ enum vertices T0_func(const fixedpt * restrict in1,
 	scores[4] = P4(in1, in2, in3, in4);
 	scores[5] = P5(in1, in2, in3, in4);
 
+	__asm__ volatile("T0_end:");
+
 	 /* read cycles (64-bit if available in CSR_READ) */
 	CSR_READ(CSR_REG_MCYCLE, total_cycles);
-
-	// each graph traversal/class is done NB_MEASURES times 
-	// uint32_t cycles_avg = total_cycles / NB_MEASURE;
 
 	return next[bestProgram(scores, 6)];
 }
