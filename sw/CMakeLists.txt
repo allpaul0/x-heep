@@ -361,15 +361,19 @@ endif()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Set CMAKE flags
 
+### ORIGINAL
 #-w -O2 -g  -nostdlib  \
+### PERF
 # -O3 -flto -fomit-frame-pointer
+### NO OPTIMS
+# -w -O0 -g -nostdlib -Wcpp -Wall \
 
 # specify the C standard
 if(NOT ${PROJECT} MATCHES "coremark")
   set(COMPILER_LINKER_FLAGS "\
     -march=${CMAKE_SYSTEM_PROCESSOR} \
     -mabi=${ABI} \
-    -w -O0 -g -nostdlib -Wcpp -Wall \
+    -w -O3 -g  -nostdlib -Wcpp -Wall \
     -ffunction-sections \
     -DHOST_BUILD \
     -D${CRT_TYPE} \
