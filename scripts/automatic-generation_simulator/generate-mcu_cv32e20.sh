@@ -25,21 +25,26 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
+DEST="$OUTPUT_DIR/$CONFIG"
+
 echo "=== Building MCU for config: $CONFIG ==="
 
 # ---- MCU generation ----
 make mcu-gen X_HEEP_CFG="$HJSON_FILE"
 
+# ---- Check if simulator already exists ----
+if [ -d "$DEST" ]; then
+    echo "=== Simulator already exists for $CONFIG ==="
+    echo "=== Skipping verilator-build ==="
+    echo "Existing simulator located at: $DEST"
+    exit 0
+fi
+
 echo "=== Verilating: $CONFIG ==="
 make verilator-build
 
-# (Optional) Testing steps
-# make app
-# make verilator-run
-
 echo "=== Finished config: $CONFIG ==="
 
-DEST="$OUTPUT_DIR/$CONFIG"
 mv build/ "$DEST"
 
-echo "Output located at: $DEST"
+echo "=== Done. Output at: $DEST ==="

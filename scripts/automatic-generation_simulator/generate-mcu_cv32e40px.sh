@@ -7,26 +7,23 @@ if [ $# -ne 1 ]; then
 fi
 
 CONFIG="$1"
+OUTPUT_DIR="experimentations/microarchitectures/simulators"
 
 case "$CONFIG" in
     cv32e40px)
         PARAMS=""
-        DEST="cv32e40px"
         ;;
 
     cv32e40px_fpu)
         PARAMS='FUSESOC_PARAM="--X_EXT=1 --FPU=1"'
-        DEST="cv32e40px_fpu"
         ;;
 
     cv32e40px_corev_pulp_fpu)
         PARAMS='FUSESOC_PARAM="--COREV_PULP=1 --X_EXT=1 --FPU=1"'
-        DEST="cv32e40px_corev_pulp_fpu"
         ;;
 
     cv32e40px_corev_pulp)
         PARAMS='FUSESOC_PARAM="--COREV_PULP=1"'
-        DEST="cv32e40px_corev_pulp"
         ;;
 
     *)
@@ -36,19 +33,36 @@ case "$CONFIG" in
         ;;
 esac
 
+# ---- Setup ----
+mkdir -p "$OUTPUT_DIR"
 
-echo "=== Building config: $CONFIG ==="
+DEST="$OUTPUT_DIR/$CONFIG"
+
+echo "=== Building MCU for config:  $CONFIG ==="
+
+# ---- MCU generation ----
 make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40px.hjson
 
-# Run verilator-build with optional params
+# ---- Check if simulator already exists ----
+if [ -d "$DEST" ]; then
+    echo "=== Simulator already exists for $CONFIG ==="
+    echo "=== Skipping verilator-build ==="
+    echo "Existing simulator located at: $DEST"
+    exit 0
+fi
+
+echo "=== Verilating: $CONFIG ==="
+
+# ---- Verilator build with or without parameters ----
 if [ -z "$PARAMS" ]; then
     make verilator-build
 else
     eval make verilator-build $PARAMS
 fi
 
-mkdir -p experimentations/microarchitectures/simulators
+echo "=== Finished config: $CONFIG ==="
 
-mv build/ experimentations/microarchitectures/simulators/$DEST
+# ---- Move output ----
+mv build/ "$DEST"
 
-echo "=== Done. Output moved to: experimentations/microarchitectures/simulators/$DEST ==="
+echo "=== Done. Output at: $DEST ==="

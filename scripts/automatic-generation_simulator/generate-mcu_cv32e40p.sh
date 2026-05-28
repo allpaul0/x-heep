@@ -14,11 +14,9 @@ OUTPUT_DIR="experimentations/microarchitectures/simulators"
 case "$CONFIG" in
     cv32e40p)
         PARAMS=""
-        DEST="cv32e40p"
         ;;
     cv32e40p_corev_pulp)
         PARAMS='FUSESOC_PARAM="--COREV_PULP=1"'
-        DEST="cv32e40p_corev_pulp"
         ;;
     *)
         echo "Invalid config: $CONFIG"
@@ -30,10 +28,22 @@ esac
 # ---- Setup ----
 mkdir -p "$OUTPUT_DIR"
 
-echo "=== Building: $CONFIG ==="
+DEST="$OUTPUT_DIR/$CONFIG"
+
+echo "=== Building MCU for config:  $CONFIG ==="
 
 # ---- MCU generation ----
 make mcu-gen X_HEEP_CFG=configs/mcu/hjson/cv32e40p.hjson
+
+# ---- Check if simulator already exists ----
+if [ -d "$DEST" ]; then
+    echo "=== Simulator already exists for $CONFIG ==="
+    echo "=== Skipping verilator-build ==="
+    echo "Existing simulator located at: $DEST"
+    exit 0
+fi
+
+echo "=== Verilating: $CONFIG ==="
 
 # ---- Verilator build with or without parameters ----
 if [ -z "$PARAMS" ]; then
@@ -42,7 +52,9 @@ else
     eval make verilator-build $PARAMS
 fi
 
-# ---- Move output ----
-mv build/ "$OUTPUT_DIR/$DEST"
+echo "=== Finished config: $CONFIG ==="
 
-echo "=== Done. Output at: $OUTPUT_DIR/$DEST ==="
+# ---- Move output ----
+mv build/ "$DEST"
+
+echo "=== Done. Output at: $DEST ==="
