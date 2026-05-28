@@ -10,7 +10,7 @@ apptainer shell --bind .:/opt/x-heep ../containers/x-heep.sif
 ./scripts/generate-mcu/generate-mcu.sh cv32e40x_im2_zba_zbb
 
 ## Command used to compile and disassemble code 
-./scripts/compile_disassemble/compile_disassemble.sh tpg_modelization/tpg_inference_instr_team_fixedpt_custom_TPG cv32e40x_im2_zba_zbb rv32ic_zicsr_zmmul_zba_zbb ilp32 FIXEDPT /opt/tools/riscv
+./scripts/compile_disassemble/compile_disassemble.sh tpg_modelization/tpg_inference_instrTeams_instrTPG cv32e40x_im2_zba_zbb rv32ic_zicsr_zmmul_zba_zbb ilp32 FIXEDPT /opt/tools/riscv
 
 ## Command used to launch an inference benchmark code
-./scripts/automatic-simulation/simulation.sh tpg_modelization/tpg_inference_instr_team_fixedpt_custom_TPG cv32e40x_im2_zba_zbb rv32ic_zicsr_zmmul_zba_zbb ilp32 FIXEDPT /opt/tools/riscv/
+./scripts/automatic-simulation/simulation.sh tpg_modelization/tpg_inference_instrTeams_instrTPG cv32e40x_im2_zba_zbb rv32ic_zicsr_zmmul_zba_zbb ilp32 FIXEDPT /opt/tools/riscv/
