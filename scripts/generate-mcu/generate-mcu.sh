@@ -27,7 +27,7 @@ if [[ "$CONFIG" =~ ^cv32e20_(em[0-3]|im[0-3])$ ]]; then
 fi
 
 # ---- cv32e40x (sv.tpl-based configs) ----
-if [[ "$CONFIG" =~ ^cv32e40x_(em[0-2]|im[0-2])$ ]]; then
+if [[ "$CONFIG" =~ ^cv32e40x_(em[0-2]|im[0-2])(_zba_zbb)?$ ]]; then
     exec "$SCRIPT_DIR/generate-mcu_cv32e40x.sh" "$CONFIG"
 fi
 
