@@ -1,0 +1,27 @@
+branchlessv1
+Class,Count,AvgCyclesPerClass,StddevCyclesPerClass
+0,10,155,0
+1,10,149,20
+2,10,155,0
+3,10,155,0
+4,10,155,0
+5,10,155,0
+6,10,155,0
+7,10,155,0
+8,10,155,0
+9,10,155,0
+Parsed 10 records.
+TPG mean latency: 154
+TPG stddev latency: 1
+
+Profiling Error Percentage per class:
+  Class 0: 0.00%
+  Class 1: 13.42%
+  Class 2: 0.00%
+  Class 3: 0.00%
+  Class 4: 0.00%
+  Class 5: 0.00%
+  Class 6: 0.00%
+  Class 7: 0.00%
+  Class 8: 0.00%
+  Class 9: 0.00%

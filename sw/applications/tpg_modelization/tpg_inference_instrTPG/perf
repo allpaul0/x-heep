@@ -1,0 +1,26 @@
+Class,Count,AvgCyclesPerClass,StddevCyclesPerClass
+0,10,152,2
+1,10,145,23
+2,10,148,0
+3,10,149,0
+4,10,149,0
+5,10,152,1
+6,10,155,0
+7,10,151,1
+8,10,149,0
+9,10,150,0
+Parsed 10 records.
+TPG mean latency: 150
+TPG stddev latency: 2
+
+Profiling Error Percentage per class:
+  Class 0: 1.32%
+  Class 1: 15.86%
+  Class 2: 0.00%
+  Class 3: 0.00%
+  Class 4: 0.00%
+  Class 5: 0.66%
+  Class 6: 0.00%
+  Class 7: 0.66%
+  Class 8: 0.00%
+  Class 9: 0.00%

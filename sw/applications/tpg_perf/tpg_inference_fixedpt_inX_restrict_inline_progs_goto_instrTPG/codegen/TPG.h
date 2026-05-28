@@ -24,7 +24,10 @@ extern "C" {
 
 #include "externHeader.h"
 
-void inferenceTPG(fixedpt* actions, const fixedpt * restrict in1,
+# define NB_TEAMS 2
+
+void inferenceTPG(fixedpt* actions, 
+					const fixedpt * restrict in1,
                 	const fixedpt * restrict in2,
 					const fixedpt * restrict in3,
                 	const fixedpt * restrict in4);

@@ -2,19 +2,23 @@
    Embedded RISC-V benchmark adapted from desktop version.
    - Uses CSR cycle counter (MCYCLE)
    - Uses inferenceTPG(&actionID)
-   - Uses in1..in4 global pointers from externHeader.h
+   - Uses in1..in4 pointers, passed to inferenceTPG as args instead of global extern, to allow restrict qualifier in externHeader.h
+     (and thus better optimization opportunities for inferenceTPG)
+     Note: in1..in4 are still global pointers, but now they are set to point to local buffers in main() instead of being directly used as extern arrays.
+     This allows us to keep the same precalculated dataSourcesLE_* arrays and just copy their values into local buffers before calling inferenceTPG.
+     This way we can still use the same precalculated data without modification, while enabling better optimization in inferenceTPG.
    - Computes per-class mean & stddev using Welford algorithm (online)
 */
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
 #include "csr.h"                        // CSR macros (CSR_WRITE/READ/CLEAR_BITS)
-#include "codegen/externHeader.h"       // extern declarations: in1,in2,in3,in4, typeInf, inferenceTPG
+#include "codegen/externHeader.h"       // extern declarations: typeInf, inferenceTPG
 #include "precalcul/LE_states.h"        // dataSourcesLE_* arrays, ids_graph_traversals[], NB_SEED, NB_CLASSES
-#include "codegen/TPG_program.h"
-#include "codegen/TPG.h"            // forward declarations if needed
+#include "codegen/TPG.h"                // forward declarations if needed
 
 /* By default, printfs are activated for FPGA and disabled for simulation. */
 #define PRINTF_IN_FPGA  1
@@ -28,10 +32,6 @@
      #define PRINTF(...)
 #endif
 
-/* Number of inference iterations to amortize timer overhead */
-#ifndef NB_ACTIONS_INF
-#define NB_ACTIONS_INF 10
-#endif
 
 typeInf* in1;
 typeInf* in2;
@@ -43,6 +43,7 @@ typeInf in1_buf[3];
 typeInf in2_buf[3];
 typeInf in3_buf[3];
 typeInf in4_buf[6];
+
 
 /* Assign input buffers for seed and point global in1..in4 pointers at them */
 static void assign_LE_values(int seed)
@@ -113,19 +114,10 @@ int main(void)
         /* reset MCYCLE */
         CSR_WRITE(CSR_REG_MCYCLE, 0);
 
-        /* run inference NB_ACTIONS_INF times */
-        for (uint32_t j = 0; j < NB_ACTIONS_INF; ++j)
-        {
-            inferenceTPG(&actionID, in1, in2, in3, in4);
-        }
+        inferenceTPG(&actionID, in1, in2, in3, in4);
 
         /* read cycles (64-bit if available in CSR_READ) */
         CSR_READ(CSR_REG_MCYCLE, &total_cycles);
-
-        // each graph traversal/class is done NB_ACTIONS_INF times 
-        uint32_t cycles_avg = total_cycles / NB_ACTIONS_INF;
-
-        //PRINTF("cycles_avg; %d\n", total_cycles);
 
         int cls = ids_graph_traversals[seed];
         if (cls < 0 || cls >= NB_CLASSES) {
@@ -133,7 +125,7 @@ int main(void)
             continue;
         }
 
-        welford_add(&accumulators[cls], cycles_avg);
+        welford_add(&accumulators[cls], total_cycles);
     }
 
     /* Print per-class statistics */
@@ -142,7 +134,7 @@ int main(void)
     {
         if (accumulators[c].count == 0) continue;
         double mean = accumulators[c].mean;
-        double variance = (accumulators[c].count > 1) ? (accumulators[c].M2 / (accumulators[c].count)) : 0.0;
+        double variance = (accumulators[c].count > 1) ? (accumulators[c].M2 / (accumulators[c].count - 1)) : 0.0;
         double stddev = (variance > 0.0) ? sqrt(variance) : 0.0;
         PRINTF("%d,%u,%d,%d\n", c, accumulators[c].count, (int) mean, (int) stddev);
     }

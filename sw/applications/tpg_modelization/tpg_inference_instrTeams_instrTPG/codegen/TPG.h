@@ -1,0 +1,40 @@
+/**
+ * File generated with GEGELATI v2.0.0
+ * On the 2025-11-21 13:02:17
+ * With the CodeGen::TPGGenerationEngine.
+ */
+
+#ifndef C_TPG_H
+#define C_TPG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "TPG_program.h"
+
+#include <stdlib.h>
+#include <limits.h>
+#include <assert.h>
+#include <float.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+
+#include "externHeader.h"
+
+# define NB_TEAMS 2
+
+void inferenceTPG(fixedpt* actions, 
+					const fixedpt * restrict in1,
+                	const fixedpt * restrict in2,
+					const fixedpt * restrict in3,
+                	const fixedpt * restrict in4,
+				    uint32_t * team_cycles);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
