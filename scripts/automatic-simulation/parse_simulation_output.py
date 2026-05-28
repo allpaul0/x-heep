@@ -38,14 +38,14 @@ for line in lines[1:]:
     cls, count, avg, stddev = line.split(",")
     avg = int(avg)
     stddev = int(stddev)
-    error_pct = (stddev / avg * 100) if avg != 0 else 0.0
+    coeff_var = (stddev / avg * 100) if avg != 0 else 0.0
 
     records.append({
         "Class": int(cls),
         "Count": int(count),
         "AvgCyclesPerClass": avg,
         "StddevCyclesPerClass": stddev,
-        "ProfilingErrorPercentage": round(error_pct, 4)
+        "CoefficientVariation": round(coeff_var, 4)
     })
 
 # ---------------------------------------------
@@ -85,9 +85,9 @@ with open(output_file, "w") as f:
 print("Parsed", len(records), "records.")
 print("TPG mean latency:", tpg_mean_latency)
 print("TPG stddev latency:", tpg_stddev_latency)
-print("\nProfiling Error Percentage per class:")
+print("\nCoefficient of Variation per class:")
 
 for r in records:
-    print(f"  Class {r['Class']}: {r['ProfilingErrorPercentage']:.2f}%")
+    print(f"  Class {r['Class']}: {r['CoefficientVariation']:.2f}%")
 
 print("\nOutput written to:", output_file)
