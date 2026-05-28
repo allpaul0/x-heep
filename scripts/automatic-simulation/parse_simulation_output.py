@@ -38,7 +38,7 @@ for line in lines[1:]:
     cls, count, avg, stddev = line.split(",")
     avg = int(avg)
     stddev = int(stddev)
-    error_pct = stddev / avg if avg != 0 else 0.0
+    error_pct = (stddev / avg * 100) if avg != 0 else 0.0
 
     records.append({
         "Class": int(cls),
@@ -88,6 +88,6 @@ print("TPG stddev latency:", tpg_stddev_latency)
 print("\nProfiling Error Percentage per class:")
 
 for r in records:
-    print(f"  Class {r['Class']}: {r['ProfilingErrorPercentage']:.4f}")
+    print(f"  Class {r['Class']}: {r['ProfilingErrorPercentage']:.2f}%")
 
 print("\nOutput written to:", output_file)
