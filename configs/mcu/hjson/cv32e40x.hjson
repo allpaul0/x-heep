@@ -8,30 +8,32 @@
 
      ram_banks: {
         code_and_data: {
-            num: 2
-            sizes: [32]
+            num: 4
+            sizes: [64]
         }
     }
 
+    // 128 KiB each
     linker_sections: 
     [
         {
             name: code
             start: 0
-            size: 0xA500
+            size: 0x20000    
         }
         {
             name: data
-            start: 0xA500
-            size: 0x5000
+            start: 0x20000   
+            size: 0x20000   
         }
     ]
    
     cpu_type: cv32e40x
 
+    // 16 KiB each
     linker_script: {
-        stack_size: 0x800
-        heap_size: 0x800
+        stack_size: 0x4000   
+        heap_size: 0x4000   
     }
 
     debug: {
