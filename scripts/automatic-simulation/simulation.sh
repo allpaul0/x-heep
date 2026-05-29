@@ -4,11 +4,12 @@ set -e
 # -------------------------------
 # Validate arguments
 # -------------------------------
-if [ $# -ne 6 ]; then
-    echo "Usage: $0 <APP> <SIMULATOR> <ISA> <ABI> <DTYPE> <COMPILER>"
+if [ $# -ne 7 ]; then
+    echo "Usage: $0 <APP> <SIMULATOR> <ISA> <ABI> <DTYPE> <COMPILER> <INSTR>"
+    echo "INSTR; whether Teams are instrumented (True/False)"
     echo
     echo "Example:"
-    echo "  $0 tpg_inference_fixedpt cv32e40p rv32imc_zicsr ilp32 FIXEDPT /opt/tools/riscv" 
+    echo "  $0 tpg_inference_fixedpt cv32e40p rv32imc_zicsr ilp32 FIXEDPT /opt/tools/riscv False" 
     echo
     echo "SIMULATOR: directory under experimentations/microarchitectures/simulators/"
     exit 1
@@ -20,6 +21,7 @@ ISA="$3"
 ABI="$4"
 DTYPE="$5"
 COMPILER="$6"
+INSTR="$7"
 
 # Check simulator directory exists
 SIM_PATH="experimentations/microarchitectures/simulators/$SIMULATOR/openhwgroup.org_systems_core-v-mini-mcu_0.3.0"
@@ -63,4 +65,4 @@ echo "=== Running simulation ==="
 make verilator-run
 
 # parse simulation ouptput 
-python3 scripts/automatic-simulation/parse_simulation_output.py ${SIMULATOR} ${ISA} ${ABI} ${DTYPE}
+python3 scripts/automatic-simulation/parse_simulation_output.py ${SIMULATOR} ${ISA} ${ABI} ${DTYPE} ${INSTR}
