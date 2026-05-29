@@ -27,7 +27,7 @@ os.makedirs(output_dir, exist_ok=True)
 output_file = f"{output_dir}/{SIMULATOR}_{ISA}_{ABI}_{DTYPE}.json"
 
 # ---------------------------------------------
-# Parsing uart0.log (Class + Team)
+# Parsing uart0.log
 # ---------------------------------------------
 class_records = []
 team_records = []
@@ -84,65 +84,62 @@ for line in lines:
 # ---------------------------------------------
 # Compute class statistics
 # ---------------------------------------------
-tpg_mean_latency = sum(r["AvgCyclesPerClass"] for r in class_records) / len(class_records)
+def compute_latency_stats(records, key):
+    mean = sum(r[key] for r in records) / len(records)
+    var = sum((r[key] - mean) ** 2 for r in records) / len(records)
+    std = math.sqrt(var)
+    return int(mean), int(std)
 
-variance = sum((r["AvgCyclesPerClass"] - tpg_mean_latency) ** 2 for r in class_records) / len(class_records)
-tpg_stddev_latency = math.sqrt(variance)
-
-tpg_mean_latency = int(tpg_mean_latency)
-tpg_stddev_latency = int(tpg_stddev_latency)
+tpg_mean_lat, tpg_stddev_lat = compute_latency_stats(class_records, "AvgCyclesPerClass")
 
 # ---------------------------------------------
-# Build base output
+# Build base structure
 # ---------------------------------------------
 base_output = {
     "simulator": SIMULATOR,
     "isa": ISA,
     "abi": ABI,
     "dtype": DTYPE,
-    "records": class_records,
-    "tpg_mean_latency": tpg_mean_latency,
-    "tpg_stddev_latency": tpg_stddev_latency
+
+    "instrTPG": {
+        "Classes": class_records,
+        "tpg_mean_lat": tpg_mean_lat,
+        "tpg_stddev_lat": tpg_stddev_lat
+    }
 }
 
-
 # ---------------------------------------------
-# Write JSON file
-# CASE 1: INSTR = FALSE  → wrap in instrTPG
+# Write / Merge JSON
 # ---------------------------------------------
 if not INSTR:
-    output = {
-        "instrTPG": base_output
-    }
+    output = base_output
 
     with open(output_file, "w") as f:
         json.dump(output, f, indent=4)
 
     print("Parsed", len(class_records), "class records.")
-    print("TPG mean latency:", tpg_mean_latency)
-    print("TPG stddev latency:", tpg_stddev_latency)
-    print("\nCoefficient of Variation per class:")
+    print("TPG mean latency:", tpg_mean_lat)
+    print("TPG stddev latency:", tpg_stddev_lat)
 
+    print("\nCoefficient of Variation per class:")
     for r in class_records:
         print(f"  Class {r['Class']}: {r['CoefficientVariation']:.2f}%")
 
     print("\nOutput written to:", output_file)
 
-# ---------------------------------------------
-# Write JSON file
-# CASE 2: INSTR = TRUE → merge into existing JSON
-# ---------------------------------------------
 else:
     if not os.path.exists(output_file):
-        print("Error: previous instrTPG JSON not found:", output_file)
+        print("Error: previous JSON not found:", output_file)
         sys.exit(1)
 
     with open(output_file, "r") as f:
         existing_json = json.load(f)
 
     existing_json["instrTeams_instrTPG"] = {
-        "Class": class_records,
-        "Team": team_records
+        "Classes": class_records,
+        "tpg_mean_lat": tpg_mean_lat,
+        "tpg_stddev_lat": tpg_stddev_lat,
+        "Teams": team_records
     }
 
     with open(output_file, "w") as f:
