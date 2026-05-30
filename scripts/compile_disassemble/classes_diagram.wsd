@@ -1,0 +1,106 @@
+@startuml
+
+' =========================
+' Core Domain
+' =========================
+
+' parses assembly code corresponding to a Team 
+' and extracts Instruction 
+class Disassembler {
+    - parseAssembly(code : String) : List<Instruction>
+}
+
+' Analyzes a list of Instructions and extracts features to add 
+' to the FeatureTable of a Uarch
+class InstructionsAnalyzer{
+    - analyzeBasicBlock(instructions : List<Instruction>) : Dict<String, Integer>
+}
+
+class Uarch {
+    name : String
+    isa : String
+    abi : String
+    FeatureTable : Dict<String, Integer>
+}
+
+class TPG{
+    name : String
+    dtype : String
+    instructions : List<String>
+}
+
+class InferenceResult {
+}
+
+class instrTraversal {
+    idTraversal : Integer
+    count : Integer
+    avgCycles : Integer
+    stdDevCycles : Integer
+}
+
+class instrTeam {
+    idTeam : Integer
+    count : Integer
+    avgCycles : Integer
+    stdDevCycles : Integer
+}
+
+class Instruction {
+    mnemonic : String
+    operands : List<String>
+    immediate : String
+    raw : String
+}
+
+class Team
+
+
+' =========================
+' Aggregates
+' =========================
+
+class TraversalLevelTPG {
+    inferenceAvgCycles : Integer
+    inferenceStdDevCycles : Integer
+}
+
+class TeamLevelTPG{
+    inferenceAvgCycles : Integer
+    inferenceStdDevCycles : Integer
+}
+
+class Assembly{
+    code : String
+}
+
+' =========================
+' Relationships
+' =========================
+
+InferenceResult "1" *-- "1" TraversalLevelTPG
+InferenceResult "1" *-- "1" TeamLevelTPG
+
+TraversalLevelTPG "1" *-- "1..*" instrTraversal
+TeamLevelTPG "1" *-- "1..*" instrTeam
+TeamLevelTPG "1" *-- "1..*" instrTraversal
+
+Team "1" *-- "1" instrTeam
+
+Team "1" *-- "1..*" Instruction
+
+TPG "1" *-- "1" InferenceResult
+
+TPG "1" *-- "1..*" Team
+
+Uarch "1" *-- "1..*" InferenceResult
+
+Disassembler ..> Instruction : produces
+Assembly ..> Disassembler : takes
+
+InstructionsAnalyzer ..> Uarch : produces
+Instruction ..> InstructionsAnalyzer : takes
+
+Team "1" *-- "1" Assembly
+
+@enduml
