@@ -11,22 +11,37 @@ class Disassembler {
 }
 
 ' Analyzes a list of Instructions and extracts features to add 
-' to the FeatureTable of a Uarch
-class InstructionsAnalyzer{
-    - analyzeBasicBlock(instructions : List<Instruction>) : Dict<String, Integer>
+' to the FeatureVector to the Uarch
+class FeaturesAnalyzer{
+    - analyzeBasicBlock(instructions : List<Instruction>) : FeatureVector 
+}
+
+class FeatureVector{
+    values : Map<String, Float>  
+}
+
+' takes latency results from a team (avgCycles)
+' takes FeatureTable 
+' fits coefficients 
+class Regressor{
+    ' weights = { "ADD_count": 0.12, "LOAD_count": 1.85, "RAW_hazards": 3.40, "ADD_ADD_transition": 0.75'
+    - weights: Map<String, Float>
+    - bias: Float
+    - fit (features: List<FeatureVector>, latencies: List<Float>) : void 
+    - predict(feature: FeatureVector) : Float
 }
 
 class Uarch {
     name : String
     isa : String
     abi : String
-    FeatureTable : Dict<String, Integer>
+    FeatureTable : List<FeatureVector>
 }
 
 class TPG{
     name : String
     dtype : String
-    instructions : List<String>
+    GPIS : List<String>
 }
 
 class InferenceResult {
@@ -50,10 +65,14 @@ class Instruction {
     mnemonic : String
     operands : List<String>
     immediate : String
-    raw : String
+    ' raw code 
+    code : String
 }
 
-class Team
+class Team {
+    id : Integer
+    idProgs : List<Integer>
+}
 
 
 ' =========================
@@ -98,8 +117,8 @@ Uarch "1" *-- "1..*" InferenceResult
 Disassembler ..> Instruction : produces
 Assembly ..> Disassembler : takes
 
-InstructionsAnalyzer ..> Uarch : produces
-Instruction ..> InstructionsAnalyzer : takes
+FeaturesAnalyzer ..> Uarch : produces
+Instruction ..> FeaturesAnalyzer : takes
 
 Team "1" *-- "1" Assembly
 
