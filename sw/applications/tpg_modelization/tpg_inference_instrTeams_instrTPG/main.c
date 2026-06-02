@@ -115,7 +115,7 @@ int main(void)
     {
         assign_LE_values(seed);
 
-        for (int i = 0; i < NB_TEAMS; ++i) team_cycles[i] = 0;
+        for (int i = 0; i < NB_TEAMS; ++i) team_cycles[i] = 0; 
 
         uint32_t total_cycles = 0;
 
@@ -136,7 +136,7 @@ int main(void)
         welford_add(&classes_accumulators[cls], total_cycles);
         
         for (int t = 0; t < NB_TEAMS; ++t) {
-            welford_add(&team_accumulators[t], (float) team_cycles[t]);
+            if (team_cycles[t] > 0) welford_add(&team_accumulators[t], (float) team_cycles[t]);
         }
     }
 
