@@ -18,11 +18,8 @@ class Team {
 }
 
 class Instruction {
-    + idTeam : Integer
     + mnemonic : String
     + operands : List<String>
-    + immediate : String
-    + code : String
 }
 
 TPG "1" *-- "1..*" Team
@@ -43,7 +40,6 @@ class Uarch {
 ' =====================================
 
 class TeamMeasurement {
-    + idTeam : Integer
     + latency : Float
 }
 
@@ -58,7 +54,6 @@ Team "1" *-- "1" FeatureVector
 class FeatureVector {
     ' Created from instructions, table of features 
     ' {"ADD_count": 3, "LOAD_count": 5, "RAW_hazards": 2, "ADD_ADD_transition": 1}
-    + idTeam: Integer
     + values : Map<String, Float>
 }
 
