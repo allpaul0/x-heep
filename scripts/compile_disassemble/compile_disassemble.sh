@@ -67,3 +67,4 @@ cp sw/build/main.S sw/applications/"$APP"/main.S
 
 "$COMPILER"/bin/"$COMPILER_PREFIX"elf-objdump -d sw/build/main.elf > sw/build/disassembly.txt
 cp sw/build/disassembly.txt sw/applications/"$APP"/disassembly_"$APP_LAST_FOLDER".txt
+cp sw/applications/"$APP"/disassembly_"$APP_LAST_FOLDER".txt experimentations/compilations/.
