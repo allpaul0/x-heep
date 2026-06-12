@@ -21,6 +21,9 @@ ABI="$4"
 DTYPE="$5"
 COMPILER="$6"
 
+# Extract the last folder name from APP path
+APP_LAST_FOLDER="${APP##*/}"
+
 # Check simulator directory exists
 SIM_PATH="experimentations/microarchitectures/simulators/$SIMULATOR/openhwgroup.org_systems_core-v-mini-mcu_0.3.0"
 
@@ -63,4 +66,4 @@ cp sw/build/main.elf sw/applications/"$APP"/main.elf
 cp sw/build/main.S sw/applications/"$APP"/main.S
 
 "$COMPILER"/bin/"$COMPILER_PREFIX"elf-objdump -d sw/build/main.elf > sw/build/disassembly.txt
-cp sw/build/disassembly.txt sw/applications/"$APP"/disassembly.txt
+cp sw/build/disassembly.txt sw/applications/"$APP"/disassembly_"$APP_LAST_FOLDER".txt
