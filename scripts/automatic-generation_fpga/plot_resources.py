@@ -309,7 +309,8 @@ def assign_simulator_nickname(simulator: str) -> str:
         return simulator
 
 def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]]],
-                                   targets: List[str]):
+                                   targets: List[str],
+                                   mode: str = "full"):
     """
     Improved normalization plot:
 
@@ -321,7 +322,44 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
       • Layout, sorting, baseline marking, variant/family labels
         remain consistent with the delta plot.
+
+    Args:
+        mode: "full"    → paper layout (all microarchitectures, compact sizing)
+              "reduced" → poster layout (3–4 microarchitectures, larger text)
     """
+
+    # ============================================================
+    # LAYOUT CONFIG
+    # ============================================================
+    CONFIGS = {
+        "full": {
+            "fig_size":       (9.5, 4.8),
+            "font_size":      9,        # variant label font
+            "family_font":    10,       # family label font
+            "legend_font":    8,        # legend font size
+            "axis_label":     11,       # axis label (ylabel / xlabel) font size
+            "sticker_font":   7.5,      # baseline sticker font size
+            "bar_width":      0.18,
+            "bottom_margin":  0.27,     # plt.subplots_adjust bottom
+        },
+        "reduced": {
+            "fig_size":       (7.0, 5.2),
+            "font_size":      12,       # variant label font
+            "family_font":    13,       # family label font
+            "legend_font":    11,       # legend font size
+            "axis_label":     13,       # axis label font size
+            "sticker_font":   10,       # baseline sticker font size
+            "bar_width":      0.22,
+            "bottom_margin":  0.30,
+        },
+    }
+
+    if mode not in CONFIGS:
+        raise ValueError(f"mode must be 'full' or 'reduced', got '{mode}'")
+
+    cfg = CONFIGS[mode]
+    # ============================================================
+
     print("\nRenaming architectures for clarity...")
     for archi in all_archi_results.keys():
         print(archi)
@@ -356,15 +394,6 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     def split_arch_name(arch_name: str):
         name = arch_name.strip()
 
-        # if name.startswith("cv32e20"):
-        #     fam = "cv32e20"
-        #     var = name[len("cv32e20"):].lstrip("_")
-        # elif name.startswith("cv32e40"):
-        #     fam = "cv32e40"
-        #     var = name[len("cv32e40"):].lstrip("_")
-        # else:
-        #     fam, _, var = name.partition("_")
-
         if name.startswith("s2"):
             fam = "s2"
             var = name[len("s2"):].lstrip("_")
@@ -379,9 +408,8 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     variant_order = {
         "s2": ["em0d0", "em1d1", "em2d1", "em3d1", "im0d0", "im1d1", "im2d1", "im3d1"],
         "s4": ["em0d0", "em4d0", "em4d2", "im0d0", "im4d0", "im4d2",
-                     "im5d2", "im5d2_pulp", "im5d2_fpu", "im5d2_pulp_fpu"] #"p", "p_pulp",
+               "im5d2", "im5d2_pulp", "im5d2_fpu", "im5d2_pulp_fpu"],
     }
-
 
     def arch_sort_key(arch):
         fam, var = split_arch_name(arch)
@@ -391,6 +419,10 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
             idx = len(variant_order.get(fam, []))
         return (fam, idx)
 
+     # keep only 3uarchs in reduced (poster) mode; full mode keeps everything
+    if mode == "reduced":
+        keep = ['s2_em0d0', 's4_im4d2', 's4_im5d2_fpu']
+        all_archi_results = {k: v for k, v in all_archi_results.items() if k in keep}
 
     archis_sorted = sorted(all_archi_results.keys(), key=arch_sort_key)
 
@@ -404,9 +436,8 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     DSP_LUT_EQ = 700 #1500 # 750 LUTs, 150 FFs is the diff btw cv32e20_em1 and cv32e20_em0
     DSP_FF_EQ  = 150 #0
 
-    # Gamma expressed consistently with alpha/beta
     gamma = alpha * DSP_LUT_EQ + beta * DSP_FF_EQ
-    print("gamma:" +  str(gamma))
+    print("gamma:" + str(gamma))
 
     # ------------------------------------------------------------
     # 3) Assign resource cost w.r.t resource cost model 
@@ -513,10 +544,10 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         "DSP": "#3A86FF",
     }
 
-    x = np.arange(len(archis_sorted))
-    width = 0.18
-    bar_sep = 0.5
-    fig, ax1 = plt.subplots(figsize=(9.5, 4.8))
+    x     = np.arange(len(archis_sorted))
+    width = cfg["bar_width"]
+
+    fig, ax1 = plt.subplots(figsize=cfg["fig_size"])
 
     bar_lut = ax1.bar(
         x - 0.5 * width,
@@ -541,15 +572,6 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         color="#8338EC",  # purple
         label="Resource cost"
     )
-
-    # bar_resource_cap = ax1.bar(
-    #     x + 2.5 * width,
-    #     norm_RESOURCE_CAP,
-    #     width,
-    #     color="#06D6A0",  # green
-    #     label="Resource cost (capacity)"
-    # )
-
 
     # Secondary axis (raw DSP)
     ax2 = ax1.twinx()
@@ -579,7 +601,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
             xy=(xi, 0), xycoords=("data", "axes fraction"),
             xytext=(0, -5), textcoords="offset points",
             rotation=45, ha="right", va="top",
-            fontsize=9,
+            fontsize=cfg["font_size"],
             color=fam_colors.get(fam, "black")
         )
 
@@ -597,15 +619,13 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
             xy=(cx, 0), xycoords=("data", "axes fraction"),
             xytext=(0, -40), textcoords="offset points",
             ha="center", va="top",
-            fontsize=10, fontweight="bold",
+            fontsize=cfg["family_font"], fontweight="bold",
             color=fam_colors.get(fam, "black")
         )
 
-    plt.subplots_adjust(bottom=0.27)
+    plt.subplots_adjust(bottom=cfg["bottom_margin"])
 
-    # Give headroom for stickers
-    ymax1 = max(max(norm_LUT), max(norm_FF), max(norm_RESOURCE) * 1.15)
-
+    ymax1 = max(max(norm_LUT), max(norm_FF), max(norm_RESOURCE)) * 1.15
     ax1.set_ylim(0, ymax1)
     ax1.set_xlim(-0.5, len(archis_sorted) - 0.5)
 
@@ -613,7 +633,6 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # 6) Baseline sticker
     # ------------------------------------------------------------
     x_base = x[archis_sorted.index(baseline_archi)]
-    #sticker = f"LUT={baseline_LUT}\nFF={baseline_FF}\nDSP={baseline_DSP}"
     sticker_text = f"LUT: {round(baseline_LUT / 1000)}k\nFF: {round(baseline_FF / 1000)}k\nDSP: {round(baseline_DSP / 1000)} "
 
     ax1.text(
@@ -621,25 +640,9 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         max(norm_LUT[x_base], norm_FF[x_base]) + 2.50,
         sticker_text,
         ha="center", va="bottom",
-        fontsize=7.5,
+        fontsize=cfg["sticker_font"],
         bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
     )
-
-    # x_base_dsp = x[archis_sorted.index(baseline_archi_DSP)]
-    # sticker_text_dsp = f"LUT: {round(baseline_archi_DSP_LUT / 1000)}k\nFF: {round(baseline_archi_DSP_FF / 1000)}k\nDSP: {int(baseline_archi_DSP_DSP)} "
-    
-    # # compute a vertical offset = 5% of axis height
-    # y_offset = 0.01 * ax1.get_ylim()[1]
-
-    # ax1.text(
-    #     x_base_dsp,
-    #     max(norm_LUT[x_base_dsp], norm_FF[x_base_dsp], norm_DSP[x_base_dsp]) + y_offset,
-    #     sticker_text_dsp,
-    #     ha="center", va="bottom",
-    #     fontsize=10,
-    #     bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
-    # )   
-
 
     # ------------------------------------------------------------
     # Draw dotted line between families
@@ -660,40 +663,32 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # ------------------------------------------------------------
     # 7) Labeling and legend
     # ------------------------------------------------------------
-    ax1.set_ylabel("LUT, FF, Resource cost (% of baseline)")
-    ax2.set_ylabel("DSP raw")
+    ax1.set_ylabel("LUT, FF, Resource cost (% of baseline)", fontsize=cfg["axis_label"])
+    ax2.set_ylabel("DSP raw", fontsize=cfg["axis_label"])
+    ax1.set_xlabel("Microarchitecture", labelpad=35, fontsize=cfg["axis_label"])
 
-    #ax1.set_title("Normalized Resource Usage (baseline = 1.0)")
-    ax1.set_xlabel("Microarchitecture", labelpad=35)
-
-    ax1.legend(handles=[bar_dsp, bar_lut, bar_ff, bar_resource],
-               labels=["DSP", "LUT", "FF", "Resource cost"],
-               loc="upper left", fontsize=8)
+    ax1.legend(
+        handles=[bar_dsp, bar_lut, bar_ff, bar_resource],
+        labels=["DSP", "LUT", "FF", "Resource cost"],
+        loc="upper left",
+        fontsize=cfg["legend_font"]
+    )
 
     plt.tight_layout()
-    # plt.savefig(
-    #     "./experimentations/results/microarchitectures_normalized_resource_usage.svg",
-    #     format="svg",
-    #     bbox_inches="tight",  # removes extra white space
-    #     transparent=False,    # set True if you want a transparent background
-    # )
 
-    # compute relative difference for each microarchitecture between first and second cost model
+    # compute relative difference between cost models
     print("\nRelative difference between first and second cost model:")
     for archi, cost1, cost2 in zip(archis_sorted, norm_RESOURCE, norm_RESOURCE_CAP):
         rel_diff = 100 * abs(cost2 - cost1) / cost1
         print(f"{archi}: {rel_diff:.2f}%")
 
-    # compute avg relative difference
     rel_diffs = [
         100 * abs(cost2 - cost1) / cost1
         for cost1, cost2 in zip(norm_RESOURCE, norm_RESOURCE_CAP)
     ]
     avg_rel_diff = sum(rel_diffs) / len(rel_diffs)
-    
-    import math
 
-    # std
+    import math
     mean = avg_rel_diff
     std_rel_diff = math.sqrt(
         sum((x - mean) ** 2 for x in rel_diffs) / len(rel_diffs)
@@ -704,9 +699,13 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     # Export to PDF
     plt.tight_layout()
-    plt.savefig("./experimentations/results/microarchitectures_resources.pdf", format="pdf")
+    out_suffix = f"_{mode}"
+    plt.savefig(
+        f"./experimentations/results/microarchitectures_resources{out_suffix}.pdf",
+        format="pdf"
+    )
     plt.show()
-
+    
 def find_cost_one_dsp(all_archi_results: Dict[str, Dict[str, List[float]]]):
     """
     Estimate the cost of one DSP by comparing e2_em1d1 and e2_em2d1
@@ -831,7 +830,7 @@ def main():
     # plot_resource_utilization(all_archi_results, targets)
     # plot_delta_resource_usage(all_archi_results, targets)
     
-    plot_normalised_resource_usage(all_archi_results, targets)
+    plot_normalised_resource_usage(all_archi_results, targets, "reduced")
 
 if __name__ == "__main__":
     main()
