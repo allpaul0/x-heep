@@ -39,7 +39,7 @@ def plot_resource_utilization(all_archi_results: Dict[str, Dict[str, List[float]
 
     x = np.arange(n_archis)
     width = 0.15
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 6))
 
     for i, target in enumerate(targets):
         plt.bar(x + i * width, data[i], width, label=target)
@@ -159,7 +159,7 @@ def plot_delta_resource_usage(all_archi_results: Dict[str, Dict[str, List[float]
     x = np.arange(len(archis_sorted))
     width = 0.25
 
-    fig, ax1 = plt.subplots(figsize=(12, 6))
+    fig, ax1 = plt.subplots(figsize=(10, 6))
 
     # Define formatter function
     def kilo_formatter(x, pos):
@@ -272,36 +272,36 @@ def assign_simulator_nickname(simulator: str) -> str:
         """
         Produce a compact nickname from a simulator string.
         Patterns handled:
-        cv32e20 -> e2 
-        cv32e40 -> e4
+        cv32e20 -> s2 
+        cv32e40 -> s4
         ! Attention à l'ordre des règles !+
         """
         
-        simulator = simulator.replace("cv32e20", "e2") # simplifie
-        simulator = simulator.replace("cv32e40", "e4") # simplifie
+        simulator = simulator.replace("cv32e20", "s2") # simplifie
+        simulator = simulator.replace("cv32e40", "s4") # simplifie
         simulator = simulator.replace("corev_pulp", "pulp") # simplifie
                
         # e4x_i-em0,1,2 -> renommage
-        simulator = simulator.replace("e4x_im0", "e4x_im0d0") # pas de mult, pas de div
-        simulator = simulator.replace("e4x_im1", "e4x_im4d1") # change mult -> basé ressources, ajoute div
-        simulator = simulator.replace("e4x_im2", "e4x_im4d0") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("s4x_im0", "s4x_im0d0") # pas de mult, pas de div
+        simulator = simulator.replace("s4x_im1", "s4x_im4d2") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("s4x_im2", "s4x_im4d0") # change mult -> basé ressources, ajoute div
 
-        simulator = simulator.replace("e4x_em0", "e4x_em0d0") # pas de mult, pas de div
-        simulator = simulator.replace("e4x_em1", "e4x_em4d1") # change mult -> basé ressources, ajoute div
-        simulator = simulator.replace("e4x_em2", "e4x_em4d0") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("s4x_em0", "s4x_em0d0") # pas de mult, pas de div
+        simulator = simulator.replace("s4x_em1", "s4x_em4d2") # change mult -> basé ressources, ajoute div
+        simulator = simulator.replace("s4x_em2", "s4x_em4d0") # change mult -> basé ressources, ajoute div
 
-        simulator = simulator.replace("e4px", "e4x_im5d1") # ajout mult -> basé ressources
+        simulator = simulator.replace("s4px", "s4x_im5d2") # ajout mult -> basé ressources
 
         # e2_i-em0-3 -> add div
-        simulator = simulator.replace("e2_im0", "e2_im0d1")
-        simulator = simulator.replace("e2_im1", "e2_im1d1")
-        simulator = simulator.replace("e2_im2", "e2_im2d1")
-        simulator = simulator.replace("e2_im3", "e2_im3d1")
+        simulator = simulator.replace("s2_im0", "s2_im0d0")
+        simulator = simulator.replace("s2_im1", "s2_im1d1")
+        simulator = simulator.replace("s2_im2", "s2_im2d1")
+        simulator = simulator.replace("s2_im3", "s2_im3d1")
 
-        simulator = simulator.replace("e2_em0", "e2_em0d1")
-        simulator = simulator.replace("e2_em1", "e2_em1d1")
-        simulator = simulator.replace("e2_em2", "e2_em2d1")
-        simulator = simulator.replace("e2_em3", "e2_em3d1")
+        simulator = simulator.replace("s2_em0", "s2_em0d0")
+        simulator = simulator.replace("s2_em1", "s2_em1d1")
+        simulator = simulator.replace("s2_em2", "s2_em2d1")
+        simulator = simulator.replace("s2_em3", "s2_em3d1")
 
         simulator = simulator.replace("px", "") # rassemble px, x
         simulator = simulator.replace("x", "") # rassemble px, x
@@ -365,21 +365,21 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         # else:
         #     fam, _, var = name.partition("_")
 
-        if name.startswith("e2"):
-            fam = "e2"
-            var = name[len("e2"):].lstrip("_")
-        elif name.startswith("e4"):
-            fam = "e4"
-            var = name[len("e4"):].lstrip("_")
+        if name.startswith("s2"):
+            fam = "s2"
+            var = name[len("s2"):].lstrip("_")
+        elif name.startswith("s4"):
+            fam = "s4"
+            var = name[len("s4"):].lstrip("_")
         else:
             fam, _, var = name.partition("_")
 
         return fam, var or "-"
 
     variant_order = {
-        "e2": ["em0d1", "em1d1", "em2d1", "em3d1", "im0d1", "im1d1", "im2d1", "im3d1"],
-        "e4": ["em0d0", "em4d0", "em4d1", "im0d0", "im4d0", "im4d1",
-                     "im5d1", "im5d1_pulp", "im5d1_fpu", "im5d1_pulp_fpu"] #"p", "p_pulp",
+        "s2": ["em0d0", "em1d1", "em2d1", "em3d1", "im0d0", "im1d1", "im2d1", "im3d1"],
+        "s4": ["em0d0", "em4d0", "em4d2", "im0d0", "im4d0", "im4d2",
+                     "im5d2", "im5d2_pulp", "im5d2_fpu", "im5d2_pulp_fpu"] #"p", "p_pulp",
     }
 
 
@@ -506,6 +506,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # ------------------------------------------------------------
     # 4) Plot
     # ------------------------------------------------------------
+
     colors = {
         "LUT": "#FFBE0B",
         "FF":  "#FB5607",
@@ -515,7 +516,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     x = np.arange(len(archis_sorted))
     width = 0.18
     bar_sep = 0.5
-    fig, ax1 = plt.subplots(figsize=(12, 6))
+    fig, ax1 = plt.subplots(figsize=(9.5, 4.8))
 
     bar_lut = ax1.bar(
         x - 0.5 * width,
@@ -569,7 +570,9 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     for xi, (fam, var) in enumerate(zip(families, variants)):
         label = var
         if archis_sorted[xi] == baseline_archi:
-            label = f"baseline: {var}"
+            label = f"baseline:\n{var}"
+        elif label == "im5d2_pulp_fpu":
+            label = "im5d2_\npulp_fpu"
 
         ax1.annotate(
             label,
@@ -604,6 +607,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     ymax1 = max(max(norm_LUT), max(norm_FF), max(norm_RESOURCE) * 1.15)
 
     ax1.set_ylim(0, ymax1)
+    ax1.set_xlim(-0.5, len(archis_sorted) - 0.5)
 
     # ------------------------------------------------------------
     # 6) Baseline sticker
@@ -617,7 +621,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         max(norm_LUT[x_base], norm_FF[x_base]) + 2.50,
         sticker_text,
         ha="center", va="bottom",
-        fontsize=10,
+        fontsize=7.5,
         bbox=dict(facecolor="white", edgecolor="black", boxstyle="round,pad=0.3")
     )
 
@@ -664,7 +668,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
     ax1.legend(handles=[bar_dsp, bar_lut, bar_ff, bar_resource],
                labels=["DSP", "LUT", "FF", "Resource cost"],
-               loc="upper left")
+               loc="upper left", fontsize=8)
 
     plt.tight_layout()
     # plt.savefig(
