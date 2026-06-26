@@ -343,14 +343,16 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
             "bottom_margin":  0.27,     # plt.subplots_adjust bottom
         },
         "reduced": {
-            "fig_size":       (7.0, 5.2),
-            "font_size":      12,       # variant label font
-            "family_font":    13,       # family label font
-            "legend_font":    11,       # legend font size
-            "axis_label":     13,       # axis label font size
-            "sticker_font":   10,       # baseline sticker font size
-            "bar_width":      0.22,
-            "bottom_margin":  0.30,
+            "fig_size":         (7.0, 5.2),
+            "font_size":        12,    # variant label font
+            "family_font":      13,    # family label font
+            "legend_font":      11,    # legend font size
+            "axis_label":       13,    # axis label font size
+            "sticker_font":     10,    # baseline sticker font size
+            "bar_width":        0.18,  # thinner bars (fewer uarchs, more breathing room)
+            "bottom_margin":    0.30,
+            "xlabel_x":         0.08,  # normalized axes x for xlabel (shift left)
+            "sticker_y_offset": 5.0,  # extra gap (% pts) above bar for baseline sticker
         },
     }
 
@@ -364,8 +366,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     for archi in all_archi_results.keys():
         print(archi)
 
-     # rename microarchitectures: replace 'corev_pulp' with 'pulp'
-
+    # rename microarchitectures: replace 'corev_pulp' with 'pulp'
     renamed_archis = {}
     for arch, key in all_archi_results.items():
         arch = assign_simulator_nickname(arch)
@@ -478,7 +479,6 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         for cost in resource_cost
     ]
 
-    # print cost per microarchitecture
     print("\nResource cost per microarchitecture:")
     for archi, cost in zip(archis_sorted, norm_RESOURCE):
         print(f"{archi}: {cost:.2f}%")
@@ -522,8 +522,6 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
 
         resource_cost_cap.append(cost_cap)
         all_archi_results[archi]["Resource cost (capacity)"] = [cost_cap]
-
-    # D. Normalize second resource cost (baseline = baseline_archi)
 
     baseline_cap_cost = resource_cost_cap[
         archis_sorted.index(baseline_archi)
@@ -634,10 +632,11 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # ------------------------------------------------------------
     x_base = x[archis_sorted.index(baseline_archi)]
     sticker_text = f"LUT: {round(baseline_LUT / 1000)}k\nFF: {round(baseline_FF / 1000)}k\nDSP: {round(baseline_DSP / 1000)} "
+    sticker_y_gap = cfg.get("sticker_y_offset", 2.50)
 
     ax1.text(
         x_base + 0.40 * width,
-        max(norm_LUT[x_base], norm_FF[x_base]) + 2.50,
+        max(norm_LUT[x_base], norm_FF[x_base]) + sticker_y_gap,
         sticker_text,
         ha="center", va="bottom",
         fontsize=cfg["sticker_font"],
@@ -665,7 +664,21 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
     # ------------------------------------------------------------
     ax1.set_ylabel("LUT, FF, Resource cost (% of baseline)", fontsize=cfg["axis_label"])
     ax2.set_ylabel("DSP raw", fontsize=cfg["axis_label"])
-    ax1.set_xlabel("Microarchitecture", labelpad=35, fontsize=cfg["axis_label"])
+
+    # In reduced mode, shift the xlabel left to sit under the single s2 bar
+    # rather than centred over all bars (which would be over empty space).
+    if mode == "reduced":
+        ax1.set_xlabel("")   # clear the default centred label
+        ax1.annotate(
+            "Microarchitecture",
+            xy=(cfg.get("xlabel_x", 0.08), 0),
+            xycoords=("axes fraction", "axes fraction"),
+            xytext=(80, -40), textcoords="offset points",
+            ha="left", va="top",
+            fontsize=cfg["axis_label"],
+        )
+    else:
+        ax1.set_xlabel("Microarchitecture", labelpad=35, fontsize=cfg["axis_label"])
 
     ax1.legend(
         handles=[bar_dsp, bar_lut, bar_ff, bar_resource],
@@ -705,7 +718,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         format="pdf"
     )
     plt.show()
-    
+
 def find_cost_one_dsp(all_archi_results: Dict[str, Dict[str, List[float]]]):
     """
     Estimate the cost of one DSP by comparing e2_em1d1 and e2_em2d1
