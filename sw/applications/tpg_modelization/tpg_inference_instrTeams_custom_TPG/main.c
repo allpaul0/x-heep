@@ -46,18 +46,18 @@ static void assign_LE_values(int seed)
     in1_buf[1] = dataSourcesLE_1[seed];
     in1_buf[2] = dataSourcesLE_2[seed];
 
-    in2_buf[0] = dataSourcesLE_3[0];
-    in2_buf[1] = dataSourcesLE_4[0];
-    in2_buf[2] = dataSourcesLE_5[0];
+    in2_buf[0] = dataSourcesLE_3[seed];
+    in2_buf[1] = dataSourcesLE_4[seed];
+    in2_buf[2] = dataSourcesLE_5[seed];
 
     in3_buf[0] = dataSourcesLE_6[seed];
     in3_buf[1] = dataSourcesLE_7[seed];
     in3_buf[2] = dataSourcesLE_8[seed];
 
-    in4_buf[0] = dataSourcesLE_9[0];
-    in4_buf[1] = dataSourcesLE_10[0];
-    in4_buf[2] = dataSourcesLE_11[0];
-    in4_buf[3] = dataSourcesLE_12[0];
+    in4_buf[0] = dataSourcesLE_9[seed];
+    in4_buf[1] = dataSourcesLE_10[seed];
+    in4_buf[2] = dataSourcesLE_11[seed];
+    in4_buf[3] = dataSourcesLE_12[seed];
     in4_buf[4] = dataSourcesLE_13[0];
     in4_buf[5] = dataSourcesLE_14[0];
 
