@@ -174,18 +174,25 @@ static inline fixedpt __attribute__((always_inline))protected_fixedpt_div(fixedp
   return result;
 }
 
-// forces the compiler to inline the function even if optimizations are disabled. 
-static inline fixedpt __attribute__((always_inline))protected_fixedpt_div_32(fixedpt A, fixedpt B) {
-    
-  int result = 0;
+/* Protected 32-bit divide for Q16.16.
+ *
+ * fixedpt_div_32 computes (A << 8) / (B >> 8), keeping both operands
+ * 32-bit so the compiler emits a real hardware divide (no 64-bit softdiv).
+ *
+ * The catch: it divides by (B >> 8), not B. So we must reject any B whose
+ * top-half is zero, i.e. |B| < 256 in raw units (|B_real| < ~0.0039).
+ * Checking "B == 0" is NOT enough — B in [1..255] would still divide by zero.
+ *
+ * Returns 0 as a safe sentinel when the divisor is too small.
+ */
+static inline fixedpt __attribute__((always_inline))
+protected_fixedpt_div_32(fixedpt A, fixedpt B) {
+    /* 1 << (FIXEDPT_FBITS/2) == 256 in Q16.16 : the smallest B that
+     * survives the >>8 without collapsing to zero. */
+    if (fixedpt_abs(B) < ((fixedpt)1 << (FIXEDPT_FBITS / 2)))
+        return 0;
 
-  if ((B == 0) ) {
-          result = 0;
-  } else {
-    result = fixedpt_div_32(A, B);
-  }
-  
-  return result;
+    return fixedpt_div_32(A, B);
 }
 
 /*
@@ -351,7 +358,7 @@ fixedpt_cos(fixedpt A)
 static inline fixedpt
 fixedpt_tan(fixedpt A)
 {
-	return protected_fixedpt_div(fixedpt_sin(A), fixedpt_cos(A));
+	return protected_fixedpt_div_32(fixedpt_sin(A), fixedpt_cos(A));
 }
 
 
@@ -372,6 +379,12 @@ fixedpt_exp(fixedpt fp)
 
 	if (fp == 0)
 		return (FIXEDPT_ONE);
+	// addition for saturation and underflow to avoid overflow in the exponential function
+	// used for genetic programming handling of large numbers of the TPG 
+	if (fp >  fixedpt_rconst(10.39))   return (fixedpt)0x7FFFFFFF;  /* saturate high */
+	if (fp <  fixedpt_rconst(-11.09))  return 0;                    /* underflow to 0 */
+	// end of addition
+
 	xabs = fixedpt_abs(fp);
 	k = fixedpt_mul(xabs, LN2_INV);
 	k += FIXEDPT_ONE_HALF;
@@ -385,7 +398,7 @@ fixedpt_exp(fixedpt fp)
 	    fixedpt_mul(z, EXP_P[0] + fixedpt_mul(z, EXP_P[1] +
 	    fixedpt_mul(z, EXP_P[2] + fixedpt_mul(z, EXP_P[3] +
 	    fixedpt_mul(z, EXP_P[4])))));
-	xp = FIXEDPT_ONE + protected_fixedpt_div(fixedpt_mul(fp, FIXEDPT_TWO), R - fp);
+	xp = FIXEDPT_ONE + protected_fixedpt_div_32(fixedpt_mul(fp, FIXEDPT_TWO), R - fp);
 	if (k < 0)
 		k = FIXEDPT_ONE >> (-k >> FIXEDPT_FBITS);
 	else
@@ -439,7 +452,7 @@ fixedpt_ln(fixedpt x)
 static inline fixedpt
 fixedpt_log(fixedpt x, fixedpt base)
 {
-	return (protected_fixedpt_div(fixedpt_ln(x), fixedpt_ln(base)));
+	return (protected_fixedpt_div_32(fixedpt_ln(x), fixedpt_ln(base)));
 }
 
 
