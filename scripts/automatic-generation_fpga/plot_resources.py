@@ -523,6 +523,7 @@ def plot_normalised_resource_usage(all_archi_results: Dict[str, Dict[str, List[f
         resource_cost_cap.append(cost_cap)
         all_archi_results[archi]["Resource cost (capacity)"] = [cost_cap]
 
+    # D. Normalize second resource cost (baseline = baseline_archi)
     baseline_cap_cost = resource_cost_cap[
         archis_sorted.index(baseline_archi)
     ]
