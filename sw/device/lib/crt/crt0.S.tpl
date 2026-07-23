@@ -127,6 +127,12 @@ _init_bss:
     call atexit
     call __libc_init_array
 
+#ifdef __riscv_flen
+    li   t0, 0x2000
+    csrs mstatus, t0
+    csrw fcsr, x0
+#endif
+
 /* call main */
     lw a0, 0(sp)                    /* a0 = argc */
     addi a1, sp, __SIZEOF_POINTER__ /* a1 = argv */
