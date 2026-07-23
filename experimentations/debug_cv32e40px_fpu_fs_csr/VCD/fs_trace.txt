@@ -1,0 +1,101 @@
+=== TOP.testharness.x_heep_system_i.core_v_mini_mcu_i.cpu_subsystem_i.gen_cv32e40px.cv32e40px_top_i.core_i.id_stage_i.register_file_i.mem_fp(0)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.gen_USE_EXTERNAL_DEVICE_EXAMPLE.gen_fpu_ss_wrapper.fpu_ss_wrapper_i.fpu_ss_i.gen_fp_register_file.fpu_ss_regfile_i.mem(0)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.x_heep_system_i.core_v_mini_mcu_i.cpu_subsystem_i.gen_cv32e40px.cv32e40px_top_i.core_i.id_stage_i.register_file_i.mem_fp(8)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.gen_USE_EXTERNAL_DEVICE_EXAMPLE.gen_fpu_ss_wrapper.fpu_ss_wrapper_i.fpu_ss_i.gen_fp_register_file.fpu_ss_regfile_i.mem(8)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.x_heep_system_i.core_v_mini_mcu_i.cpu_subsystem_i.gen_cv32e40px.cv32e40px_top_i.core_i.id_stage_i.register_file_i.mem_fp(13)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.gen_USE_EXTERNAL_DEVICE_EXAMPLE.gen_fpu_ss_wrapper.fpu_ss_wrapper_i.fpu_ss_i.gen_fp_register_file.fpu_ss_regfile_i.mem(13)[31:0]
+  0 0x00000000
+  42015000 0x42E6978D
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.x_heep_system_i.core_v_mini_mcu_i.cpu_subsystem_i.gen_cv32e40px.cv32e40px_top_i.core_i.id_stage_i.register_file_i.mem_fp(14)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.gen_USE_EXTERNAL_DEVICE_EXAMPLE.gen_fpu_ss_wrapper.fpu_ss_wrapper_i.fpu_ss_i.gen_fp_register_file.fpu_ss_regfile_i.mem(14)[31:0]
+  0 0x00000000
+  40405000 0x43EFB5E3
+  40485000 0x42470D36
+  40715000 0x43F74893
+  40895000 0x42029DDE
+  40925000 0x42E6978D
+  40965000 0x44B3C000
+  41075000 0x496C32F9
+  41835000 0x41725461
+  41885000 0x449D4000
+  42345000 0x4407598C
+  43175000 0x44B3C000
+  43455000 0x3C2C901D
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.x_heep_system_i.core_v_mini_mcu_i.cpu_subsystem_i.gen_cv32e40px.cv32e40px_top_i.core_i.id_stage_i.register_file_i.mem_fp(15)[31:0]
+  0 0x00000000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+=== TOP.testharness.gen_USE_EXTERNAL_DEVICE_EXAMPLE.gen_fpu_ss_wrapper.fpu_ss_wrapper_i.fpu_ss_i.gen_fp_register_file.fpu_ss_regfile_i.mem(15)[31:0]
+  0 0x00000000
+  39435000 0x42E6978D
+  39465000 0x42AB04B6
+  39505000 0x43F74893
+  39545000 0x42BE8ACE
+  39585000 0x420EFC36
+  39625000 0x43EFB5E3
+  39665000 0x41A032FF
+  39705000 0x42470D36
+  39745000 0x41725461
+  39785000 0x449D4000
+  39825000 0x44B3C000
+  39865000 0x44FC4000
+  39905000 0x45000000
+  39945000 0x44000000
+  39985000 0x43800000
+  40395000 0x44FC4000
+  40415000 0x496C32F9
+  40455000 0x45000000
+  40665000 0x42249EE1
+  40695000 0x41725461
+  40935000 0x44DA4744
+  40975000 0x4A19438A
+  41185000 0x42249EE1
+  41295000 0x42029DDE
+  41355000 0xFF800000
+  41465000 0x4A19438A
+  41525000 0xFF800000
+  41825000 0x420EFC36
+  41845000 0x4407598C
+  41915000 0x44B3C000
+  41925000 0x49DCD360
+  41965000 0x45000000
+  41975000 0x4A1D4000
+  42025000 0x00000000
+  42065000 0x41A032FF
+  42245000 0x3E31D9D5
+  42255000 0x435A7E1C
+  42465000 0x49DCD360
+  42525000 0xFF800000
+  42635000 0x4A1D4000
+  42695000 0xFF800000
+  42805000 0x435A7E1C
+  42865000 0xFF800000
+  43165000 0x41725461
+  43355000 0x3C2C901D
+  43575000 0x00000000
+  43635000 0xFF800000
+  9223372036854775806 0xxxxxxxxx
+  9223372036854775807 0xzzzzzzzz
+Exiting.
