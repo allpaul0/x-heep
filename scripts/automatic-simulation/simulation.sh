@@ -62,7 +62,8 @@ make app PROJECT="$APP" ARCH="$ISA" ABI="$ABI" COMPILER_PREFIX=$COMPILER_PREFIX 
 
 # Run simulation
 echo "=== Running simulation ==="
-make verilator-run
+# in case of VCD dump MAX_SIM_TIME=200000
+make verilator-run 
 
 # parse simulation ouptput 
 python3 scripts/automatic-simulation/parse_simulation_output.py ${SIMULATOR} ${ISA} ${ABI} ${DTYPE} ${INSTR}
