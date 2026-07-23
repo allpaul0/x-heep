@@ -31,7 +31,7 @@ void runCycles(unsigned int ncycles, Vtestharness *dut, VerilatedFstC *m_trace){
 
 int main (int argc, char * argv[])
 {
-
+  std::cout << "VCD dumping is " << (VCD_DUMP ? "enabled" : "disabled") << std::endl;
   std::string firmware;
   vluint64_t max_sim_time;
   unsigned int boot_sel, exit_val;
@@ -49,6 +49,7 @@ int main (int argc, char * argv[])
 #endif
   VerilatedFstC *m_trace = new VerilatedFstC;
 #if VCD_DUMP
+  std::cout<<"Tracing enabled"<< std::endl;
   dut->trace (m_trace, 99);
   m_trace->open ("waveform.fst");
 #endif
