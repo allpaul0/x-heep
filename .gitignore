@@ -81,3 +81,7 @@ experimentations/simulations/*
 #x-heep generated files
 hw/core-v-mini-mcu/cpu_subsystem.sv
 hw/core-v-mini-mcu/core_v_mini_mcu.sv
+
+sw/applications/tpg_modelization/*/precalcul/*
+sw/applications/tpg_modelization/*/codegen/TPG*
+sw/applications/tpg_modelization/*/main.S
