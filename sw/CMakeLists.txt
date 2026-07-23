@@ -464,6 +464,7 @@ SET(CMAKE_EXE_LINKER_FLAGS  "-T ${LINKER_SCRIPT}  \
                              -Wl,-Map=${MAINFILE}.map \
                              -Wl,--gc-sections \
                              -L ${RISCV_XHEEP}/${COMPILER_PREFIX}elf/${CMAKE_SYSTEM_PROCESSOR}/lib \
+                             -Wl,-u,_printf_float \
                              -lc -lm -lgcc -flto \
                              -fpermissive -fno-rtti -fno-exceptions -fno-threadsafe-statics \
                             -ffunction-sections -fdata-sections -specs=nano.specs")
