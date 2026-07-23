@@ -77,3 +77,7 @@ private/
 experimentations/microarchitectures/fpga_implementations/*
 experimentations/microarchitectures/simulators/*
 experimentations/simulations/*
+
+#x-heep generated files
+hw/core-v-mini-mcu/cpu_subsystem.sv
+hw/core-v-mini-mcu/core_v_mini_mcu.sv
