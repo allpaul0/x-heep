@@ -19,3 +19,6 @@ apptainer shell --bind .:/opt/x-heep ../containers/x-heep.sif
 
 ## Command used to launch an inference benchmark code (TPG inf instrumented)
 ./scripts/automatic-simulation/simulation.sh tpg_modelization/tpg_inference_instrTeams_instrTPG_dev cv32e40x_im2_zba_zbb rv32ic_zicsr_zmmul_zba_zbb ilp32 FIXEDPT /opt/tools/riscv/ True
+
+## TPG inference float
+./scripts/automatic-simulation/simulation.sh tpg_modelization/tpg_inference_instrTPG_dev cv32e40px_fpu rv32imf_zicsr ilp32f FLOAT /opt/tools/riscv/ False 
