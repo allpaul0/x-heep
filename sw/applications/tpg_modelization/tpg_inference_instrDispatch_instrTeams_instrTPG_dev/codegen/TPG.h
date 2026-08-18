@@ -26,8 +26,8 @@ extern "C" {
 #include "precalcul/LE_states.h"
 
 # define NB_TEAMS 15
-#define MAX_TRANSITION_SIZE 7
-#define MAX_TRANSITION_RECORDS (NB_SEED * (NB_TEAMS + 1))
+#define NB_PROGS_MAX 7
+#define DISPATCH_RECORDS_SIZE (NB_SEED * (NB_TEAMS + 1))
 
 void inferenceTPG(int* actions, 
 					const fixedpt * __restrict__ in1, 
@@ -35,8 +35,8 @@ void inferenceTPG(int* actions,
 					const fixedpt * __restrict__ in3, 
 					const fixedpt * __restrict__ in4, 
 					uint32_t * team_cycles,
-					uint32_t * transition_counts,
-                    uint32_t transition_cycles[][MAX_TRANSITION_RECORDS]);
+					uint32_t * dispatch_counts,
+                    uint32_t dispatch_cycles[NB_PROGS_MAX + 1][DISPATCH_RECORDS_SIZE]);
 
 #ifdef __cplusplus
 }

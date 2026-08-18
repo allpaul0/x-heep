@@ -9,7 +9,7 @@
 
 static uint32_t dispatch_start;
 static uint32_t dispatch_end;
-static uint32_t last_transition_size;
+static uint32_t last_dispatch_size;
 
 /* ------------------------------------------------------------ */
 /* Helper                                                        */
@@ -34,8 +34,8 @@ void inferenceTPG(int *actions,
 					const fixedpt * __restrict__ in3,
 					const fixedpt * __restrict__ in4,
 					uint32_t * team_cycles,
-					uint32_t * transition_counts,
-                    uint32_t transition_cycles[][MAX_TRANSITION_RECORDS])
+					uint32_t * dispatch_counts,
+                    uint32_t dispatch_cycles[NB_PROGS_MAX + 1][DISPATCH_RECORDS_SIZE])
 {
 	/* Jump table — static const lets GCC keep it in .rodata and
 	   potentially cache it in a register across iterations.       */
@@ -53,8 +53,8 @@ void inferenceTPG(int *actions,
 L_T0: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 
 		static const int next[2] = { 15, 16 };
@@ -72,7 +72,7 @@ L_T0: {
 		team_cycles[0] = end - start;
 		
 
-		last_transition_size = 2;
+		last_dispatch_size = 2;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 2)]];
@@ -81,8 +81,8 @@ L_T0: {
 L_T1: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[2] = { 0, 20 };
 		fixedpt  scores[2];
@@ -98,7 +98,7 @@ L_T1: {
 
 		team_cycles[1] = end - start;
 
-		last_transition_size = 2;
+		last_dispatch_size = 2;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 2)]];
@@ -107,8 +107,8 @@ L_T1: {
 L_T2: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[4] = { 17, 21, 16, 19 };
 		fixedpt  scores[4];
@@ -126,7 +126,7 @@ L_T2: {
 
 		team_cycles[2] = end - start;
 
-		last_transition_size = 4;
+		last_dispatch_size = 4;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 4)]];
@@ -135,8 +135,8 @@ L_T2: {
 L_T3: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[3] = { 21, 1, 17 };
 		fixedpt  scores[3];
@@ -153,7 +153,7 @@ L_T3: {
 
 		team_cycles[3] = end - start;
 
-		last_transition_size = 3;
+		last_dispatch_size = 3;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 3)]];
@@ -162,8 +162,8 @@ L_T3: {
 L_T4: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[3] = { 21, 1, 17 };
 		fixedpt  scores[3];
@@ -180,7 +180,7 @@ L_T4: {
 
 		team_cycles[4] = end - start;
 
-		last_transition_size = 3;
+		last_dispatch_size = 3;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 3)]];
@@ -189,8 +189,8 @@ L_T4: {
 L_T5: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[2] = { 2, 3 };
 		fixedpt  scores[2];
@@ -206,7 +206,7 @@ L_T5: {
 
 		team_cycles[5] = end - start;
 
-		last_transition_size = 2;
+		last_dispatch_size = 2;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 2)]];
@@ -215,8 +215,8 @@ L_T5: {
 L_T6: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[3] = { 16, 2, 4 };
 		fixedpt  scores[3];
@@ -233,7 +233,7 @@ L_T6: {
 
 		team_cycles[6] = end - start;
 
-		last_transition_size = 3;
+		last_dispatch_size = 3;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 3)]];
@@ -242,8 +242,8 @@ L_T6: {
 L_T7: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[2] = { 4, 2 };
 		fixedpt  scores[2];
@@ -259,7 +259,7 @@ L_T7: {
 
 		team_cycles[7] = end - start;
 
-		last_transition_size = 2;
+		last_dispatch_size = 2;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 2)]];
@@ -268,8 +268,8 @@ L_T7: {
 L_T8: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[2] = { 18, 5 };
 		fixedpt  scores[2];
@@ -285,7 +285,7 @@ L_T8: {
 
 		team_cycles[8] = end - start;
 
-		last_transition_size = 2;
+		last_dispatch_size = 2;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 2)]];
@@ -294,8 +294,8 @@ L_T8: {
 L_T9: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[4] = { 3, 8, 18, 2 };
 		fixedpt  scores[4];
@@ -313,7 +313,7 @@ L_T9: {
 
 		team_cycles[9] = end - start;
 
-		last_transition_size = 4;
+		last_dispatch_size = 4;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 4)]];
@@ -322,8 +322,8 @@ L_T9: {
 L_T10: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[4] = { 7, 15, 3, 18 };
 		fixedpt  scores[4];
@@ -341,7 +341,7 @@ L_T10: {
 
 		team_cycles[10] = end - start;
 
-		last_transition_size = 4;
+		last_dispatch_size = 4;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 4)]];
@@ -350,8 +350,8 @@ L_T10: {
 L_T11: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[6] = { 10, 6, 9, 18, 20, 6 };
 		fixedpt  scores[6];
@@ -371,7 +371,7 @@ L_T11: {
 
 		team_cycles[11] = end - start;
 
-		last_transition_size = 6;
+		last_dispatch_size = 6;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 6)]];
@@ -380,8 +380,8 @@ L_T11: {
 L_T12: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[7] = { 10, 6, 22, 11, 6, 9, 20 };
 		fixedpt  scores[7];
@@ -402,7 +402,7 @@ L_T12: {
 
 		team_cycles[12] = end - start;
 
-		last_transition_size = 7;
+		last_dispatch_size = 7;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 7)]];
@@ -411,8 +411,8 @@ L_T12: {
 L_T13: {
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-		transition_cycles[last_transition_size]
-			[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+		dispatch_cycles[last_dispatch_size]
+			[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 		static const int next[2] = { 10, 12 };
 		fixedpt  scores[2];
@@ -428,7 +428,7 @@ L_T13: {
 
 		team_cycles[13] = end - start;
 
-		last_transition_size = 2;
+		last_dispatch_size = 2;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 2)]];
@@ -451,7 +451,7 @@ L_T14: {
 
 		team_cycles[14] = end - start;
 
-		last_transition_size = 4;
+		last_dispatch_size = 4;
 		CSR_READ(CSR_REG_MCYCLE, &dispatch_start);
 
 		goto *jump_table[next[bestProgram(scores, 4)]];
@@ -460,40 +460,40 @@ L_T14: {
 L_A3: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 
 	actions[0] = 3; return;
 }
 L_A4: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 		actions[0] = 4; return;
 } 
 L_A5: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 	actions[0] = 5; return;
 }
 L_A6: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 	actions[0] = 6; return;
 }
 L_A8: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 	actions[0] = 8; return;
 }
@@ -501,16 +501,16 @@ L_A0: {
 
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 	actions[0] = 0; return;
 } 
 L_A7: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 	actions[0] = 7; return;
 }
@@ -518,8 +518,8 @@ L_A7: {
 L_A1: {
 	CSR_READ(CSR_REG_MCYCLE, &dispatch_end);
 	
-	transition_cycles[last_transition_size]
-		[transition_counts[last_transition_size]++] = dispatch_end - dispatch_start;
+	dispatch_cycles[last_dispatch_size]
+		[dispatch_counts[last_dispatch_size]++] = dispatch_end - dispatch_start;
 	
 	actions[0] = 1; return;
 }

@@ -93,11 +93,11 @@ int main(void)
 
     Welford team_accumulators[NB_TEAMS];
 
-    Welford transition_accumulators[8];   // index = number of programs (2..7)
+    Welford dispatch_accumulators[8];   // index = number of programs (2..7)
 
-    uint32_t transition_counts[MAX_TRANSITION_SIZE + 1] = {0};
+    uint32_t dispatch_counts[NB_PROGS_MAX + 1] = {0};
 
-    uint32_t transition_cycles[MAX_TRANSITION_SIZE + 1][MAX_TRANSITION_RECORDS];
+    uint32_t dispatch_cycles[NB_PROGS_MAX + 1][DISPATCH_RECORDS_SIZE];
 
     // Team cycle_counters
     uint32_t team_cycles[NB_TEAMS];
@@ -114,10 +114,10 @@ int main(void)
         team_accumulators[t].M2 = 0.0;
     }
 
-    for (int size = 2; size <= MAX_TRANSITION_SIZE; ++size) {
-        transition_accumulators[size].count = 0;
-        transition_accumulators[size].mean = 0.0;
-        transition_accumulators[size].M2 = 0.0;
+    for (int size = 2; size <= NB_PROGS_MAX; ++size) {
+        dispatch_accumulators[size].count = 0;
+        dispatch_accumulators[size].mean = 0.0;
+        dispatch_accumulators[size].M2 = 0.0;
     }
 
     /* Temporary variables */
@@ -136,8 +136,8 @@ int main(void)
         
         inferenceTPG(&actionID, in1, in2, in3, in4, 
              team_cycles, 
-             transition_counts,
-             transition_cycles);
+             dispatch_counts,
+             dispatch_cycles);
 
         /* read cycles (64-bit if available in CSR_READ) */
         CSR_READ(CSR_REG_MCYCLE, &total_cycles);
@@ -156,16 +156,16 @@ int main(void)
                 welford_add(&team_accumulators[t], (float) team_cycles[t]);
         }
 
-        for (int size = 2; size <= MAX_TRANSITION_SIZE; size++)
+        for (int size = 2; size <= NB_PROGS_MAX; size++)
         {
-            for (uint32_t i = 0; i < transition_counts[size]; i++)
+            for (uint32_t i = 0; i < dispatch_counts[size]; i++)
             {
-                welford_add(&transition_accumulators[size],
-                            (float)transition_cycles[size][i]);
+                welford_add(&dispatch_accumulators[size],
+                            (float)dispatch_cycles[size][i]);
             }
 
             // reset for next seed
-            transition_counts[size] = 0;
+            dispatch_counts[size] = 0;
         }
     }
 
@@ -194,20 +194,20 @@ int main(void)
         PRINTF("%d,%u,%d,%d\n", t, team_accumulators[t].count, (int) mean, (int) stddev);
     }
 
-    PRINTF("\nTransitionSize,Count,AvgCyclesPerTransition,StddevCyclesPerTransition\n");
+    PRINTF("\nDispatchSize,Count,AvgCyclesPerDispatch,StddevCyclesPerDispatch\n");
 
-    for (int size = 2; size <= MAX_TRANSITION_SIZE; size++)
+    for (int size = 2; size <= NB_PROGS_MAX; size++)
     {
-        if (transition_accumulators[size].count == 0)
+        if (dispatch_accumulators[size].count == 0)
             continue;
 
-        float mean = transition_accumulators[size].mean;
+        float mean = dispatch_accumulators[size].mean;
 
         float variance =
-            (transition_accumulators[size].count > 1)
+            (dispatch_accumulators[size].count > 1)
             ?
-            transition_accumulators[size].M2 /
-            (transition_accumulators[size].count - 1)
+            dispatch_accumulators[size].M2 /
+            (dispatch_accumulators[size].count - 1)
             :
             0.0;
 
@@ -215,7 +215,7 @@ int main(void)
 
         PRINTF("%d,%u,%d,%d\n",
             size,
-            transition_accumulators[size].count,
+            dispatch_accumulators[size].count,
             (int)mean,
             (int)stddev);
     }
