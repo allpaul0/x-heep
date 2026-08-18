@@ -12,16 +12,19 @@ extern "C" {
 #include "../approximateComputingTools.h"
 
 #ifdef USE_INT
-  #warning "Using int as typeInf"
+  #pragma message (  "Using int as typeInf" )
   typedef int typeInf;  
 #elif defined(USE_FLOAT)
-  #warning "Using float as typeInf"
+  #pragma message ( "Using float as typeInf" )
   typedef float  typeInf;
+#elif defined(USE_DOUBLE)
+  #pragma message ( "Using double as typeInf" )
+  typedef double  typeInf;
 #elif defined(USE_FIXEDPT)
-  #warning "Using fixedpt as typeInf"
+  #pragma message ( "Using fixedpt as typeInf" )
   typedef fixedpt  typeInf;  // using fixedptc library
 #else  // default
-  #warning "Using float as typeInf"
+  #pragma message ( "Using float as typeInf" )
   typedef float    typeInf;
 #endif
 
