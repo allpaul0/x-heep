@@ -6,10 +6,13 @@ set -e
 # -------------------------------
 if [ $# -ne 7 ]; then
     echo "Usage: $0 <APP> <SIMULATOR> <ISA> <ABI> <DTYPE> <COMPILER> <INSTR>"
-    echo "INSTR; whether Teams are instrumented (True/False)"
+    echo "INSTR; instrumentation level (0/1/2)"
+    echo "  0 -> instrTPG"
+    echo "  1 -> instrTeams_instrTPG"
+    echo "  2 -> instrDispatch_instrTeams_instrTPG"
     echo
     echo "Example:"
-    echo "  $0 tpg_inference_fixedpt cv32e40p rv32imc_zicsr ilp32 FIXEDPT /opt/tools/riscv False" 
+    echo "  $0 tpg_inference_fixedpt cv32e40p rv32imc_zicsr ilp32 FIXEDPT /opt/tools/riscv 0"
     echo
     echo "SIMULATOR: directory under experimentations/microarchitectures/simulators/"
     exit 1
@@ -22,6 +25,24 @@ ABI="$4"
 DTYPE="$5"
 COMPILER="$6"
 INSTR="$7"
+
+ 
+# Check INSTR is a valid instrumentation level
+if [[ ! "$INSTR" =~ ^[0-2]$ ]]; then
+    echo "Error: INSTR must be 0, 1 or 2 (got '$INSTR')"
+    echo "  0 -> instrTPG"
+    echo "  1 -> instrTeams_instrTPG"
+    echo "  2 -> instrDispatch_instrTeams_instrTPG"
+    exit 1
+fi
+ 
+case "$INSTR" in
+    0) INSTR_LABEL="instrTPG" ;;
+    1) INSTR_LABEL="instrTeams_instrTPG" ;;
+    2) INSTR_LABEL="instrDispatch_instrTeams_instrTPG" ;;
+esac
+echo "=== Instrumentation level $INSTR ($INSTR_LABEL) ==="
+ 
 
 # Check simulator directory exists
 SIM_PATH="experimentations/microarchitectures/simulators/$SIMULATOR/openhwgroup.org_systems_core-v-mini-mcu_0.3.0"
