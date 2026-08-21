@@ -125,7 +125,7 @@ int main(void)
     }
 
     /* Temporary variables */
-    typeInf actionID = -1;
+    int actionID = -1;
 
     for (int seed = 0; seed < NB_SEED; ++seed)
     {

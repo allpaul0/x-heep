@@ -105,7 +105,7 @@ int main(void)
 
     /* Temporary variables */
     uint32_t total_cycles = 0;
-    typeInf actionID = -1;
+    int actionID = -1;
 
     for (int seed = 0; seed < NB_SEED; ++seed)
     {
