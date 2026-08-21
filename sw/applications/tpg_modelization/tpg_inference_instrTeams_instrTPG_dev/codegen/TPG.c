@@ -416,8 +416,6 @@ L_T19: {
 		//__asm__ volatile("T19_start:");
 		CSR_READ(CSR_REG_MCYCLE, &start);
 
-		inline_asm(label_start_T19); 
-
         scores[0] = P54(in1, in2, in3, in4);
         scores[1] = P55(in1, in2, in3, in4);
         scores[2] = P56(in1, in2, in3, in4);
