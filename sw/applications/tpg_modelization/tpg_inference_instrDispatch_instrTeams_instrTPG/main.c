@@ -89,18 +89,18 @@ int main(void)
     CSR_CLEAR_BITS(CSR_REG_MCOUNTINHIBIT, 0x1); // enable cycle counting
 
     /* Arrays sized by NB_CLASSES (extern from LE_states.h) */
-    Welford classes_accumulators[NB_CLASSES];
+    static Welford classes_accumulators[NB_CLASSES];
 
-    Welford team_accumulators[NB_TEAMS];
+    static Welford team_accumulators[NB_TEAMS];
 
-    Welford dispatch_accumulators[NB_PROGS_MAX + 1];   // index = number of programs (2..7)
+    static Welford dispatch_accumulators[NB_PROGS_MAX + 1];   // index = number of programs (2..7)
 
-    uint32_t dispatch_counts[NB_PROGS_MAX + 1] = {0};
+    static uint32_t dispatch_counts[NB_PROGS_MAX + 1] = {0};
 
-    uint32_t dispatch_cycles[NB_PROGS_MAX + 1][DISPATCH_RECORDS_SIZE];
+    static uint32_t dispatch_cycles[NB_PROGS_MAX + 1][DISPATCH_RECORDS_SIZE];
 
     // Team cycle_counters
-    uint32_t team_cycles[NB_TEAMS];
+    static uint32_t team_cycles[NB_TEAMS];
 
     for (int c = 0; c < NB_CLASSES; ++c) {
         classes_accumulators[c].count = 0;
@@ -158,6 +158,14 @@ int main(void)
 
         for (int size = 2; size <= NB_PROGS_MAX; size++)
         {
+            /* Guard: inferenceTPG may have written more records than the array
+               holds. Clamp before reading so we don't walk off the end. */
+            if (dispatch_counts[size] > DISPATCH_RECORDS_SIZE) {
+                PRINTF("OVERFLOW: size=%d count=%u > %d\n",
+                       size, dispatch_counts[size], DISPATCH_RECORDS_SIZE);
+                dispatch_counts[size] = DISPATCH_RECORDS_SIZE;
+            }
+
             for (uint32_t i = 0; i < dispatch_counts[size]; i++)
             {
                 welford_add(&dispatch_accumulators[size],
