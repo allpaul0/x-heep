@@ -6,25 +6,25 @@
 {
     bus_type: "onetoM"
 
-    ram_banks: {
+     ram_banks: {
         code_and_data: {
             num: 4
-            sizes: [64]
+            sizes: [128]
         }
     }
 
-    // 128 KiB each
+    // 256 KiB each
     linker_sections: 
     [
         {
             name: code
             start: 0
-            size: 0x20000    
+            size: 0x40000    
         }
         {
             name: data
-            start: 0x20000   
-            size: 0x20000   
+            start: 0x40000   
+            size: 0x40000   
         }
     ]
    
