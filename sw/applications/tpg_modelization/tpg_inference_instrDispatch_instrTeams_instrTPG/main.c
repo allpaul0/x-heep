@@ -93,7 +93,7 @@ int main(void)
 
     Welford team_accumulators[NB_TEAMS];
 
-    Welford dispatch_accumulators[8];   // index = number of programs (2..7)
+    Welford dispatch_accumulators[NB_PROGS_MAX + 1];   // index = number of programs (2..7)
 
     uint32_t dispatch_counts[NB_PROGS_MAX + 1] = {0};
 
