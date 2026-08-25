@@ -9,22 +9,22 @@
      ram_banks: {
         code_and_data: {
             num: 4
-            sizes: [128]
+            sizes: [64]
         }
     }
 
-    // 256 KiB each
+    // 128 KiB each
     linker_sections: 
     [
         {
             name: code
             start: 0
-            size: 0x40000    
+            size: 0x20000    
         }
         {
             name: data
-            start: 0x40000   
-            size: 0x40000   
+            start: 0x20000   
+            size: 0x20000   
         }
     ]
    
