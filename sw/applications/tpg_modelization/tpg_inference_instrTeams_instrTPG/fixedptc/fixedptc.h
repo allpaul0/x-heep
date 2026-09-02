@@ -353,18 +353,22 @@ fixedpt_cos(fixedpt A)
 	return (fixedpt_sin(FIXEDPT_HALF_PI - A));
 }
 
+/////// functions using 32 bits division ///////
+
 
 /* Returns the tangens of the given fixedpt number */
+// Divisor cos(A) ∈ [−1.00005, 1.00005],
 static inline fixedpt
-fixedpt_tan(fixedpt A)
+fixedpt_tan_wdiv32(fixedpt A)
 {
 	return protected_fixedpt_div_32(fixedpt_sin(A), fixedpt_cos(A));
 }
 
 
 /* Returns the value exp(x), i.e. e^x of the given fixedpt number. */
+// R − r ∈ [1.67334, 2.36661]. no division protection
 static inline fixedpt
-fixedpt_exp(fixedpt fp)
+fixedpt_exp_wdiv32(fixedpt fp)
 {
 	fixedpt xabs, k, z, R, xp;
 	const fixedpt LN2 = fixedpt_rconst(0.69314718055994530942);
@@ -398,7 +402,122 @@ fixedpt_exp(fixedpt fp)
 	    fixedpt_mul(z, EXP_P[0] + fixedpt_mul(z, EXP_P[1] +
 	    fixedpt_mul(z, EXP_P[2] + fixedpt_mul(z, EXP_P[3] +
 	    fixedpt_mul(z, EXP_P[4])))));
-	xp = FIXEDPT_ONE + protected_fixedpt_div_32(fixedpt_mul(fp, FIXEDPT_TWO), R - fp);
+	xp = FIXEDPT_ONE + fixedpt_div_32(fixedpt_mul(fp, FIXEDPT_TWO), R - fp);
+	if (k < 0)
+		k = FIXEDPT_ONE >> (-k >> FIXEDPT_FBITS);
+	else
+		k = FIXEDPT_ONE << (k >> FIXEDPT_FBITS);
+	return (fixedpt_mul(k, xp));
+}
+
+
+/* Returns the natural logarithm of the given fixedpt number. */
+// fixedpt_div_32 is using 2 + f (1.0–3.0, bounded) therefore 
+// no protection of the div
+static inline fixedpt
+fixedpt_ln_wdiv32(fixedpt x)
+{
+	fixedpt log2, xi;
+	fixedpt f, s, z, w, R;
+	const fixedpt LN2 = fixedpt_rconst(0.69314718055994530942);
+	const fixedpt LG[7] = {
+		fixedpt_rconst(6.666666666666735130e-01),
+		fixedpt_rconst(3.999999999940941908e-01),
+		fixedpt_rconst(2.857142874366239149e-01),
+		fixedpt_rconst(2.222219843214978396e-01),
+		fixedpt_rconst(1.818357216161805012e-01),
+		fixedpt_rconst(1.531383769920937332e-01),
+		fixedpt_rconst(1.479819860511658591e-01)
+	};
+
+	if (x < 0)
+		return (0);
+	if (x == 0)
+		return 0xffffffff;
+
+	log2 = 0;
+	xi = x;
+	while (xi > FIXEDPT_TWO) {
+		xi >>= 1;
+		log2++;
+	}
+	f = xi - FIXEDPT_ONE;
+	s = fixedpt_div_32(f, FIXEDPT_TWO + f);
+	z = fixedpt_mul(s, s);
+	w = fixedpt_mul(z, z);
+	R = fixedpt_mul(w, LG[1] + fixedpt_mul(w, LG[3]
+	    + fixedpt_mul(w, LG[5]))) + fixedpt_mul(z, LG[0]
+	    + fixedpt_mul(w, LG[2] + fixedpt_mul(w, LG[4]
+	    + fixedpt_mul(w, LG[6]))));
+	return (fixedpt_mul(LN2, (log2 << FIXEDPT_FBITS)) + f
+	    - fixedpt_mul(s, f - R));
+}
+	
+
+/* Returns the logarithm of the given base of the given fixedpt number */
+// see figure divide charactesiation (b)
+static inline fixedpt
+fixedpt_log_wdiv32(fixedpt x, fixedpt base)
+{
+	return (protected_fixedpt_div_32(fixedpt_ln_wdiv32(x), fixedpt_ln_wdiv32(base)));
+}
+
+
+/* Return the power value (n^exp) of the given fixedpt numbers */
+static inline fixedpt
+fixedpt_pow_wdiv32(fixedpt n, fixedpt exp)
+{
+	if (exp == 0)
+		return (FIXEDPT_ONE);
+	if (n < 0)
+		return 0;
+	return (fixedpt_exp_wdiv32(fixedpt_mul(fixedpt_ln_wdiv32(n), exp)));
+}
+
+
+
+
+/////// functions using 64 bits division ///////
+
+/* Returns the tangens of the given fixedpt number */
+static inline fixedpt
+fixedpt_tan(fixedpt A)
+{
+	return protected_fixedpt_div(fixedpt_sin(A), fixedpt_cos(A));
+}
+
+
+/* Returns the value exp(x), i.e. e^x of the given fixedpt number. */
+static inline fixedpt
+fixedpt_exp(fixedpt fp)
+{
+	fixedpt xabs, k, z, R, xp;
+	const fixedpt LN2 = fixedpt_rconst(0.69314718055994530942);
+	const fixedpt LN2_INV = fixedpt_rconst(1.4426950408889634074);
+	const fixedpt EXP_P[5] = {
+		fixedpt_rconst(1.66666666666666019037e-01),
+		fixedpt_rconst(-2.77777777770155933842e-03),
+		fixedpt_rconst(6.61375632143793436117e-05),
+		fixedpt_rconst(-1.65339022054652515390e-06),
+		fixedpt_rconst(4.13813679705723846039e-08),
+	};
+
+	if (fp == 0)
+		return (FIXEDPT_ONE);
+	xabs = fixedpt_abs(fp);
+	k = fixedpt_mul(xabs, LN2_INV);
+	k += FIXEDPT_ONE_HALF;
+	k &= ~FIXEDPT_FMASK;
+	if (fp < 0)
+		k = -k;
+	fp -= fixedpt_mul(k, LN2);
+	z = fixedpt_mul(fp, fp);
+	/* Taylor */
+	R = FIXEDPT_TWO +
+	    fixedpt_mul(z, EXP_P[0] + fixedpt_mul(z, EXP_P[1] +
+	    fixedpt_mul(z, EXP_P[2] + fixedpt_mul(z, EXP_P[3] +
+	    fixedpt_mul(z, EXP_P[4])))));
+	xp = FIXEDPT_ONE + fixedpt_div(fixedpt_mul(fp, FIXEDPT_TWO), R - fp);
 	if (k < 0)
 		k = FIXEDPT_ONE >> (-k >> FIXEDPT_FBITS);
 	else
@@ -452,7 +571,7 @@ fixedpt_ln(fixedpt x)
 static inline fixedpt
 fixedpt_log(fixedpt x, fixedpt base)
 {
-	return (protected_fixedpt_div_32(fixedpt_ln(x), fixedpt_ln(base)));
+	return (protected_fixedpt_div(fixedpt_ln(x), fixedpt_ln(base)));
 }
 
 
