@@ -8,24 +8,24 @@
 
      ram_banks: {
         code_and_data: {
-            num: 4
+            num: 6
             sizes: [64]
         }
     }
 
-    // 128 KiB each
+    // 128 KiB code, 256 KiB data
     linker_sections: 
     [
         {
             name: code
             start: 0
             size: 0x20000    
-        }
+        } // -> ram0 
         {
             name: data
             start: 0x20000   
-            size: 0x20000   
-        }
+            size: 0x40000   
+        }  // -> ram1
     ]
    
     cpu_type: cv32e40x
